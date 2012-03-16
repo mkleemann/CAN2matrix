@@ -28,20 +28,35 @@
 /***************************************************************************/
 /* Definition of global variables to store CAN values.                     */
 /***************************************************************************/
+/**
+ * @brief storage struct to keep values to send to CAN2
+ */
 typedef struct
 {
-   uint8_t wheel1U;     // wheel signal 1 upper byte (as-is)
-   uint8_t wheel1L;     // wheel signal 1 lower byte (as-is)
-   uint8_t wheel2U;     // wheel signal 2 upper byte (as-is)
-   uint8_t wheel2L;     // wheel signal 2 lower byte (as-is)
-   uint8_t wheel3U;     // wheel signal 3 upper byte (as-is)
-   uint8_t wheel3L;     // wheel signal 3 lower byte (as-is)
-   uint8_t wheel4U;     // wheel signal 4 upper byte (as-is)
-   uint8_t wheel4L;     // wheel signal 4 lower byte (as-is)
-   uint8_t ignition;    // ignition key status (destination)
-   uint8_t gearBox;     // gear box status (destination)
-   uint8_t headlights;  // headlights status (destination) on/off
-   uint8_t dimLevel;    // dimming of display (destination) 0..255
+   //! wheel signal 1 upper byte (as-is)
+   uint8_t wheel1U;
+   //! wheel signal 1 lower byte (as-is)
+   uint8_t wheel1L;
+   //! wheel signal 2 upper byte (as-is)
+   uint8_t wheel2U;
+   //! wheel signal 2 lower byte (as-is)
+   uint8_t wheel2L;
+   //! wheel signal 3 upper byte (as-is)
+   uint8_t wheel3U;
+   //! wheel signal 3 lower byte (as-is)
+   uint8_t wheel3L;
+   //! wheel signal 4 upper byte (as-is)
+   uint8_t wheel4U;
+   //! wheel signal 4 lower byte (as-is)
+   uint8_t wheel4L;
+   //! ignition key status (destination)
+   uint8_t ignition;
+   //! gear box status (destination)
+   uint8_t gearBox;
+   //! headlights status (destination) on/off
+   uint8_t headlights;
+   //! dimming of display (destination) 0..255
+   uint8_t dimLevel;
 } storeVals_t;
 
 volatile storeVals_t storage;
