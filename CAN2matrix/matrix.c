@@ -345,7 +345,6 @@ void sendCan1_1000ms(can_t* msg)
 void sendCan1Message(can_t* msg)
 {
 #ifdef ___SINGLE_CAN___
-   msg->msgId = CANID_2_DIMMING;
    fillInfoToCAN1(msg);
 
    can_send_message(CAN_CHIP1, msg);
