@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,15 +8,15 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
+ *
+ * \file adc_config.h
+ *
+ * \date Created: 24.02.2012 19:59:37
+ * \author Matthias Kleemann
  **/
 
-/*
- * adc_config.h
- *
- * Created: 24.02.2012 19:59:37
- *  Author: MKleemann
- */
 
 
 #ifndef ADC_CONFIG_H_
@@ -24,18 +25,21 @@
 /**
  * @brief set voltage reference
  *
+ * \code
  * REFS1 REFS0 Voltage Reference Selection
  *     0     0 AREF, Internal Vref turned off
  *     0     1 AVCC with external capacitor at AREF pin
  *     1     0 Reserved
  *     1     1 Internal 2.56V Voltage Reference with external capacitor at
  *             AREF pin
+ * \endcode
  */
 #define ADC_REF_SELECT        (1 << REFS0)
 
 /**
  * @brief input channel selection
  *
+ * \code
  * MUX3..0 Single Ended Input
  *    0000 ADC0
  *    0001 ADC1
@@ -53,13 +57,19 @@
  *    1101
  *    1110 1.30V (VBG)
  *    1111 0V (GND)
+ * \endcode
  */
 #define ADC_INPUT_CHANNEL     0
+
+/**
+ * @brief selects the input pin used for ADC
+ */
 #define ADC_INPUT_PIN         C,ADC_INPUT_CHANNEL
 
 /**
  * @brief prescaler value between Fosc and CLKadc
  *
+ * \code
  * ADPS2 ADPS1 ADPS0 Division Factor
  *     0     0     0 2
  *     0     0     1 2
@@ -69,11 +79,17 @@
  *     1     0     1 32
  *     1     1     0 64
  *     1     1     1 128
+ * \endcode
  */
 #define ADC_PRESCALER         (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0)
 
 /**
  * @brief use only upper 8bit of ADC value
+ *
+ * This causes ADLAR bit to be set, so the ADC value is left aligned. It
+ * only returns the upper byte in this case, so it can be used directly
+ * as 8bit value. It also causes the lower two bit to be discarded
+ * (10bit -> 8bit)
  */
 #define ADC_8BIT_RESOLUTION
 
