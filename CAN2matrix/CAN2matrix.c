@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,15 +8,15 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
+ *
+ * \file CAN2matrix.c
+ *
+ * \date Created: 28.11.2011 18:12:46
+ * \author Matthias Kleemann
  **/
 
-/*
- * CAN2matrix.c
- *
- * Created: 28.11.2011 18:12:46
- *  Author: MKleemann
- */
 
 #include <stdbool.h>
 #include <avr/io.h>
@@ -40,6 +41,9 @@ static volatile bool    send100ms    = false;
 static volatile bool    send500ms    = false;
 static volatile state_t fsmState     = INIT;
 
+/**
+ * @brief main loop
+ **/
 int main(void)
 {
    initHardware();
@@ -310,14 +314,21 @@ bool initCAN()
 /* INTERRUPT SERVICE ROUTINES                                              */
 /***************************************************************************/
 
-// Timer1 input capture interrupt (~15s 4MHz@1024 prescale factor)
+/**
+ * @brief interrupt service routine for Timer1 capture
+ *
+ * Timer1 input capture interrupt (~15s 4MHz@1024 prescale factor)
+ **/
 ISR(TIMER1_CAPT_vect)
 {
    fsmState = SLEEP_DETECTED;
 }
 
-// Timer2 compare match interrupt handler
-// --> set as 25ms (4x25ms = 100ms)
+/**
+ * @brief interrupt service routine for Timer2 compare
+ *
+ * Timer2 compare match interrupt handler --> set as 25ms (4x25ms = 100ms)
+ **/
 ISR(TIMER2_COMP_vect)
 {
    ++send_it;
@@ -325,7 +336,11 @@ ISR(TIMER2_COMP_vect)
    send500ms = (0 == (send_it % 20));  // ~500ms
 }
 
-// External Interrupt0 handler to wake up from CAN activity
+/**
+ * @brief interrupt service routine for external interrupt 0
+ *
+ * External Interrupt0 handler to wake up from CAN activity
+ **/
 ISR(INT0_vect)
 {
 #ifndef ___AVR_SLEEP_ON___

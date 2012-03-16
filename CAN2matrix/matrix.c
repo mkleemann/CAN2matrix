@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,15 +8,15 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
+ *
+ * \file matrix.c
+ *
+ * \date Created: 03.01.2012 07:38:54
+ * \author Matthias Kleemann
  **/
 
-/*
- * matrix.c
- *
- * Created: 03.01.2012 07:38:54
- *  Author: MKleemann
- */
 
 #include <avr/io.h>
 #include <stdbool.h>

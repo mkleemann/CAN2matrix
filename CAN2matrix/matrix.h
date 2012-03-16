@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,15 +8,18 @@
  * like beer much.)
  *
  * Matthias Kleemann
- * ----------------------------------------------------------------------------
- **/
-
-/*
- * matrix.h
  *
- * Created: 28.11.2011 18:25:36
- *  Author: MKleemann
- */
+ * ----------------------------------------------------------------------------
+ *
+ * \file matrix.h
+ *
+ * \date Created: 28.11.2011 18:25:36
+ * \author Matthias Kleemann
+ *
+ * \todo verify CAN signals in car
+**/
+
+
 
 
 #ifndef MATRIX_H_
@@ -28,7 +32,6 @@
 /* Definition of car CAN message ids                                       */
 /***************************************************************************/
 // currently a mix of infotainment and convenience CAN bus signals
-// TODO: verify CAN signals in car
 
 // ignition by key status
 // another id could be 0x2C3 - verify
