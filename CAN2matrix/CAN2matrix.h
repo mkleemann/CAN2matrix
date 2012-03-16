@@ -25,13 +25,23 @@
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */
 /***************************************************************************/
+
+/**
+ * @brief defines all states of the FSM
+ */
 typedef enum
 {
+   //! initialize all hardware
    INIT           = 0,
+   //! do all the work
    RUNNING        = 1,
+   //! prepare sleep mode (AVR and CAN)
    SLEEP_DETECTED = 2,
+   //! sleeping
    SLEEPING       = 3,
+   //! wake up (AVR and CAN)
    WAKEUP         = 4,
+   //! an error occurred, stop working
    ERROR          = 5
 } state_t;
 
