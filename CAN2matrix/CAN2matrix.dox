@@ -1,6 +1,5 @@
 /**
- * \mainpage CAN2matrix
- * An AVR based dual CAN solution to provide signals from one bus to another.
+ * \mainpage CAN2matrix - An AVR based dual CAN solution to provide signals from one bus to another.
  *
  * \section Copyright
  * - - -
