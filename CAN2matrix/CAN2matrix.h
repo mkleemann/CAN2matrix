@@ -57,42 +57,57 @@ typedef enum
 // use only CAN1 - read messages and put them back on bus with msgId += 10
 //#define ___SINGLE_CAN___
 
-/***************************************************************************/
-/* INT0 trigger definition                                                 */
-/*                                                                         */
-/* ISC01 ISC00 Description                                                 */
-/*     0     0 The low level of INT0 generates an interrupt request        */
-/*     0     1 Any logical change on INT0 generates an interrupt request   */
-/*     1     0 The falling edge of INT0 generates an interrupt request     */
-/*     1     1 The rising edge of INT0 generates an interrupt request      */
-/***************************************************************************/
+/**
+ * @brief INT0 trigger definition
+ *
+ * \code
+ * ISC01 ISC00 Description
+ *     0     0 The low level of INT0 generates an interrupt request
+ *     0     1 Any logical change on INT0 generates an interrupt request
+ *     1     0 The falling edge of INT0 generates an interrupt request
+ *     1     1 The rising edge of INT0 generates an interrupt request
+ * \endcode
+ */
 #define EXTERNAL_INT0_TRIGGER    0
+
+/**
+ * @brief setup for enabling the INT0 interrupt
+ */
 #define EXTERNAL_INT0_ENABLE     (1 << INT0)
 
-/***************************************************************************/
-/* INT1 trigger definition                                                 */
-/*                                                                         */
-/* ISC11 ISC10 Description                                                 */
-/*     0     0 The low level of INT1 generates an interrupt request        */
-/*     0     1 Any logical change on INT1 generates an interrupt request   */
-/*     1     0 The falling edge of INT1 generates an interrupt request     */
-/*     1     1 The rising edge of INT1 generates an interrupt request      */
-/***************************************************************************/
-//#define EXTERNAL_INT1_TRIGGER    (1 << ISC11)
-//#define EXTERNAL_INT1_ENABLE     (1 << INT1)
 
-/***************************************************************************/
-/* AVR sleep modes: power down                                             */
-/*                                                                         */
-/* SM2 SM1 SM0 Sleep Mode                                                  */
-/*   0   0   0 Idle                                                        */
-/*   0   0   1 ADC Noise Reduction                                         */
-/*   0   1   0 Power-down                                                  */
-/*   0   1   1 Power-save                                                  */
-/*   1   1   0 Standby                                                     */
-/***************************************************************************/
-//#define AVR_SLEEP_MODE           (1 << SM1)
-#define AVR_SLEEP_MODE           SLEEP_MODE_PWR_DOWN
+/**
+ * @brief INT1 trigger definition
+ *
+ * \code
+ * ISC11 ISC10 Description
+ *     0     0 The low level of INT1 generates an interrupt request
+ *     0     1 Any logical change on INT1 generates an interrupt request
+ *     1     0 The falling edge of INT1 generates an interrupt request
+ *     1     1 The rising edge of INT1 generates an interrupt request
+ * \endcode
+ */
+#define EXTERNAL_INT1_TRIGGER    (1 << ISC11)
+
+/**
+ * @brief setup for enabling the INT1 interrupt
+ */
+#define EXTERNAL_INT1_ENABLE     (1 << INT1)
+
+/**
+ * @brief setup AVR sleep mode: power down
+ *
+ * \code
+ * SM2 SM1 SM0 Sleep Mode
+ *   0   0   0 Idle
+ *   0   0   1 ADC Noise Reduction
+ *   0   1   0 Power-down
+ *   0   1   1 Power-save
+ *   1   1   0 Standby
+ * \code
+ */
+#define AVR_SLEEP_MODE           (1 << SM1)
+//#define AVR_SLEEP_MODE           SLEEP_MODE_PWR_DOWN
 
 /***************************************************************************/
 /* STATES OF FSM                                                           */
