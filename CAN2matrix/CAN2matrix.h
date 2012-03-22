@@ -164,19 +164,19 @@ void handleCan1Reception(can_t* msg);
 
 /**
  * @brief handles CAN2 reception
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void handleCan2Reception(can_t* msg);
 
 /**
  * @brief handle CAN1 transmission
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void handleCan1Transmission(can_t* msg);
 
 /**
  * @brief handle CAN2 transmission
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void handleCan2Transmission(can_t* msg);
 
@@ -185,7 +185,7 @@ void handleCan2Transmission(can_t* msg);
  *
  * Note: Set message id before calling this function.
  *
- * @param pointer to CAN message
+ * @param msg - pointer to CAN message
  */
 void sendCan2Message(can_t* msg);
 #endif

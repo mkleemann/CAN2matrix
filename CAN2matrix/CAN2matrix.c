@@ -36,9 +36,13 @@
 
 #define ___AVR_SLEEP_ON___
 
+//! counter to evluate timing to send CAN messages
 static volatile uint8_t send_it      = 0;
+//! flag to send 100ms cycle CAN messages
 static volatile bool    send100ms    = false;
+//! flag to send 500ms cycle CAN messages
 static volatile bool    send500ms    = false;
+//! current state of FSM
 static volatile state_t fsmState     = INIT;
 
 /**
@@ -358,7 +362,7 @@ ISR(INT0_vect)
 #ifndef ___SIMULATION___
 /**
  * @brief handles CAN1 reception
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void handleCan1Reception(can_t* msg)
 {
@@ -381,7 +385,7 @@ void handleCan1Reception(can_t* msg)
 
 /**
  * @brief handles CAN2 reception
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void handleCan2Reception(can_t* msg)
 {
@@ -399,7 +403,7 @@ void handleCan2Reception(can_t* msg)
 
 /**
  * @brief handle CAN1 transmission
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void handleCan1Transmission(can_t* msg)
 {
@@ -415,7 +419,7 @@ void handleCan1Transmission(can_t* msg)
 
 /**
  * @brief handle CAN2 transmission
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void handleCan2Transmission(can_t* msg)
 {

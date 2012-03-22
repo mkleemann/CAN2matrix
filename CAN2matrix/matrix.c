@@ -59,10 +59,14 @@ typedef struct
    uint8_t dimLevel;
 } storeVals_t;
 
+//! temporary storage for any values comming via CAN
 volatile storeVals_t storage;
-volatile uint16_t    dimSum      = 0x7F;  // start with average
-volatile uint8_t     dimMeasures = 0;     // number of measurements
-volatile bool        nightMode   = false; // night mode detection
+//! sum of dimming values for averaging it for CAN transmission
+volatile uint16_t    dimSum      = 0x7F;
+//! number of dimming measurements for averaging the values
+volatile uint8_t     dimMeasures = 0;
+//! night mode detection flag (together with dimming)
+volatile bool        nightMode   = false;
 
 
 /***************************************************************************/
@@ -71,7 +75,7 @@ volatile bool        nightMode   = false; // night mode detection
 
 /**
  * @brief fetch information from CAN1 and put to storage
- * @param CAN message to extract
+ * @param msg - CAN message to extract
  */
 void fetchInfoFromCAN1(can_t* msg)
 {
@@ -105,7 +109,7 @@ void fetchInfoFromCAN1(can_t* msg)
 
 /**
  * @brief fetch information from CAN2 and put to storage
- * @param CAN message to extract
+ * @param msg - CAN message to extract
  */
 void fetchInfoFromCAN2(can_t* msg)
 {
@@ -113,7 +117,7 @@ void fetchInfoFromCAN2(can_t* msg)
 
 /**
  * @brief put information from storage to CAN1
- * @param CAN message to fill
+ * @param msg - CAN message to fill
  */
 void fillInfoToCAN1(can_t* msg)
 {
@@ -154,7 +158,7 @@ void fillInfoToCAN1(can_t* msg)
 
 /**
  * @brief put information from storage to CAN2
- * @param CAN message to fill
+ * @param msg - CAN message to fill
  */
 void fillInfoToCAN2(can_t* msg)
 {
@@ -234,7 +238,7 @@ void fillInfoToCAN2(can_t* msg)
  *
  * Direction from CAN1 to CAN2!
  *
- * @param pointer to CAN message
+ * @param msg - pointer to CAN message
  */
 void transferIgnStatus(can_t* msg)
 {
@@ -273,7 +277,7 @@ void transferIgnStatus(can_t* msg)
  *
  * Direction from CAN1 to CAN2
  *
- * @param pointer to CAN message
+ * @param msg - pointer to CAN message
  */
 void transferWheelCount(can_t* msg)
 {
@@ -293,7 +297,7 @@ void transferWheelCount(can_t* msg)
  *
  * Direction from CAN1 to CAN2
  *
- * @param pointer to CAN message
+ * @param msg - pointer to CAN message
  */
 void transferGearStatus(can_t* msg)
 {
@@ -325,7 +329,7 @@ void transferGearStatus(can_t* msg)
 
 /**
  * @brief send CAN1 message every 100ms
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void sendCan1_100ms(can_t* msg)
 {
@@ -333,7 +337,7 @@ void sendCan1_100ms(can_t* msg)
 
 /**
  * @brief send CAN1 message every 500ms
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void sendCan1_500ms(can_t* msg)
 {
@@ -345,7 +349,7 @@ void sendCan1_500ms(can_t* msg)
 
 /**
  * @brief send CAN1 message every 1000ms
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void sendCan1_1000ms(can_t* msg)
 {
@@ -356,7 +360,7 @@ void sendCan1_1000ms(can_t* msg)
  *
  * Note: Set message id before calling this function.
  *
- * @param pointer to CAN message with set msg id
+ * @param msg - pointer to CAN message with set msg id
  */
 void sendCan1Message(can_t* msg)
 {
@@ -370,7 +374,7 @@ void sendCan1Message(can_t* msg)
 
 /**
  * @brief send CAN2 message every 100ms
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void sendCan2_100ms(can_t* msg)
 {
@@ -383,7 +387,7 @@ void sendCan2_100ms(can_t* msg)
 
 /**
  * @brief send CAN2 message every 500ms
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void sendCan2_500ms(can_t* msg)
 {
@@ -396,7 +400,7 @@ void sendCan2_500ms(can_t* msg)
 
 /**
  * @brief send CAN2 message every 1000ms
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void sendCan2_1000ms(can_t* msg)
 {
@@ -407,7 +411,7 @@ void sendCan2_1000ms(can_t* msg)
  *
  * Note: Set message id before calling this function.
  *
- * @param pointer to CAN message with set msg id
+ * @param msg - pointer to CAN message with set msg id
  */
 void sendCan2Message(can_t* msg)
 {
@@ -418,7 +422,7 @@ void sendCan2Message(can_t* msg)
 
 /**
  * @brief gets a dim value to be sent via CAN
- * @param dim value 0..255
+ * @param value - dim value 0..255
  */
 void setDimValue(uint8_t value)
 {
