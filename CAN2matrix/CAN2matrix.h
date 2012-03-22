@@ -54,7 +54,7 @@ typedef enum
 // use this to cut off all CAN handling
 //#define ___SIMULATION___
 
-// use only CAN1 - read messages and put them back on bus with msgId += 10
+// use only CAN1
 //#define ___SINGLE_CAN___
 
 /**
@@ -104,7 +104,7 @@ typedef enum
  *   0   1   0 Power-down
  *   0   1   1 Power-save
  *   1   1   0 Standby
- * \code
+ * \endcode
  */
 #define AVR_SLEEP_MODE           (1 << SM1)
 //#define AVR_SLEEP_MODE           SLEEP_MODE_PWR_DOWN
@@ -158,7 +158,7 @@ bool initCAN(void);
 #ifndef ___SIMULATION___
 /**
  * @brief handles CAN1 reception
- * @param pointer to message struct
+ * @param msg - pointer to message struct
  */
 void handleCan1Reception(can_t* msg);
 
