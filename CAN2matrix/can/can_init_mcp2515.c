@@ -33,7 +33,8 @@
 
 
 
-/* @brief internal CAN bitrate setup
+/**
+ * @brief internal CAN bitrate setup
  *
  * These values are based on 4Mhz oscillator frequency. Higher CAN bitrates
  * may need a higher clock frequency (bus idle time - see datasheet).
@@ -41,13 +42,13 @@
  * Only one sample time is set, wake-up filters too (Wake On CAN).
  */
 static uint8_t  mcp2515_cnf[NUM_OF_CAN_BITRATES][3] = {
-   // CAN_BITRATE_100_KBPS
+   //! CAN_BITRATE_100_KBPS
    {
       0x01,    // CNF1  (1 << BRP0)
       0xA0,    // CNF2  (1 << BTLMODE) | (1 << PHSEG12)
       0x42     // CNF3  (1 << WAKFIL)  | (1 << PHSEG21)
    },
-   // CAN_BITRATE_125_KBPS
+   //! CAN_BITRATE_125_KBPS
    {
       0x01,    // CNF1  (1 << BRP0)
       0x90,    // CNF2  (1 << BTLMODE) | (1 << PHSEG11)
@@ -55,7 +56,7 @@ static uint8_t  mcp2515_cnf[NUM_OF_CAN_BITRATES][3] = {
    }
 };
 
-/*
+/**
  * @brief  initializes MCP2515 selected
  *
  * Note: All MCP2515 connected to AVR need to have the same clock speed when
@@ -63,8 +64,8 @@ static uint8_t  mcp2515_cnf[NUM_OF_CAN_BITRATES][3] = {
  *
  * MCP2515 init routine does NOT initializes SPI. This has to be done before.
  *
- * @param  chip select - chip to set up
- * @param  bitrate     - CAN bitrate of chip selected
+ * @param  chip      - select chip to use
+ * @param  bitrate   - CAN bitrate of chip selected
  * @return true if ok, false if error
  */
 bool can_init_mcp2515(eChipSelect chip,
@@ -131,12 +132,12 @@ bool can_init_mcp2515(eChipSelect chip,
    return(retVal);
 }
 
-/*
+/**
  * @brief  write to MCP2515 registers
  *
- * @param  chip select - chip to use
- * @param  address     - register address of MCP2515
- * @param  data        - data byte
+ * @param  chip      - select chip to use
+ * @param  address   - register address of MCP2515
+ * @param  data      - data byte
  */
 void write_register_mcp2515(eChipSelect   chip,
                             uint8_t       address,
@@ -154,12 +155,12 @@ void write_register_mcp2515(eChipSelect   chip,
 }
 
 
-/*
+/**
  * @brief  read from MCP2515 registers
  *
- * @param  chip select - chip to use
- * @param  address     - register address of MCP2515
- * @return data        - data byte
+ * @param  chip      - select chip to use
+ * @param  address   - register address of MCP2515
+ * @return data      - data byte
  */
 uint8_t read_register_mcp2515(eChipSelect chip,
                               uint8_t     address)
@@ -181,16 +182,16 @@ uint8_t read_register_mcp2515(eChipSelect chip,
 }
 
 
-/*
+/**
  * @brief  write masked bits to MCP2515 registers
  *
  * Note: Not all registers are able to provide this functionality. Mostly
  *       configuration registers do. Read the datasheet for details.
  *
- * @param  chip select - chip to use
- * @param  address     - register address of MCP2515
- * @param  mask        - bit mask for modify
- * @param  data        - data byte
+ * @param  chip      - select chip to use
+ * @param  address   - register address of MCP2515
+ * @param  mask      - bit mask for modify
+ * @param  data      - data byte
  */
 void bit_modify_mcp2515(eChipSelect chip,
                         uint8_t     address,
@@ -209,11 +210,11 @@ void bit_modify_mcp2515(eChipSelect chip,
    set_chip_select(chip);
 }
 
-/*
+/**
  * @brief  reads MCP2515 status registers
  *
- * @param  chip select - chip to use
- * @param  command     - read quick status command of MCP2515
+ * @param  chip    - select chip to use
+ * @param  command - read quick status command of MCP2515
  * @return value of status register
  */
 uint8_t read_status_mcp2515(eChipSelect  chip,
@@ -236,11 +237,11 @@ uint8_t read_status_mcp2515(eChipSelect  chip,
 }
 
 
-/*
+/**
  * @brief  set MCP2515 mode of operation
  *
- * @param  chip select - chip to use
- * @param  mode of operation of MCP2515
+ * @param  chip - select chip to use
+ * @param  mode - mode of operation of MCP2515
  */
 void set_mode_mcp2515(eChipSelect   chip,
                       uint8_t       mode)
@@ -286,8 +287,9 @@ void set_mode_mcp2515(eChipSelect   chip,
 
 /***************************************************************************/
 
-/* @brief setting up the interrupt pins
- * @param chip selected
+/**
+ * @brief setting up the interrupt pins
+ * @param  chip - select chip to use
  */
 void setup_interrupt_pins(eChipSelect chip)
 {
@@ -303,7 +305,8 @@ void setup_interrupt_pins(eChipSelect chip)
    }
 }
 
-/* @brief setting up the chip select pins
+/**
+ * @brief setting up the chip select pins
  * @param chip selected
  */
 void setup_cs_pins(eChipSelect chip)
@@ -325,8 +328,9 @@ void setup_cs_pins(eChipSelect chip)
 }
 
 
-/* @brief set chip select for the right chip
- * @param chip selected
+/**
+ * @brief set chip select for the right chip
+ * @param  chip - select chip to use
  */
 void set_chip_select(eChipSelect chip)
 {
@@ -342,8 +346,9 @@ void set_chip_select(eChipSelect chip)
    }
 }
 
-/* @brief unset chip select for the right chip
- * @param chip selected
+/**
+ * @brief unset chip select for the right chip
+ * @param  chip - select chip to use
  */
 void unset_chip_select(eChipSelect chip)
 {
