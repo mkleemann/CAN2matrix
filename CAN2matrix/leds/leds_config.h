@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,30 +8,38 @@
  * like beer much.)
  *
  * Matthias Kleemann
- * ----------------------------------------------------------------------------
- **/
-
-/*
- * leds_config.h
  *
- * Created: 28.11.2011 18:18:23
- *  Author: MKleemann
- */
+ * ----------------------------------------------------------------------------
+ *
+ * \file leds_config.h
+ *
+ * \date Created: 28.11.2011 18:18:23
+ * \author Matthias Kleemann
+ **/
 
 
 #ifndef LEDS_CONFIG_H_
 #define LEDS_CONFIG_H_
 
-/* @brief define LEDs connected to your controller - name them as you wish, but keep
- *        in mind that it matches the port/pin definitions below.
+/**
+ * @brief define LEDs connected to your controller
+ *
+ * Name them as you wish, but keep in mind that it matches the
+ * port/pin definitions below.
  */
 typedef enum
 {
+   //! error on CAN1
    errCan1LED  = 0,
+   //! error on CAN2
    errCan2LED  = 1,
+   //! tx traffic on CAN2
    txCan2LED   = 2,
+   //! rx traffic on CAN1
    rxCan1LED   = 3,
+   //! status LED for run/sleep mode
    sleepLed    = 4,
+   //! maximum number of LEDs
    NUM_OF_LEDS = 5         // always the last one
 } eLED;
 

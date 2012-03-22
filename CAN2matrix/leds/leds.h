@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,15 +8,16 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
+ *
+ * \file leds.h
+ *
+ * \date Created: 28.11.2011 18:15:48
+ * \author Matthias Kleemann
+ *
  **/
 
-/*
- * leds.h
- *
- * Created: 28.11.2011 18:15:48
- *  Author: MKleemann
- */
 
 
 #ifndef LEDS_H_
@@ -27,10 +29,14 @@
 /* TYPEDEFS                                                                */
 /***************************************************************************/
 
-/* @brief type of led control struct
+/**
+ * @brief type of led control struct
  */
-typedef struct { pvuint8_t ddr;
+typedef struct { //! pointer of data direction register
+                 pvuint8_t ddr;
+                 //! pointer to port register
                  pvuint8_t port;
+                 //! pin of port to be used
                  uint8_t   pin;
                } ledType;
 
@@ -38,32 +44,31 @@ typedef struct { pvuint8_t ddr;
 /* PROTOTYPES                                                              */
 /***************************************************************************/
 
-/* @brief  initializes ports and bits connected to leds
- * @param  nothing
- * @return nothing
+/**
+ * @brief  initializes ports and bits connected to leds
  */
 void led_init(void);
 
-/* @brief  switches a led defined by a number on
- * @param  led to be switched, defined by enum in leds_config.h
- * @return nothing
+/**
+ * @brief switches a led defined by a number on
+ * @param led to be switched, defined by enum in leds_config.h
  */
 void led_on(eLED led);
 
-/* @brief switches a led defined by a number off
- * @param  led to be switched, defined by enum in leds_config.h
- * @return nothing
+/**
+ * @brief switches a led defined by a number off
+ * @param led to be switched, defined by enum in leds_config.h
  */
 void led_off(eLED led);
 
-/* @brief toggles a led defined by a number
- * @param  led to be switched, defined by enum in leds_config.h
- * @return nothing
+/**
+ * @brief toggles a led defined by a number
+ * @param led to be switched, defined by enum in leds_config.h
  */
 void led_toggle(eLED led);
 
 /**
- * @brief switches all LEDs off, e.g. for power down modes
+ * @brief switches all LEDs off, e.g. fo power down modes
  */
 void led_all_off(void);
 
