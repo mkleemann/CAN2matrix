@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,17 +8,19 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
- **/
-
-/**
- * timer.h
+ *
+ * \file timer.h
  *
  * Note: It is assumed to use an ATmega8 here.
  *
- * Created: 28.11.2011 18:15:59
- *  Author: MKleemann
- */
+ * \todo make timer functions inline, if possible/necessary
+ *
+ * \date Created: 28.11.2011 18:15:59
+ * \author Matthias Kleemann
+ **/
+
 
 
 #ifndef TIMER_H_
@@ -26,30 +29,36 @@
 #include "timer_config.h"
 
 // check prescaler settings - if not set, the timer is assumed off
-#ifndef TIMER0_PRESCALER   // TIMER 0 off
+#ifndef TIMER0_PRESCALER
+//! default: TIMER 0 off
    #define TIMER0_PRESCALER      0
 #endif
 
-#ifndef TIMER1_PRESCALER   // TIMER 1 off
+#ifndef TIMER1_PRESCALER
+//! default: TIMER 1 off
    #define TIMER1_PRESCALER      0
 #endif
 
-#ifndef TIMER2_PRESCALER   // TIMER 2 off
+#ifndef TIMER2_PRESCALER
+//! default: TIMER 2 off
    #define TIMER2_PRESCALER      0
 #endif
 
-// check compare values and set to 16bit MAX
 #ifndef TIMER1_COMPARE_VALUE
+//! default: check available compare value setup and set to 16bit MAX
    #define TIMER1_COMPARE_VALUE  0xFFFF
 #endif
 
 #ifndef TIMER2_COMPARE_VALUE
+//! default: check available compare value setup and set to 8bit MAX
    #define TIMER2_COMPARE_VALUE  0xFF
 #endif
 
-// clear all prescaler bits to stop timers - just in case
+//! clear all prescaler bits to stop TIMER0 - just in case
 #define TIMER0_STOP              (1 << CS02) | (1 << CS01) | (1 << CS00)
+//! clear all prescaler bits to stop TIMER1 - just in case
 #define TIMER1_STOP              (1 << CS12) | (1 << CS11) | (1 << CS10)
+//! clear all prescaler bits to stop TIMER2 - just in case
 #define TIMER2_STOP              (1 << CS22) | (1 << CS21) | (1 << CS20)
 
 /***************************************************************************/
@@ -69,17 +78,19 @@
  */
 typedef enum
 {
-   TimerOverflow  = 0,     // overflow
-   TimerCompare   = 1,     // output compare (CTC)
-   TimerPwm       = 2,     // phase correct PWM
-   TimerFastPwm   = 3      // fast PWM
+   //! overflow
+   TimerOverflow  = 0,
+   //! output compare (CTC)
+   TimerCompare   = 1,
+   //! phase correct PWM
+   TimerPwm       = 2,
+   //! fast PWM
+   TimerFastPwm   = 3
 } eTimerMode;
 
 /***************************************************************************/
 /* TIMER 0                                                                 */
 /***************************************************************************/
-
-// TODO: make timer functions inline, if possible/necessary
 
 /**
  * @brief initializes Timer0 and stops
@@ -127,7 +138,7 @@ void restartTimer1(void);
 
 /**
  * @brief set timer counter register to value
- * @param timer counter value
+ * @param value of timer counter
  */
 void setTimer1Count(uint16_t value);
 
@@ -158,7 +169,7 @@ void restartTimer2(void);
 
 /**
  * @brief set timer counter register to value
- * @param timer counter value
+ * @param value of timer counter
  */
 void setTimer2Count(uint8_t value);
 
