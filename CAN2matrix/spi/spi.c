@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,23 +8,22 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
+ *
+ * \file spi.c
+ *
+ * \date Created: 28.11.2011 18:16:51
+ * \author Matthias Kleemann
  **/
 
-/*
- * spi.c
- *
- * Created: 28.11.2011 18:16:51
- *  Author: MKleemann
- *
- * @brief common SPI communication
- */
 
 #include <avr/io.h>
 #include "spi.h"
 #include "../util/util.h"
 
-/* @brief setup of SPI pins
+/**
+ * @brief setup of SPI pins
  */
 void spi_pin_init(void)
 {
@@ -38,7 +38,8 @@ void spi_pin_init(void)
    PIN_SET_INPUT(P_MISO);
 }
 
-/* @brief activate SPI interface as master
+/**
+ * @brief activate SPI interface as master
  */
 void spi_master_init(void)
 {
@@ -47,7 +48,8 @@ void spi_master_init(void)
    SPSR = R_SPSR;
 }
 
-/* @brief activate SPI interface as slave
+/**
+ * @brief activate SPI interface as slave
  */
 void spi_slave_init(void)
 {
@@ -56,7 +58,8 @@ void spi_slave_init(void)
    SPSR = R_SPSR;
 }
 
-/* @brief  writes (and reads!) a byte via hardware SPI
+/**
+ * @brief  writes (and reads!) a byte via hardware SPI
  * @param  data byte to send
  * @return data byte received
  */
