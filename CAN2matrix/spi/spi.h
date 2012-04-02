@@ -32,6 +32,9 @@
  * \def R_SPSR
  * \brief register value of AVR's SPSR
  *
+ * In the calculation the value of the SPI2X bit is determined. It is only
+ * set if the prescaler value is 2^2n-1 (n = 1..4).
+ *
  * \def SPI_PRESCALER_
  * \brief intermediate value of SPI prescaler
  *
@@ -41,6 +44,8 @@
  *
  * \def R_SPCR
  * \brief register value of AVR's SPCR
+ *
+ * The setup of the SPR0 and SPR1 bit in SPCR register.
  */
 
 // now start calculating prescaler values. Start with SPI2X bit...
