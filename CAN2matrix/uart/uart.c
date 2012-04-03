@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,27 +8,27 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
- **/
-
-/*
- * uart.c
+ *
+ * \file uart.c
  *
  * Setup U(S)ART for debugging or communication. Can be used for
- * ATmega8
- * ATmega8515
+ * - ATmega8
+ * - ATmega8515
  *
- * Created: 28.11.2011 18:17:02
- *  Author: MKleemann
- */
+ * \date Created: 28.11.2011 18:17:02
+ * \author Matthias Kleemann
+ *
+ **/
+
 
 #include <avr/io.h>
-
 #include "uart.h"
 
 
-/* @brief initializes uart interface
- *
+/**
+ * @brief initializes UART interface
  */
 void uart_init()
 {
@@ -48,9 +49,9 @@ void uart_init()
    while (UCSRA & (1 << RXC));
 }
 
-/* @brief  put byte to uart interface
- * @param  byte to be transmitted to UART
- * @return nothing
+/**
+ * @brief  put byte to UART interface
+ * @param  data byte to be transmitted to UART
  */
 void uart_putc(const uint8_t data)
 {
@@ -62,9 +63,9 @@ void uart_putc(const uint8_t data)
    UDR = data;
 }
 
-/* @brief  put null terminated string to uart interface
- * @param  null terminated string
- * @return nothing
+/**
+ * @brief  put null terminated string to UART interface
+ * @param  data pointer (null terminated string)
  */
 void uart_puts(const char *data)
 {
@@ -75,8 +76,8 @@ void uart_puts(const char *data)
    while (*data++);
 }
 
-/* @brief  read byte from UART, wait until something happens
- * @param  nothing
+/**
+ * @brief  read byte from UART, wait until something happens
  * @return received byte
  */
 uint8_t uart_getc_wait (void)
@@ -89,8 +90,8 @@ uint8_t uart_getc_wait (void)
    return (UDR);
 }
 
-/* @brief  read byte from UART, but don't wait for it
- * @param  nothing
+/**
+ * @brief  read byte from UART, but don't wait for it
  * @return received byte, -1 otherwise
  */
 int uart_getc_nowait(void)
