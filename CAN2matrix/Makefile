@@ -1,7 +1,3 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
 SHELL := cmd.exe
 RM := rm -rf
 
@@ -37,6 +33,8 @@ AVR_APP_PATH :=
 QUOTE := "
 ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:=
+DOC_EXE := doxygen
+DOC_CONF := doxygen.conf
 
 # Every subdirectory with source files must be described here
 SUBDIRS :=  \
@@ -309,4 +307,7 @@ size: $(OUTPUT_FILE_PATH)
 # Other Targets
 clean:
 	-$(RM) $(OBJS_AS_ARGS)$(C_DEPS_AS_ARGS) $(EXECUTABLES) $(LIB_AS_ARGS) $(HEX_FLASH_FILE_PATH_AS_ARGS) $(HEX_EEPROM_FILE_PATH_AS_ARGS) $(LSS_FILE_PATH_AS_ARGS) $(MAP_FILE_PATH_AS_ARGS) $(OUTPUT_FILE_PATH_AS_ARGS) $(TEMPS) $(S_SRCS)
+
+docu:
+	$(DOC_EXE) $(DOC_CONF)
 
