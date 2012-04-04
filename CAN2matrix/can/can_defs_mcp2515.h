@@ -34,7 +34,7 @@
  * @{
  */
 
-/*! resets all registers to configuration mode */
+/*! \brief resets all registers to configuration mode */
 #define MCP2515_RESET         0xC0
 /*! \brief quick polling of filter match and message type */
 #define MCP2515_RX_STATUS     0xB0
@@ -539,15 +539,89 @@
 /**************************************************************************/
 /* MCP2515 MODES OF OPERATION                                             */
 /**************************************************************************/
+
+/**
+ * \addtogroup mcp_mode_of_operation MCP2515 Modes of Operation
+ * \brief MCP2515 supports different modes of operation
+ * @{
+ */
+
+/*!
+ * \def MODE_SELECT_MASK
+ * \brief selection mask for any mode settings
+ *
+ * The mask is used to prvide easy access to the operation mode bits
+ * of the CANCTRL register.
+ *
+ * \sa CANCTRL(x)
+ */
 #define MODE_SELECT_MASK      ((1 << REQOP2) | (1 << REQOP1) | (1 << REQOP0))
+
+/**
+ * \def NORMAL_MODE
+ * \brief standard operation mode
+ *
+ * This is the standard operation mode. In this mode the controller actively
+ * monitors and reacts to the CAN stream. This is the only mode to transmit
+ * CAN frames to the bus.
+ * \sa CANCTRL(x)
+ *
+ * \def SLEEP_MODE
+ * \brief mode to reduce power consumption
+ *
+ * During sleep mode the power consumption is reduced to a minimum.
+ * Nevertheless the controller registers can be accessed via SPI the
+ * whole time, to allow wake up and other operations while the chip
+ * sleeps (on CAN).
+ *
+ * The internal oscillator is stopped during sleep.
+ *
+ * When setting up the wakup interrupt, any activity on the bus can wake up
+ * the controller.
+ * \sa CANCTRL(x)
+ * \sa WAKIE, WAKIF
+ * \sa CANINTE, CANINTF
+ *
+ * \def LOOPBACK_MODE
+ * \brief internal CAN loopback
+ *
+ * This mode is used for testing during development. The transmit buffer
+ * will be put directly to the receive buffer without actually sending
+ * anything on the bus. Filters can be applied too.
+ * \sa CANCTRL(x)
+ *
+ * \def LISTEN_ONLY_MODE
+ * \brief listen only to the bus
+ *
+ * This mode can be used for monitoring or baud rate detection applications.
+ *
+ * The mode is also set, when waking up. So no messages are accidentally sent
+ * to the CAN bus after sleep mode.
+ * \sa CANCTRL(x)
+ * \sa SLEEP_MODE
+ *
+ * \def CONFIG_MODE
+ * \brief mode to configure the controller
+ *
+ * This mode can be entered anytime and automatically after power-up. The
+ * controller needs to be configured prior activation. It's the only mode
+ * to set the following control registers:
+ * - CNF1, CNF2, CNF3
+ * - TXRTSCTRL
+ * - Filter registers
+ * - Mask registers
+ *
+ * \sa CANCTRL(x)
+ * \sa CNF1, CNF2, CNF3
+ * \sa TXRTSCTRL
+ */
 #define NORMAL_MODE           0
 #define SLEEP_MODE            (1 << REQOP0)
 #define LOOPBACK_MODE         (1 << REQOP1)
 #define LISTEN_ONLY_MODE      (1 << REQOP1) | (1 << REQOP0)
 #define CONFIG_MODE           (1 << REQOP2)
-// now some specials not used by MCP2515, but internally
-#define SLEEP_WITH_WAKEUP     SLEEP_MODE
-#define SLEEP_WO_WAKEUP       (SLEEP_MODE | 0x01)
+
+/*! @} */
 
 
 
