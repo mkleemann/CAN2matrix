@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,13 +8,12 @@
  * like beer much.)
  *
  * Matthias Kleemann
- * ----------------------------------------------------------------------------
- **/
-
-/*
- * can_init_mcp2515.c
  *
- * Acknowlegements:
+ * ----------------------------------------------------------------------------
+ *
+ * \file can_init_mcp2515.c
+ *
+ * \par Acknowlegements
  *
  * Most functions and sequences are based on CAN tutorial by Fabian Greif
  * (http://www.kreatives-chaos.com) and his CAN library. I took the freedom
@@ -25,9 +25,10 @@
  *
  * Thanks!
  *
- * Created: 28.11.2011 18:19:00
- *  Author: MKleemann
- */
+ * \date Created: 28.11.2011 18:19:00
+ * \author Matthias Kleemann
+ **/
+
 
 #include "can_mcp2515.h"
 
@@ -59,9 +60,11 @@ static uint8_t  mcp2515_cnf[NUM_OF_CAN_BITRATES][3] = {
 /**
  * @brief  initializes MCP2515 selected
  *
- * Note: All MCP2515 connected to AVR need to have the same clock speed when
- *       using the same bitrate! See array in can_init_mcp2515.c.
+ * \par Clock Speed
+ * All MCP2515 connected to AVR need to have the same clock speed when
+ * using the same bitrate! See array in can_init_mcp2515.c.
  *
+ * \par SPI
  * MCP2515 init routine does NOT initializes SPI. This has to be done before.
  *
  * @param  chip      - select chip to use

@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,19 +8,20 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
+ *
+ * \file can_receive_mcp2515.c
+ *
+ * \date Created: 28.11.2011 18:19:32
+ * \author Matthias Kleemann
  **/
 
-/*
- * can_receive_mcp2515.c
- *
- * Created: 28.11.2011 18:19:32
- *  Author: MKleemann
- */
 
 #include "can_mcp2515.h"
 
-/* @brief  checks if any messages are received (via MCP2515's interrupt pin)
+/**
+ * @brief  checks if any messages are received (via MCP2515's interrupt pin)
  * @param  chip selected
  * @return true if message was received
  */
@@ -40,11 +42,11 @@ bool can_check_message_received(eChipSelect chip)
    return(retVal);
 }
 
-/*
+/**
  * @brief  get received CAN message
  *
- * @param  chip select - chip to use
- * @param  msg         - CAN message received
+ * @param  chip - select chip to use
+ * @param  msg  - pointer to CAN message to send
  * @return filter match status + 1
  */
 uint8_t can_get_message(eChipSelect chip,

@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,21 +8,22 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
+ *
+ * \file can_send_mcp2515.c
+ *
+ * \date Created: 28.11.2011 18:19:15
+ * \author Matthias Kleemann
  **/
 
-/*
- * can_send_mcp2515.c
- *
- * Created: 28.11.2011 18:19:15
- *  Author: MKleemann
- */
 
 #include "can_mcp2515.h"
 
 
-/* @brief  checks if any tx buffer is free to be loaded with a message
- * @param  chip selected
+/**
+ * @brief  checks if any tx buffer is free to be loaded with a message
+ * @param  chip - select chip to use
  * @return true if a buffer is free
  */
 bool can_check_free_tx_buffers(eChipSelect chip)
@@ -37,11 +39,11 @@ bool can_check_free_tx_buffers(eChipSelect chip)
    return true;
 }
 
-/*
+/**
  * @brief  send message via CAN
  *
- * @param  chip select - chip to use
- * @param  msg         - CAN message to send
+ * @param  chip - select chip to use
+ * @param  msg  - pointer to CAN message to send
  * @return address of buffer used to send
  */
 uint8_t can_send_message(eChipSelect   chip,

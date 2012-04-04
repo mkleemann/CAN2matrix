@@ -22,7 +22,7 @@
 /*
  * @brief  put MCP2515 (and attached MCP2551) to sleep
  *
- * To put MCP2551 also to sleep connect RX1BF pin to RS pin of MCP2551. It
+ * To put MCP2551 also to sleep, connect RX1BF pin to RS pin of MCP2551. It
  * is not always wanted to wakeup on any CAN activity. Sometimes, with
  * multiple interfaces, the "master bus" should only trigger the wakeup,
  * whereas the "slave" interfaces are woken up by wakeup signal from

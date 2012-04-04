@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,24 +8,24 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
+ *
+ * \file can_filter_mcp2515.c
+ *
+ * \date Created: 28.11.2011 18:37:21
+ * \author Matthias Kleemann
  **/
 
-/*
- * can_filter_mcp2515.c
- *
- * Created: 28.11.2011 18:37:21
- *  Author: MKleemann
- */
 
 #include "can_mcp2515.h"
 
 /**
- * @brief clear all filters
+ * @brief clear filters
+ * @param chip - select chip to use
  *
- * Note: The MCP2515 has to be in configuration mode to set these registers.
- *
- * @param chip selected
+ * \note
+ * The MCP2515 has to be in configuration mode to set these registers.
  */
 void clear_filters(eChipSelect chip)
 {
@@ -78,12 +79,14 @@ void clear_filters(eChipSelect chip)
 
 /**
  * @brief set filters during configuration (static filters)
- * @param chip selected
- * @param pointer to filter struct
+ * @param chip   - select chip to use
+ * @param filter - pointer to filter struct
+ *
+ * \todo add filter setup implementation
  */
 void setFilters(eChipSelect   chip,
                 uint8_t*      filter)
 {
-   // TODO: add filter setup implementation
+   // nothing yet
 }
 

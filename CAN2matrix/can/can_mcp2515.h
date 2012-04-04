@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,15 +8,15 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
+ *
+ * \file can_mcp2515.h
+ *
+ * \date Created: 28.11.2011 18:15:12
+ * \author Matthias Kleemann
  **/
 
-/*
- * can_mcp2515.h
- *
- * Created: 28.11.2011 18:15:12
- *  Author: MKleemann
- */
 
 
 #ifndef CAN_MCP2515_H_
@@ -106,9 +107,11 @@ typedef struct
 /**
  * @brief  initializes MCP2515 selected
  *
- * Note: All MCP2515 connected to AVR need to have the same clock speed when
- *       using the same bitrate! See array in can_init_mcp2515.c.
+ * \par Clock Speed
+ * All MCP2515 connected to AVR need to have the same clock speed when
+ * using the same bitrate! See array in can_init_mcp2515.c.
  *
+ * \par SPI
  * MCP2515 init routine does NOT initializes SPI. This has to be done before.
  *
  * @param  chip      - select chip to use
@@ -170,11 +173,11 @@ uint8_t read_status_mcp2515(eChipSelect  chip,
 /**
  * @brief  put MCP2515 (and attached MCP2551) to sleep
  *
- * To put MCP2551 also to sleep connect RX1BF pin to RS pin of MCP2551. It
+ * To put MCP2551 also to sleep, connect RX1BF pin to RS pin of MCP2551. It
  * is not always wanted to wakeup on any CAN activity. Sometimes, with
  * multiple interfaces, the "master bus" should only trigger the wakeup,
  * whereas the "slave" interfaces are woken up by wakeup signal from
- * atmega.
+ * ATmega.
  *
  * @param  chip - select chip to use
  * @param  mode - sleep mode: when to activate MCP2515 again
@@ -216,33 +219,35 @@ void setFilters(eChipSelect chip,
 /* CAN FUNCTIONS                                                        */
 /************************************************************************/
 
-/*
+/**
  * @brief  send message via CAN
  *
  * @param  chip - select chip to use
- * @param  msg  - CAN message to send
+ * @param  msg  - pointer to CAN message to send
  * @return address of buffer used to send
  */
 uint8_t can_send_message(eChipSelect chip,
                          can_t*      msg);
 
-/*
+/**
  * @brief  get received CAN message
  *
  * @param  chip - select chip to use
- * @param  msg  - CAN message to send
+ * @param  msg  - pointer to CAN message to send
  * @return filter match status + 1
  */
 uint8_t can_get_message(eChipSelect chip,
                         can_t*      msg);
 
-/* @brief  checks if any messages are received (via MCP2515's interrupt pin)
+/**
+ * @brief  checks if any messages are received (via MCP2515's interrupt pin)
  * @param  chip - select chip to use
  * @return true if message was received
  */
 bool can_check_message_received(eChipSelect chip);
 
-/* @brief  checks if any tx buffer is free to be loaded with a message
+/**
+ * @brief  checks if any tx buffer is free to be loaded with a message
  * @param  chip - select chip to use
  * @return true if a buffer is free
  */
@@ -260,7 +265,7 @@ void setup_interrupt_pins(eChipSelect chip);
 
 /**
  * @brief setting up the chip select pins
- * @param chip selected
+ * @param  chip - select chip to use
  */
 void setup_cs_pins(eChipSelect chip);
 
