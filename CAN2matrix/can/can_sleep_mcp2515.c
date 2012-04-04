@@ -1,5 +1,6 @@
 /**
  * ----------------------------------------------------------------------------
+ *
  * "THE ANY BEVERAGE-WARE LICENSE" (Revision 42 - based on beer-ware license):
  * <dev@layer128.net> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
@@ -7,19 +8,19 @@
  * like beer much.)
  *
  * Matthias Kleemann
+ *
  * ----------------------------------------------------------------------------
+ *
+ * \file can_sleep_mcp2515.c
+ *
+ * \date Created: 28.11.2011 18:19:45
+ * \author Matthias Kleemann
  **/
 
-/*
- * can_sleep_mcp2515.c
- *
- * Created: 28.11.2011 18:19:45
- *  Author: MKleemann
- */
 
 #include "can_mcp2515.h"
 
-/*
+/**
  * @brief  put MCP2515 (and attached MCP2551) to sleep
  *
  * To put MCP2551 also to sleep, connect RX1BF pin to RS pin of MCP2551. It
@@ -28,8 +29,8 @@
  * whereas the "slave" interfaces are woken up by wakeup signal from
  * ATmega.
  *
- * @param  chip select - chip to use
- * @param  sleep mode  - when to activate MCP2515 again
+ * @param  chip - chip to use
+ * @param  mode - how/when to activate MCP2515 again
  */
 void mcp2515_sleep(eChipSelect         chip,
                    eInternalSleepMode  mode)
@@ -52,10 +53,10 @@ void mcp2515_sleep(eChipSelect         chip,
 }
 
 
-/*
+/**
  * @brief  wakeup MCP2515 (and attached MCP2551) from sleep mode
  *
- * @param  chip select - chip to use
+ * @param  chip - chip to use
  */
 void mcp2515_wakeup(eChipSelect   chip)
 {
@@ -70,4 +71,5 @@ void mcp2515_wakeup(eChipSelect   chip)
    // Return now into normal mode again.
    set_mode_mcp2515(chip, NORMAL_MODE);
 }
+
 

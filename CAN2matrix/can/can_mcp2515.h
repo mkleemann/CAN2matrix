@@ -179,8 +179,8 @@ uint8_t read_status_mcp2515(eChipSelect  chip,
  * whereas the "slave" interfaces are woken up by wakeup signal from
  * ATmega.
  *
- * @param  chip - select chip to use
- * @param  mode - sleep mode: when to activate MCP2515 again
+ * @param  chip - chip to use
+ * @param  mode - how/when to activate MCP2515 again
  */
 void mcp2515_sleep(eChipSelect         chip,
                    eInternalSleepMode  mode);
@@ -188,7 +188,7 @@ void mcp2515_sleep(eChipSelect         chip,
 /**
  * @brief  wakeup MCP2515 (and attached MCP2551) from sleep mode
  *
- * @param  chip - select chip to use
+ * @param  chip - chip to use
  */
 void mcp2515_wakeup(eChipSelect   chip);
 
