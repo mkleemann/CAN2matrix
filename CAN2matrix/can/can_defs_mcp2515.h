@@ -326,6 +326,7 @@
 /**
  * \def FILHIT2
  * \brief Filter Hit bits.
+ *
  * Indicates which acceptance filter enabled reception of message.
  *
  * \code
@@ -343,7 +344,9 @@
  * \sa BUKT1, BUKT2
  *
  * \def FILHIT1
- * Further documentation, see FILHIT2.
+ * \brief Filter Hit bits.
+ *
+ * For a detailed documentation, see FILHIT2
  * \sa FILHIT2, FILHIT0
  */
 #define FILHIT2               2
@@ -351,7 +354,7 @@
 
 /**
  * \def RXM1
- * \brief Receive Buffer Operating Mode bits
+ * \brief Receive Buffer Operating Mode
  *
  * \code
  * RXM 1 0
@@ -367,12 +370,13 @@
  * \def RXM0
  * \brief Receive Buffer Operating Mode bits
  *
- * Further documentaion, see RXM1
- * \sa RXM1
+ * \sa RXM1 for detailed description
  * \sa RXB1CTRL, RXB0CTRL
  *
  * \def FILHIT0
- * Further documentation, see FILHIT2.
+ * \brief Filter Hit bits.
+ *
+ * For a detailed documentation, see FILHIT2
  * \sa FILHIT2, FILHIT1
  * \sa RXB1CTRL, RXB0CTRL
  */
@@ -382,6 +386,50 @@
 #define FILHIT0               0
 
 // TXBxCTRL
+
+/*!
+ * \def ABTF
+ * \brief Message Abborted Flag
+ *
+ * Message was aborted when det to 1, otherwise transmission completed
+ * successfully.
+ *
+ * \def MLOA
+ * \brief Message Lost Arbitration
+ *
+ * When set to 1, the message lost arbitration while being sent.
+ *
+ * \def TXERR
+ * \brief Transmission Error Detected
+ *
+ * A bus error occurrance while the message was being transmitted causes
+ * this bit to be set to 1.
+ *
+ * \def TXREQ
+ * \brief Message Transmit Request
+ *
+ * When this bit is set to 1 by MCU, the message in the tx buffer requests
+ * transmission. The bit is automatically cleared when message is sent. To
+ * abort a message, this bit can be set to 0 by MCU.
+ *
+ * \def TXP1
+ * \brief Transmit Buffer Priority bit 1
+ *
+ * These two bits set the priority of the tx buffer.
+ *
+ * \code
+ * TXP 1 0
+ *     1 1 = Highest Message Priority
+ *     1 0 = High Intermediate Message Priority
+ *     0 1 = Low Intermediate Message Priority
+ *     0 0 = Lowest Message Priority
+ * \endcode
+ *
+ * \def TXP0
+ * \brief Transmit Buffer Priority bit 0
+ * \sa TXP1 for detailed documentation
+ *
+ */
 #define ABTF                  6
 #define MLOA                  5
 #define TXERR                 4
@@ -390,6 +438,74 @@
 #define TXP0                  0
 
 // EFLG
+
+/*!
+ * \def RX1OVR
+ * \brief Receive Buffer 1 Overflow Flag
+ *
+ * Set when a valid message is received for RXB1 and CANINTF.RX1IF = 1.
+ * Must be reset by MCU.
+ *
+ * \sa CANINTF
+ * \sa RX1IF
+ *
+ * \def RX0OVR
+ * \brief Receive Buffer 0 Overflow Flag
+ *
+ * Set when a valid message is received for RXB0 and CANINTF.RX0IF = 1.
+ * Must be reset by MCU.
+ *
+ * \sa CANINTF
+ * \sa RX0IF
+ *
+ * \def TXBO
+ * \brief Bus-Off Error Flag
+ *
+ * Bit set when TEC reaches 255. Must be reset after a successful bus
+ * recovery sequence.
+ *
+ * \def TXEP
+ * \brief Transmit Error-Passive Flag
+ *
+ * Set when TEC is equal to or greater than 128. Reset when TEC is less
+ * than 128.
+ *
+ * \sa TEC
+ *
+ * \def RXEP
+ * \brief Receive Error-Passive Flag
+ *
+ * Set when REC is equal to or greater than 128. Reset when REC is less
+ * than 128.
+ *
+ * \sa REC
+ *
+ * \def TXWAR
+ * \brief Transmit Error Warning Flag
+ *
+ * Set when TEC is equal to or greater than 96. Reset when TEC is less
+ * than 96.
+ *
+ * \sa TEC
+ *
+ * \def RXWAR
+ * \brief Receive Error Warning Flag
+ *
+ * Set when REC is equal to or greater than 128. Reset when REC is less
+ * than 128.
+ *
+ * \sa REC
+ *
+ * \def EWARN
+ * \brief Error Warning Flag
+ *
+ * Set when TEC or REC is equal to or greater than 96 (TXWAR or RXWAR = 1).
+ * reset when both REC and TEC are less than 96.
+ *
+ * \sa TXWAR, RXWAR
+ * \sa TEC, REC
+ *
+ */
 #define RX1OVR                7
 #define RX0OVR                6
 #define TXBO                  5
@@ -400,6 +516,67 @@
 #define EWARN                 0
 
 // CANINTE
+
+/*!
+ * \def MERRE
+ * \brief Message Error Interrupt Enable
+ *
+ * If set to 1, interrupt on error during message reception or transmission.
+ *
+ * \sa MERRF
+ *
+ * \def WAKIE
+ * \brief Wakeup Interrupt Enable
+ *
+ * If set to 1, interrupt on CAn bus activity. This is used to signal wake-up
+ * on CAN towards MCU.
+ *
+ * \sa WAKIF
+ *
+ * \def ERRIE
+ * \brief Error Interrupt Enable
+ *
+ * There are multiple sources located in EFLG register. Set to 1 results in
+ * an interrupt on EFLG error condition change.
+ *
+ * \sa ERRIF
+ * \sa EFLG
+ *
+ * \def TX2IE
+ * \brief Transmit Buffer 2 Empty Interrupt Enable
+ *
+ * Set to 1, interrupt when tx buffer 2 (TXB2) becomes empty.
+ *
+ * \sa TX2IF
+ *
+ * \def TX1IE
+ * \brief Transmit Buffer 1 Empty Interrupt Enable
+ *
+ * Set to 1, interrupt when tx buffer 1 (TXB1) becomes empty.
+ *
+ * \sa TX1IF
+ *
+ * \def TX0IE
+ * \brief Transmit Buffer 0 Empty Interrupt Enable
+ *
+ * Set to 1, interrupt when tx buffer 0 (TXB0) becomes empty.
+ *
+ * \sa TX0IF
+ *
+ * \def RX1IE
+ * \brief Receive Buffer 1 Full Interrupt Enable
+ *
+ * Set to 1, interrupt when message received in RXB1.
+ *
+ * \sa RX1IF
+ *
+ * \def RX0IE
+ * \brief Receive Buffer 0 Full Interrupt Enable
+ *
+ * Set to 1, interrupt when message received in RXB0.
+ *
+ * \sa RX0IF
+ */
 #define MERRE                 7
 #define WAKIE                 6
 #define ERRIE                 5
@@ -410,6 +587,72 @@
 #define RX0IE                 0
 
 // CANINTF
+
+/*!
+ * \def MERRF
+ * \brief Message Error Interrupt Flag
+ *
+ * Set to 1, an interrupt is pending. Must be cleared by MCU to reset
+ * interrupt condition.
+ *
+ * \sa MERRE
+ *
+ * \def WAKIF
+ * \brief Wakeup Interrupt Flag
+ *
+ * Set to 1, an interrupt is pending. Must be cleared by MCU to reset
+ * interrupt condition.
+ *
+ * \sa WAKIE
+ *
+ * \def ERRIF
+ * \brief Error Interrupt Flag
+ *
+ * Set to 1, an interrupt is pending. Must be cleared by MCU to reset
+ * interrupt condition.
+ *
+ * \sa ERRIE
+ *
+ * \def TX2IF
+ * \brief Transmit Buffer 2 Empty Interrupt Flag
+ *
+ * Set to 1, an interrupt is pending. Must be cleared by MCU to reset
+ * interrupt condition.
+ *
+ * \sa TX2IE
+ *
+ * \def TX1IF
+ * \brief Transmit Buffer 1 Empty Interrupt Flag
+ *
+ * Set to 1, an interrupt is pending. Must be cleared by MCU to reset
+ * interrupt condition.
+ *
+ * \sa TX1Ie
+ *
+ * \def TX0IF
+ * \brief Transmit Buffer 0 Empty Interrupt Flag
+ *
+ * Set to 1, an interrupt is pending. Must be cleared by MCU to reset
+ * interrupt condition.
+ *
+ * \sa TX0IE
+ *
+ * \def RX1IF
+ * \brief Receive Buffer 1 Full Interrupt Flag
+ *
+ * Set to 1, an interrupt is pending. Must be cleared by MCU to reset
+ * interrupt condition.
+ *
+ * \sa RX1IE
+ *
+ * \def RX0IF
+ * \brief Receive Buffer 0 Full Interrupt Flag
+ *
+ * Set to 1, an interrupt is pending. Must be cleared by MCU to reset
+ * interrupt condition.
+ *
+ * \sa RX0IE
+ */
 #define MERRF                 7
 #define WAKIF                 6
 #define ERRIF                 5
