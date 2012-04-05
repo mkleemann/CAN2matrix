@@ -338,17 +338,13 @@
  *        0 0 0 = Acceptance Filter 0 (RXF0) (Only if BUKT bit set in RXB0CTRL)
  * \endcode
  *
- * \sa RXB1CTRL
- * \sa RXB0CTRL
- * \sa FILHIT1
- * \sa FILHIT0
- * \sa BUKT1
- * \sa BUKT2
+ * \sa RXB1CTRL, RXB0CTRL
+ * \sa FILHIT1, FILHIT0
+ * \sa BUKT1, BUKT2
  *
  * \def FILHIT1
  * Further documentation, see FILHIT2.
- * \sa FILHIT2
- * \sa FILHIT0
+ * \sa FILHIT2, FILHIT0
  */
 #define FILHIT2               2
 #define FILHIT1               1
@@ -366,23 +362,19 @@
  * \endcode
  *
  * \sa RXM0
- * \sa RXB1CTRL
- * \sa RXB0CTRL
+ * \sa RXB1CTRL, RXB0CTRL
  *
  * \def RXM0
  * \brief Receive Buffer Operating Mode bits
  *
  * Further documentaion, see RXM1
  * \sa RXM1
- * \sa RXB1CTRL
- * \sa RXB0CTRL
+ * \sa RXB1CTRL, RXB0CTRL
  *
  * \def FILHIT0
  * Further documentation, see FILHIT2.
- * \sa FILHIT2
- * \sa FILHIT1
- * \sa RXB1CTRL
- * \sa RXB0CTRL
+ * \sa FILHIT2, FILHIT1
+ * \sa RXB1CTRL, RXB0CTRL
  */
 #define RXM1                  6
 #define RXM0                  5
@@ -523,11 +515,67 @@
 #define RXB_RXF0_RO_RXB1      0x06
 #define RXB_RXF1_RO_RXB1      0x07
 
+
 // RXBnSIDL (n = 0, 1)
+
+/**
+ * \def SRR
+ * \brief Standard Frame Remote Transmit Request
+ *
+ * Only valid if IDE bit is set to 0. Indicates if the frames received
+ * is a remote transmit request (1) or a normal data frame (0).
+ *
+ * \sa IDE Extended Identifier Flag
+ *
+ * \def IDE
+ * \brief Extended Identifier Flag
+ *
+ * Indicates whether the received message is a standard frame (0) or a
+ * extended frame (1).
+ */
 #define SRR                   4
 #define IDE                   3
 
 // TXBnDLC and RXBxDLC
+
+/*!
+ * \def RTR
+ * \brief Remote Transmit Request
+ * \par TXBnDLC
+ * If set to 1 the frame transmitted will be a remote transmit request. If
+ * it is set to 0, the frame will be a data message.
+ *
+ * \par RXBnDLC
+ * On the reception side the bit means Extended Frame Remote Transmission
+ * Request, which is only valid when RXBnSIDL.IDE is set to 1.
+ *
+ * \sa IDE Extended Identifier Flag
+ *
+ * \def DLC3
+ * \brief Bit 3 of Data Length Code
+ * \par TXBnDLC
+ * Bit 0..3 of the DLC sets the number of data bytes (0..8) to be transmitted
+ * when using TXBnDLC.
+ *
+ * \par RXBnDLC
+ * When receiving a message the DLC bits show the length of the received
+ * message.
+ *
+ * \note It is possible to set the DLC to a value greater than 8, however
+ * only 8 bytes are transmitted
+ *
+ * \def DLC2
+ * \brief Bit 2 of Data Length Code
+ * \sa DLC3 for detailed description
+ *
+ * \def DLC1
+ * \brief Bit 1 of Data Length Code
+ * \sa DLC3 for detailed description
+ *
+ * \def DLC0
+ * \brief Bit 0 of Data Length Code
+ * \sa DLC3 for detailed description
+ */
 #define RTR                   6
 #define DLC3                  3
 #define DLC2                  2
