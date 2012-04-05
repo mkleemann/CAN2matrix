@@ -60,6 +60,10 @@ void stopTimer0()
 /**
  * @brief initializes Timer1
  * @param mode of Timer1 (overflow, compare, pwm, ...)
+ *
+ * \todo fill in initialization for PWM mode of Timer1
+ * \todo fill in initialization for Fast PWM mode of Timer1
+ *
  */
 void initTimer1(eTimerMode mode)
 {
@@ -151,6 +155,10 @@ void setTimer1Count(uint16_t value)
 /**
  * @brief initializes Timer2
  * @param mode of Timer2 (overflow, compare, pwm, ...)
+ *
+ * \todo fill in initialization for PWM mode of Timer2
+ * \todo fill in initialization for Fast PWM mode of Timer2
+ *
  */
 void initTimer2(eTimerMode mode)
 {
