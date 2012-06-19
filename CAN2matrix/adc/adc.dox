@@ -1,4 +1,15 @@
 /**
- * \page page1 The Analog/Digital Converter
- * Some explanation here!
+ * \page page1 Analog/Digital Converter
+ *
+ * The Analag/Digital Converter (ADC) is used to get a value of brightness
+ * to use as input to dim the unit automatically.
+ *
+ * \section adc_setup_sec Setting up the ADC
+ *
+ * Describe here!
+ *
+ * \section adc_use_sec Use the ADC
+ *
+ * Describe here!
+ *
  */

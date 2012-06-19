@@ -91,6 +91,18 @@
  * as 8bit value. It also causes the lower two bit to be discarded
  * (10bit -> 8bit)
  */
-#define ADC_8BIT_RESOLUTION
+//#define ADC_8BIT_RESOLUTION
+
+/**
+ * @brief use left alignment of 16bit value
+ *
+ * This causes the ADLAR bit to be set, so the ADC value is left aligned.
+ * In this case it returns the full 16bit value with the upper 10 bit
+ * defining the value. Other than the switch ADC_8BIT_RESOLUTION, this
+ * does not remove anything.
+ *
+ * \sa ADC_8BIT_RESOLUTION
+ */
+#define ADC_LEFT_ALIGNED
 
 #endif /* ADC_CONFIG_H_ */

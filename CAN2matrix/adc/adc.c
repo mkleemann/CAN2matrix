@@ -30,7 +30,7 @@ void adc_init(void)
    PIN_SET_INPUT(ADC_INPUT_PIN);
    ADMUX  = ADC_REF_SELECT | ADC_INPUT_CHANNEL;
    ADCSRA = ADC_PRESCALER;
-#ifdef ADC_8BIT_RESOLUTION
+#if defined (ADC_8BIT_RESOLUTION) || defined (ADC_LEFT_ALIGNED)
    ADMUX |= (1 << ADLAR);
 #endif
 }
