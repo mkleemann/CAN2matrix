@@ -147,6 +147,14 @@ void sleepDetected()
 void sleeping()
 {
    cli();
+
+   // error? Maybe timer interrupt cause state change...testing
+   if(SLEEPING != fsmState)
+   {
+      led_all_on();
+      fsmState = SLEEPING;
+   }
+
    // enable wakeup interrupt INT0
    GICR  |= EXTERNAL_INT0_ENABLE;
 
@@ -208,24 +216,28 @@ void run()
    /**** GET MESSAGES FROM CAN1 ***********************************/
 
    handleCan1Reception(&msg);
+   _delay_us(1);
 
    /**** PUT MESSAGES TO CAN2 *************************************/
 
 #ifndef ___SINGLE_CAN___
    handleCan2Transmission(&msg);
+   _delay_us(1);
 
    /**** GET MESSAGES FROM CAN2 ***********************************/
 
    handleCan2Reception(&msg);
+   _delay_us(1);
 #endif
 
    /**** PUT MESSAGES TO CAN1 *************************************/
 
    handleCan1Transmission(&msg);
+   _delay_us(1);
 
    // check and set dim value
    uint16_t dimValue = adc_get();
-   setDimValue((uint8_t) dimValue);  // ADC config set to 8bit resolution
+   setDimValue(dimValue);
 
 #else
    if (send500ms)   // approx. 500ms 4MHz@1024 prescale factor

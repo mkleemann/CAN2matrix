@@ -221,8 +221,8 @@
 //! lower limit
 #define DAY_NIGHT_LOWER_LIMIT          0x40
 
-//! when to take over dimming measures - max ~250 (16bit range)
-#define DIMMING_MEASURE_CYCLE          200
+//! averaging interval (steps) for dim value
+#define DIM_STEPS_2_AVERAGE            32
 
 
 /***************************************************************************/
@@ -345,9 +345,18 @@ void sendCan2Message(can_t* msg);
 
 /**
  * @brief gets a dim value to be sent via CAN
- * @param value - dim value 0..255
+ * @param value - dim value 0..65535 (left aligned from ADC)
+ *
+ * This function uses an integral to get an averaged value to set
+ * the dimlevel of the target unit (CAN). Since nobody wants to have
+ * a too fast changing value - also for detecting darkness and switch
+ * to night mode - this needs some thought. The formula to use is:
+ * \code
+ *    dimAverage = dimAverage - value/DIM_STEPS_2_AVERAGE + value;
+ * \endcode
+ *
  */
-void setDimValue(uint8_t value);
+void setDimValue(uint16_t value);
 
 #endif /* MATRIX_H_ */
 

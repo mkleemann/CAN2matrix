@@ -61,10 +61,8 @@ typedef struct
 
 //! temporary storage for any values comming via CAN
 volatile storeVals_t storage;
-//! sum of dimming values for averaging it for CAN transmission
-volatile uint16_t    dimSum      = 0x7F;
-//! number of dimming measurements for averaging the values
-volatile uint8_t     dimMeasures = 0;
+//! average of dimming values for CAN transmission
+volatile uint16_t    dimAverage  = 0x7F;
 //! night mode detection flag (together with dimming)
 volatile bool        nightMode   = false;
 
@@ -422,22 +420,27 @@ void sendCan2Message(can_t* msg)
 
 /**
  * @brief gets a dim value to be sent via CAN
- * @param value - dim value 0..255
+ * @param value - dim value 0..65535 (left aligned from ADC)
+ *
+ * This function uses an integral to get an averaged value to set
+ * the dimlevel of the target unit (CAN). Since nobody wants to have
+ * a too fast changing value - also for detecting darkness and switch
+ * to night mode - this needs some thought. The formula to use is:
+ * \code
+ *    dimAverage = dimAverage - value/DIM_STEPS_2_AVERAGE + value;
+ * \endcode
+ *
  */
-void setDimValue(uint8_t value)
+void setDimValue(uint16_t value)
 {
-   // get values for average
-   dimSum += value;
-   ++dimMeasures;
+   // integral for averaging dim values
+   dimAverage = dimAverage - value/DIM_STEPS_2_AVERAGE + value;
+   // get back to right shifted value, since dim value
+   // comes with left alignement
+   dimAverage >>= 6;
 
-   // measurement cycle done
-   if(dimMeasures >= DIMMING_MEASURE_CYCLE)
-   {
-      dimSum           /= dimMeasures;
-      storage.dimLevel  = (storage.dimLevel + dimSum) / 2;
-      dimSum            = storage.dimLevel;
-      dimMeasures       = 0;
-   }
+   // set dim level for upper 8bit of 10bit average value
+   storage.dimLevel = dimAverage >> 2;
 }
 
 
