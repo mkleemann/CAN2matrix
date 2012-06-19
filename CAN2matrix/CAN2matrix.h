@@ -121,6 +121,16 @@ void sleepDetected(void);
 
 /**
  * @brief enter AVR sleep mode
+ *
+ * AVR also wakes up in this function, so some intial steps need to
+ * be done here.
+ *
+ * The three \c _NOP(); instructions are a safety, since older AVRs may
+ * skip the next couple of instructions after sleep mode.
+ *
+ * Also a precaution is the disabling of the wake up interrupt, to avoid
+ * several interrupts to happen, if the signal lies too long on the
+ * external interrupt pin.
  */
 void sleeping(void);
 
