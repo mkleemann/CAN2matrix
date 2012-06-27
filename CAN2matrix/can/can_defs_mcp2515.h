@@ -662,7 +662,73 @@
 #define RX1IF                 1
 #define RX0IF                 0
 
-// CNF1
+
+/*!
+ * \def SJW1
+ * \brief Synchronization Jump Width Length bit 1
+ *
+ * The SJW<1:0> bits select the Synchronization Jump Width Length in
+ * terms of number of TQs.
+ *
+ * \code
+ * SJW1 SJW0
+ *    1    1 = Length = 4 x TQ
+ *    1    0 = Length = 3 x TQ
+ *    0    1 = Length = 2 x TQ
+ *    0    0 = Length = 1 x TQ
+ * \endcode
+ *
+ * \sa CNF1
+ *
+ * \def SJW0
+ * \brief Synchronization Jump Width Length bit 0
+ *
+ * \sa CNF1
+ * \sa SJW1
+ *
+ * \def BRP5
+ * \brief Baud Rate Prescaler bit 5
+ *
+ * The BRP<5:0> bits control the baud rate prescaler. These bits set
+ * the length of TQ relative to the OSC1 input frequency, with the
+ * minimum TQ length being 2 TOSC (when BRP<5:0> = 'b000000').
+ *
+ * \code
+ * TQ = 2 x (BRP + 1)/Fosc
+ * \endcode
+ *
+ * \sa CNF1
+ *
+ * \def BRP4
+ * \brief Baud Rate Prescaler bit 4
+ *
+ * \sa CNF1
+ * \sa BRP5
+ *
+ * \def BRP3
+ * \brief Baud Rate Prescaler bit 3
+ *
+ * \sa CNF1
+ * \sa BRP5
+ *
+ * \def BRP2
+ * \brief Baud Rate Prescaler bit 2
+ *
+ * \sa CNF1
+ * \sa BRP5
+ *
+ * \def BRP1
+ * \brief Baud Rate Prescaler bit 1
+ *
+ * \sa CNF1
+ * \sa BRP5
+ *
+ * \def BRP0
+ * \brief Baud Rate Prescaler bit 0
+ *
+ * \sa CNF1
+ * \sa BRP5
+ */
 #define SJW1                  7
 #define SJW0                  6
 #define BRP5                  5
@@ -672,7 +738,88 @@
 #define BRP1                  1
 #define BRP0                  0
 
-// CNF2
+/**
+ * \def BTLMODE
+ * \brief PS2 Bit Time Length
+ *
+ * The BTLMODE bit controls how the length of PS2 is determined. If this
+ * bit is set to a '1', the length of PS2 is determined by the PHSEG2<2:0>
+ * bits of CNF3. If the BTLMODE bit is set to a '0', the length of PS2
+ * is greater than that of PS1 and the information processing time (which
+ * is fixed at 2 TQ for the MCP2515).
+ *
+ * \code
+ * 1 = Length of PS2 determined by PHSEG22:PHSEG20 bits of CNF3
+ * 0 = Length of PS2 is the greater of PS1 and IPT (2 TQ)
+ * \endcode
+ *
+ * \sa CNF2
+ * \sa PHSEG21
+ * \sa PHSEG20
+ *
+ * \def SAM
+ * \brief Sample Point Configuration
+ *
+ * The SAM bit controls how many times the RXCAN pin is sampled. Setting
+ * this bit to a '1' causes the bus to be sampled three times: twice at
+ * TQ/2 before the sample point and once at the normal sample point (which
+ * is at the end of PS1). The value of the bus is determined to be the
+ * majority sampled. If the SAM bit is set to a '0', the RXCAN pin is
+ * sampled only once at the sample point.
+ *
+ * \code
+ * 1 = Bus line is sampled three times at the sample point
+ * 0 = Bus line is sampled once at the sample point
+ * \endcode
+ *
+ * \sa CNF2
+ *
+ * \def PHSEG12
+ * \brief PS1 Length bit 2
+ *
+ * The PHSEG1<2:0> bits set the length (in TQ's) of PS1.
+ *
+ * \code
+ * (PHSEG1 + 1) x TQ
+ * \endcode
+ *
+ * \sa CNF2
+ *
+ * \def PHSEG11
+ * \brief PS1 Length bit 1
+ *
+ * \sa CNF2
+ * \sa PHSEG12
+ *
+ * \def PHSEG10
+ * \brief PS1 Length bit 0
+ *
+ * \sa CNF2
+ * \sa PHSEG12
+ *
+ * \def PRSEG2
+ * \brief Propagation Segment Length bit 2
+ *
+ * The PRSEG<2:0> bits set the length (in TQ's) of the propagation segment.
+ *
+ * \code
+ * (PRSEG + 1) x TQ
+ * \endcode
+ *
+ * \sa CNF2
+ *
+ * \def PRSEG1
+ * \brief Propagation Segment Length bit 1
+ *
+ * \sa CNF2
+ * \sa PRSEG2
+ *
+ * \def PRSEG0
+ * \brief Propagation Segment Length bit 0
+ *
+ * \sa CNF2
+ * \sa PRSEG2
+ */
 #define BTLMODE               7
 #define SAM                   6
 #define PHSEG12               5
@@ -682,7 +829,59 @@
 #define PRSEG1                1
 #define PRSEG0                0
 
-// CNF3
+/*!
+ * \def SOF
+ * \brief Start-of-Frame signal bit
+ *
+ * \code
+ * If CANCTRL.CLKEN = 1:
+ * 1 = CLKOUT pin enabled for SOF signal
+ * 0 = CLKOUT pin enabled for clockout function
+ *
+ * If CANCTRL.CLKEN = 0, Bit is don't care.
+ * \endcode
+ *
+ * \sa CNF3
+ * \sa CLKEN
+ * \sa CANCTRL
+ *
+ * \def WAKFIL
+ * \brief Wake-up Filter bit
+ *
+ * \code
+ * 1 = Wake-up filter enabled
+ * 0 = Wake-up filter disabled
+ * \endcode
+ *
+ * \sa CNF3
+ *
+ * \def PHSEG22
+ * \brief PS2 Length bit 2
+ *
+ * The PHSEG2<2:0> bits set the length (in TQ's) of PS2, if the CNF2.BTLMODE
+ * bit is set to a '1'. If the BTLMODE bit is set to a '0', the PHSEG2<2:0>
+ * bits have no effect.
+ *
+ * \code
+ * (PHSEG2 + 1) x TQ
+ * Minimum valid setting for PS2 is 2 TQ
+ * \endcode
+ *
+ * \sa CNF3
+ * \sa BTLMODE
+ *
+ * \def PHSEG21
+ * \brief PS2 Length bit 1
+ *
+ * \sa CNF3
+ * \sa PHSEG22
+ *
+ * \def PHSEG20
+ * \brief PS2 Length bit 0
+ *
+ * \sa CNF3
+ * \sa PHSEG22
+ */
 #define SOF                   7
 #define WAKFIL                6
 #define PHSEG22               2
