@@ -62,7 +62,7 @@ typedef struct
 //! temporary storage for any values comming via CAN
 volatile storeVals_t storage;
 //! average of dimming values for CAN transmission
-volatile uint16_t    dimAverage  = 0x7F;
+volatile uint16_t    dimAverage  = 0x7F00;
 //! night mode detection flag (together with dimming)
 volatile bool        nightMode   = false;
 
@@ -435,12 +435,15 @@ void setDimValue(uint16_t value)
 {
    // integral for averaging dim values
    dimAverage = dimAverage - value/DIM_STEPS_2_AVERAGE + value;
-   // get back to right shifted value, since dim value
-   // comes with left alignement
-   dimAverage >>= 6;
 
-   // set dim level for upper 8bit of 10bit average value
-   storage.dimLevel = dimAverage >> 2;
+   // set dim level for upper 8bit of 10bit left aligned average value
+   //
+   // | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | x | x | x | x | x | x |
+   // | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 | x | x | x | x | x | x |
+   // |          upper byte           |          lower byte           |
+   // |                 value                 |       not used        |
+   // |        dimming average        |           discarded           |
+   storage.dimLevel = dimAverage >> 8;
 }
 
 
