@@ -888,7 +888,61 @@
 #define PHSEG21               1
 #define PHSEG20               0
 
-// TXRTSCTRL
+/**
+ * \def B2RTS
+ * \brief TX2RTS Pin State
+ *
+ * - Reads state of TX2RTS pin when in Digital Input mode
+ * - Reads as '0' when pin is in 'Request-to-Send' mode
+ *
+ * \sa TXRTSCTRL
+ *
+ * \def B1RTS
+ * \brief TX1RTS Pin State
+ *
+ * - Reads state of TX1RTS pin when in Digital Input mode
+ * - Reads as '0' when pin is in 'Request-to-Send' mode
+ *
+ * \sa TXRTSCTRL
+ *
+ * \def B0RTS
+ * \brief TX0RTS Pin State
+ *
+ * - Reads state of TX0RTS pin when in Digital Input mode
+ * - Reads as '0' when pin is in 'Request-to-Send' mode
+ *
+ * \sa TXRTSCTRL
+ *
+ * \def B2RTSM
+ * \brief TX2RTS Pin mode
+ *
+ * \code
+ * 1 = Pin is used to request message transmission of TXB2 buffer (on falling edge)
+ * 0 = Digital input
+ * \endcode
+ *
+ * \sa TXRTSCTRL
+ *
+ * \def B1RTSM
+ * \brief TX1RTS Pin mode
+ *
+ * \code
+ * 1 = Pin is used to request message transmission of TXB1 buffer (on falling edge)
+ * 0 = Digital input
+ * \endcode
+ *
+ * \sa TXRTSCTRL
+ *
+ * \def B0RTSM
+ * \brief TX0RTS Pin mode
+ *
+ * \code
+ * 1 = Pin is used to request message transmission of TXB0 buffer (on falling edge)
+ * 0 = Digital input
+ * \endcode
+ *
+ * \sa TXRTSCTRL
+ */
 #define B2RTS                 5
 #define B1RTS                 4
 #define B0RTS                 3
@@ -896,7 +950,61 @@
 #define B1RTSM                1
 #define B0RTSM                0
 
-// BFPCRL
+/**
+ * \def B1BFS
+ * \brief RX1BF Pin State (Digital Output mode only)
+ *
+ * Reads as '0' when RX1BF is configured as interrupt pin
+ *
+ * \sa BFPCTRL
+ *
+ * \def B0BFS
+ * \brief RX0BF Pin State (Digital Output mode only)
+ *
+ * Reads as '0' when RX0BF is configured as interrupt pin
+ *
+ * \sa BFPCTRL
+ *
+ * \def B1BFE
+ * \brief RX1BF Pin Function Enable
+ *
+ * \code
+ * 1 = Pin function enabled, operation mode determined by B1BFM bit
+ * 0 = Pin function disabled, pin goes to high-impedance state
+ * \endcode
+ *
+ * \sa BFPCTRL
+ *
+ * \def B0BFE
+ * \brief RX0BF Pin Function Enable
+ *
+ * \code
+ * 1 = Pin function enabled, operation mode determined by B0BFM bit
+ * 0 = Pin function disabled, pin goes to high-impedance state
+ * \endcode
+ *
+ * \sa BFPCTRL
+ *
+ * \def B1BFM
+ * \brief RX1BF Pin Operation Mode
+ *
+ * \code
+ * 1 = Pin is used as interrupt when valid message loaded into RXB1
+ * 0 = Digital Output mode
+ * \endcode
+ *
+ * \sa BFPCTRL
+ *
+ * \def B0BFM
+ * \brief RX0BF Pin Operation Mode
+ *
+ * \code
+ * 1 = Pin is used as interrupt when valid message loaded into RXB0
+ * 0 = Digital Output mode
+ * \endcode
+ *
+ * \sa BFPCTRL
+ */
 #define B1BFS                 5
 #define B0BFS                 4
 #define B1BFE                 3
