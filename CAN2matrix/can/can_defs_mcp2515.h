@@ -373,6 +373,14 @@
  * \sa RXM1 for detailed description
  * \sa RXB1CTRL, RXB0CTRL
  *
+ * \def RXRTR
+ * \brief Received Remote Transfer Request
+ *
+ * \code
+ * 1 = Remote Transfer Request Received
+ * 0 = No Remote Transfer Request Received
+ * \endcode
+ *
  * \def FILHIT0
  * \brief Filter Hit bits.
  *
@@ -1172,7 +1180,7 @@
  * \def TXB2CNTRL_TXREQ
  * \brief Message Transmit Request buffer 2
  *
- * \head Request-To-Send (RTS) Instruction
+ * <b>Request-To-Send (RTS) Instruction</b>
  *
  * The RTS command can be used to initiate message transmission for one
  * or more of the transmit buffers. The MCP2515 is selected by lowering
@@ -1215,17 +1223,102 @@
 #define TXB0CNTRL_TXREQ       2
 
 // load TX buffer addresses
+
+/**
+ * \def TXB2ADDR
+ * \brief Address Offset to TXB2
+ *
+ * <b>Message Request-To-Send (RTS)</b>
+ *
+ * Instructs controller to begin message transmission sequence for
+ * any of the transmit buffers.
+ *
+ * \code
+ * 1000 0nnn
+ *       ^^^
+ *       ||+- TXB0
+ *       |+-- TXB1
+ *       +--- TXB2
+ * \endcode
+ *
+ * \def TXB1ADDR
+ * \brief Address Offset to TXB1
+ *
+ * \sa TXB2ADDR
+ *
+ * \def TXB0ADDR
+ * \brief Address Offset to TXB0
+ *
+ * \sa TXB2ADDR
+ */
 #define TXB2ADDR              4
 #define TXB1ADDR              2
 #define TXB0ADDR              0
 
-// RX buffer status
-// buffer information as bit - CANINTF.RXnIF bits are mapped to bits 7 and 6
+/**
+ * \def RXB_STATUSMASK
+ * \brief RX buffer status mask
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB1
+ * \brief Bit indicates message in RXB1
+ *
+ * Buffer information as bit - CANINTF.RXnIF bits are mapped to
+ * bits 7 and 6
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB0
+ * \brief Bit indicates message in RXB0
+ *
+ * \sa MCP2515_RX_STATUS
+ * \sa RXB1
+ */
 #define RXB_STATUSMASK        0x60
 #define RXB1                  7
 #define RXB0                  6
-// msg type as value - the extended ID bit is mapped to bit 4. The RTR bit
-// is mapped to bit 3
+
+/**
+ * \def RXB_EXT
+ * \brief Extended type frame received
+ *
+ * Msg type as value - the extended ID bit is mapped to bit 4.
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_RTR
+ * \brief RTR type frame received
+ *
+ * The RTR bit is mapped to bit 3.
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_MSGTYPEMASK
+ * \brief Mask of the message type in RXBn.
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_STDFRAME
+ * \brief Standard frame received
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_STDREMOTEFRAME
+ * \brief Standard Remote frame received
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_EXTDATAFRAME
+ * \brief Extended Data frame received
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_EXTREMOTEFRAME
+ * \brief Extended Remote received
+ *
+ * \sa MCP2515_RX_STATUS
+ */
 #define RXB_EXT               4
 #define RXB_RTR               3
 #define RXB_MSGTYPEMASK       0x18
@@ -1233,7 +1326,53 @@
 #define RXB_STDREMOTEFRAME    0x01
 #define RXB_EXTDATAFRAME      0x02
 #define RXB_EXTREMOTEFRAME    0x03
-// filter match as value
+
+/**
+ * \def RXB_FILTERMATCHMASK
+ * \brief RXBn filter match mask
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_RXF0
+ * \brief Acceptance Filter 0 indicator
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_RXF1
+ * \brief Acceptance Filter 1 indicator
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_RXF2
+ * \brief Acceptance Filter 2 indicator
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_RXF3
+ * \brief Acceptance Filter 3 indicator
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_RXF4
+ * \brief Acceptance Filter 4 indicator
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_RXF5
+ * \brief Acceptance Filter 5 indicator
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_RXF0_RO_RXB1
+ * \brief Acceptance Filter 0 indicator (rollover to RXB1)
+ *
+ * \sa MCP2515_RX_STATUS
+ *
+ * \def RXB_RXF1_RO_RXB1
+ * \brief Acceptance Filter 1 indicator (rollover to RXB1)
+ *
+ * \sa MCP2515_RX_STATUS
+ */
 #define RXB_FILTERMATCHMASK   0x07
 #define RXB_RXF0              0x00
 #define RXB_RXF1              0x01
