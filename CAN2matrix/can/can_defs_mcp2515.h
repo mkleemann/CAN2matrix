@@ -1013,6 +1013,64 @@
 #define B0BFM                 0
 
 // multiple registers CANSTATx
+
+/**
+ * \def OPMOD2
+ * \brief Operation Mode bit 2
+ *
+ * \code
+ * OPMOD2 OPMOD1 OPMOD0
+ *      0      0      0 = Device is in the Normal operation mode
+ *      0      0      1 = Device is in Sleep mode
+ *      0      1      0 = Device is in Loopback mode
+ *      0      1      1 = Device is in Listen-only mode
+ *      1      0      0 = Device is in Configuration mode
+ * \endcode
+ *
+ * \sa CANSTAT
+ *
+ * \def OPMOD1
+ * \brief Operation Mode bit 1
+ *
+ * \sa CANSTAT
+ * \sa OPMOD2
+ *
+ * \def OPMOD0
+ * \brief Operation Mode bit 0
+ *
+ * \sa CANSTAT
+ * \sa OPMOD2
+ *
+ * \def ICOD2
+ * \brief Interrupt Flag Code bit 2
+ *
+ * \code
+ * ICOD2 ICOD1 ICOD0
+ *     0     0     0 = No Interrupt
+ *     0     0     1 = Error Interrupt
+ *     0     1     0 = Wake-up Interrupt
+ *     0     1     1 = TXB0 Interrupt
+ *     1     0     0 = TXB1 Interrupt
+ *     1     0     1 = TXB2 Interrupt
+ *     1     1     0 = RXB0 Interrupt
+ *     1     1     1 = RXB1 Interrupt
+ * \endcode
+ *
+ * \sa CANSTAT
+ *
+ * \def ICOD1
+ * \brief Interrupt Flag Code bit 1
+ *
+ * \sa CANSTAT
+ * \sa ICOD2
+ *
+ * \def ICOD0
+ * \brief Interrupt Flag Code bit 0
+ *
+ * \sa CANSTAT
+ * \sa ICOD2
+ *
+ */
 #define OPMOD2                7
 #define OPMOD1                6
 #define OPMOD0                5
@@ -1021,6 +1079,86 @@
 #define ICOD0                 1
 
 // multiple registers CANCTRLx
+
+/**
+ * \def REQOP2
+ * \brief Request Operation Mode bit 2
+ *
+ * \code
+ * REQOP2 REQOP1 REQOP0
+ *      0      0      0 = Set Normal Operation mode
+ *      0      0      1 = Set Sleep mode
+ *      0      1      0 = Set Loopback mode
+ *      0      1      1 = Set Listen-only mode
+ *      1      0      0 = Set Configuration mode
+ * \endcode
+ *
+ * \note All other values for REQOP bits are invalid and should not be used
+ * \note On power-up, REQOP = b'111'
+ *
+ * \sa CANCTRL
+ *
+ * \def REQOP1
+ * \brief Request Operation Mode bit 1
+ *
+ * \sa CANCTRL
+ * \sa REQOP2
+ *
+ * \def REQOP0
+ * \brief Request Operation Mode bit 0
+ *
+ * \sa CANCTRL
+ * \sa REQOP2
+ *
+ * \def ABAT
+ * \brief Abort All Pending Transmissions
+ *
+ * \code
+ * 1 = Request abort of all pending transmit buffers
+ * 0 = Terminate request to abort all transmissions
+ * \endcode
+ *
+ * \sa CANCTRL
+ *
+ * \def OSM
+ * \brief One Shot Mode
+ *
+ * \code
+ * 1 = Enabled. Message will only attempt to transmit one time
+ * 0 = Disabled. Messages will reattempt transmission, if required
+ * \endcode
+ *
+ * \sa CANCTRL
+ *
+ * \def CLKEN
+ * \brief CLKOUT Pin Enable
+ *
+ * \code
+ * 1 = CLKOUT pin enabled
+ * 0 = CLKOUT pin disabled (Pin is in high-impedance state)
+ * \endcode
+ *
+ * \sa CANCTRL
+ *
+ * \def CLKPRE1
+ * \brief CLKOUT Pin Prescaler bit 1
+ *
+ * \code
+ * CLKPRE1 CLKPRE0
+ *       0       0 = Fclkout = System Clock/1
+ *       0       1 = Fclkout = System Clock/2
+ *       1       0 = Fclkout = System Clock/4
+ *       1       1 = Fclkout = System Clock/8
+ * \endcode
+ *
+ * \sa CANCTRL
+ *
+ * \def CLKPRE0
+ * \brief CLKOUT Pin Prescaler bit 0
+ *
+ * \sa CANCTRL
+ * \sa CLKPRE1
+ */
 #define REQOP2                7
 #define REQOP1                6
 #define REQOP0                5
@@ -1030,7 +1168,48 @@
 #define CLKPRE1               1
 #define CLKPRE0               0
 
-// command READ_STATUS
+/**
+ * \def TXB2CNTRL_TXREQ
+ * \brief Message Transmit Request buffer 2
+ *
+ * \head Request-To-Send (RTS) Instruction
+ *
+ * The RTS command can be used to initiate message transmission for one
+ * or more of the transmit buffers. The MCP2515 is selected by lowering
+ * the CS pin. The RTS command byte is then sent. The last 3 bits of
+ * this command indicate which transmit buffer(s) are enabled to send.
+ *
+ * This command will set the TxBnCTRL.TXREQ bit for the respective
+ * buffer(s). Any or all of the last three bits can be set in a single
+ * command. If the RTS command is sent with nnn = 000, the command will
+ * be ignored.
+ *
+ * \note The TXBnCTRL.TXREQ bit must be clear (indicating the transmit
+ *       buffer is not pending transmission) before writing to the
+ *       transmit buffer
+ *
+ * \code
+ * 1 = Buffer is currently pending transmission (MCU sets this bit to
+ *     request message be transmitted - bit is automatically cleared when
+ *     the message is sent)
+ * 0 = Buffer is not currently pending transmission (MCU can clear
+ *     this bit to request a message abort)
+ * \endcode
+ *
+ * \sa MCP2515_READ_STATUS
+ *
+ * \def TXB1CNTRL_TXREQ
+ * \brief Message Transmit Request buffer 1
+ *
+ * \sa TXB2CNTRL_TXREQ
+ * \sa MCP2515_READ_STATUS
+ *
+ * \def TXB0CNTRL_TXREQ
+ * \brief Message Transmit Request buffer 0
+ *
+ * \sa TXB2CNTRL_TXREQ
+ * \sa MCP2515_READ_STATUS
+ */
 #define TXB2CNTRL_TXREQ       6
 #define TXB1CNTRL_TXREQ       4
 #define TXB0CNTRL_TXREQ       2
