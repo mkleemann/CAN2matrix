@@ -91,7 +91,11 @@
  * as 8bit value. It also causes the lower two bit to be discarded
  * (10bit -> 8bit)
  */
-//#define ADC_8BIT_RESOLUTION
+#ifdef __DOXYGEN__   // options, no always defined
+   #define ADC_8BIT_RESOLUTION
+#else
+   //#define ADC_8BIT_RESOLUTION
+#endif
 
 /**
  * @brief use left alignment of 16bit value
@@ -103,6 +107,10 @@
  *
  * \sa ADC_8BIT_RESOLUTION
  */
-#define ADC_LEFT_ALIGNED
+#ifdef __DOXYGEN__   // options, no always defined
+   #define ADC_LEFT_ALIGNED
+#else
+   #define ADC_LEFT_ALIGNED
+#endif
 
 #endif /* ADC_CONFIG_H_ */

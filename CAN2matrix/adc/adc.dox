@@ -75,7 +75,7 @@
  * \subsection adc_setup_sec_8bit_res 8-bit Resolution
  *
  * It is possible to use a artificial 8-bit resolution instead of the
- * 10-bit one teh AVR provides. Defining the option ADC_8BIT_RESOLUTION,
+ * 10-bit the AVR provides. Defining the option ADC_8BIT_RESOLUTION,
  * only the upper 8 bit of the sampled value are given in return. The lowest
  * 2 bit are discarded, so the resolution returned is not as fine as the
  * one sampled. For some use cases this is ok, though.
@@ -107,8 +107,8 @@
  *
  *
  *
- * \section adc_use_sec Use the ADC
+ * \section adc_use_sec Use The ADC Module
  *
- * Describe here!
+ * \todo Describe usage of ADC module here!
  *
  */
