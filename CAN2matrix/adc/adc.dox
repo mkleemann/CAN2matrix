@@ -90,7 +90,7 @@
  *
  * \subsection adc_setup_sec_left_aligned Left Aligned Value
  *
- * It is possible to habe the 10-bit sample value left aligned in the
+ * It is possible to have the 10-bit sample value left aligned in the
  * 16-bit return value. The AVR provides this by using the ADLAR bit in
  * the ADMUX setup. Both are defined within the toolchain and used
  * internally, if the option ADC_LEFT_ALIGNED is set.
