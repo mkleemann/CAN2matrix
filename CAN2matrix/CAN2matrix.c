@@ -88,6 +88,9 @@ int main(void)
             case SLEEPING:
             {
                sleeping();
+               // set state WAKEUP here, too avoid race conditions
+               // with pending interrupt
+               fsmState = WAKEUP;
                break;
             }
 
@@ -158,13 +161,6 @@ void sleeping()
 {
    cli();
 
-   // error? Maybe timer interrupt cause state change...testing
-   if(SLEEPING != fsmState)
-   {
-      led_all_on();
-      fsmState = SLEEPING;
-   }
-
    // enable wakeup interrupt INT0
    GICR  |= EXTERNAL_INT0_ENABLE;
 
@@ -177,13 +173,14 @@ void sleeping()
    sleep_cpu();
    sleep_disable();
 
-   // disable interrupt: precaution, if signal lies too long on pin
-   GICR  &= ~(EXTERNAL_INT0_ENABLE);
-
    // just in case...
    _NOP();
    _NOP();
    _NOP();
+
+   // disable interrupt: precaution, if signal lies too long on pin
+   GICR  &= ~(EXTERNAL_INT0_ENABLE);
+
 #else
    sei();
 #endif
@@ -374,7 +371,6 @@ ISR(INT0_vect)
    GICR  &= ~(EXTERNAL_INT0_ENABLE);
 #endif
    led_toggle(errCan2LED);
-   fsmState = WAKEUP;
 }
 
 /***************************************************************************/
