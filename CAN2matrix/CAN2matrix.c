@@ -134,6 +134,8 @@ void sleepDetected()
    // CLKOUT pin.
 #ifndef ___SINGLE_CAN___
    mcp2515_sleep(CAN_CHIP2, INT_SLEEP_MANUAL_WAKEUP);
+   // wait for SPI
+   _delay_ms(1);
 #endif
 
    // put MCP2515 to sleep and wait for activity interrupt
@@ -196,7 +198,7 @@ void wakeUp()
    // wakeup all CAN busses
    mcp2515_wakeup(CAN_CHIP1);
 #ifndef ___SINGLE_CAN___
-   _delay_ms(100);       // wait for clock of CAN1 to be ready
+   _delay_ms(100);       // wait e.g. for clock of CAN1 to be ready
    mcp2515_wakeup(CAN_CHIP2);
 #endif
 #endif
@@ -223,24 +225,24 @@ void run()
    /**** GET MESSAGES FROM CAN1 ***********************************/
 
    handleCan1Reception(&msg);
-   _delay_us(1);
+   _delay_ms(1);
 
    /**** PUT MESSAGES TO CAN2 *************************************/
 
 #ifndef ___SINGLE_CAN___
    handleCan2Transmission(&msg);
-   _delay_us(1);
+   _delay_ms(1);
 
    /**** GET MESSAGES FROM CAN2 ***********************************/
 
    handleCan2Reception(&msg);
-   _delay_us(1);
+   _delay_ms(1);
 #endif
 
    /**** PUT MESSAGES TO CAN1 *************************************/
 
    handleCan1Transmission(&msg);
-   _delay_us(1);
+   _delay_ms(1);
 
    // check and set dim value
    uint16_t dimValue = adc_get();
@@ -251,7 +253,7 @@ void run()
    {
       send500ms = false;
       led_toggle(errCan1LED);
-   } /* end of if 500ms tick */
+   }
 #endif
 }
 
@@ -337,6 +339,8 @@ bool initCAN()
       led_on(errCan1LED);
       retVal = false;
    }
+   // wait for SPI
+   _delay_ms(1);
 #ifndef ___SINGLE_CAN___
    // init can interface 2
    else if (false == can_init_mcp2515(CAN_CHIP2, CAN_BITRATE_125_KBPS))
