@@ -54,8 +54,13 @@ int main(void)
 
    if (true == initCAN())
    {
+      // start timers and enable ADC
+      startTimer1();
+      startTimer2();
+      adc_enable();
       // start normal operation
       fsmState = RUNNING;
+
       led_on(sleepLed);
 
       // enable all (configured) interrupts
@@ -299,19 +304,16 @@ void initHardware()
 
    // set timer for bussleep detection
    initTimer1(TimerCompare);
-   startTimer1();
 
    // set timer for CAN 100ms trigger
    initTimer2(TimerCompare);
-   startTimer2();
 
    // initialize the hardware SPI with default values set in spi/spi_config.h
    spi_pin_init();
    spi_master_init();
 
-   // initialize adc and enable
+   // initialize adc
    adc_init();
-   adc_enable();
 
    // set wakeup interrupt trigger on low level
    MCUCR |= EXTERNAL_INT0_TRIGGER;
