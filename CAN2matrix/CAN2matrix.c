@@ -36,7 +36,7 @@
 
 #define ___AVR_SLEEP_ON___
 
-//! counter to evluate timing to send CAN messages
+//! counter to evaluate timing to send CAN messages
 static volatile uint8_t send_it      = 0;
 //! flag to send 100ms cycle CAN messages
 static volatile bool    send100ms    = false;
@@ -105,7 +105,7 @@ int main(void)
    }
 
    errorState();
-} /* end of main() */
+}
 
 
 /***************************************************************************/
