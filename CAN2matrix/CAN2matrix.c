@@ -202,9 +202,12 @@ void wakeUp()
 #ifndef ___SIMULATION___
    // wakeup all CAN busses
    mcp2515_wakeup(CAN_CHIP1);
+   // wait a little for the CAN controller to be ready (Tosc * 128)
+   _delay_ms(100);
 #ifndef ___SINGLE_CAN___
-   _delay_ms(100);       // wait e.g. for clock of CAN1 to be ready
    mcp2515_wakeup(CAN_CHIP2);
+   // wait a little for the CAN controller to be ready (Tosc * 128)
+   _delay_ms(100);
 #endif
 #endif
 
@@ -232,15 +235,15 @@ void run()
    handleCan1Reception(&msg);
    _delay_ms(1);
 
-   /**** PUT MESSAGES TO CAN2 *************************************/
-
 #ifndef ___SINGLE_CAN___
-   handleCan2Transmission(&msg);
-   _delay_ms(1);
-
    /**** GET MESSAGES FROM CAN2 ***********************************/
 
    handleCan2Reception(&msg);
+   _delay_ms(1);
+
+   /**** PUT MESSAGES TO CAN2 *************************************/
+
+   handleCan2Transmission(&msg);
    _delay_ms(1);
 #endif
 
