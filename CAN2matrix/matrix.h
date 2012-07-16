@@ -125,33 +125,77 @@
 /* Definition of radio CAN message ids                                     */
 /***************************************************************************/
 
-//! ignition and key status
+
+/**
+ * \addtogroup matrix_can_ids_slave CAN ids of slave (CAN #2)
+ * \brief all CAN ids for the second CAN bus used
+ * @{
+ */
+
+/**
+ * \def CANID_2_IGNITION
+ * \brief ignition and key status
+ */
 #define CANID_2_IGNITION               0x20B
 
-//! wheel pulse counter
+/**
+ * \def CANID_2_WHEEL_DATA
+ * \brief wheel pulse counter
+ */
 #define CANID_2_WHEEL_DATA             0x211
 
-//! gear box status, e.g. for rear view camera and navigation
+/**
+ * \def CANID_2_REVERSE_GEAR
+ * \brief gear box status, e.g. for rear view camera and navigation
+ */
 #define CANID_2_REVERSE_GEAR           0x20E
 
-//! light status and dimming for keys
+/**
+ * \def CANID_2_LIGHT_STATUS
+ * \brief light status and dimming for keys
+ */
 #define CANID_2_LIGHT_STATUS           0x309
 
-//! dimming for main display
-#define CANID_2_DIMMING                0x194
+/**
+ * \def CANID_2_DIMMING
+ * \brief CAN id: dimming for main display
+ *
+ * Message contains 3 bytes:
+ * \code
+ * byte  bit(s)   value          range             step
+ *    0  0        day/night
+ *    1  0..7     display level  0..200 (0..100%)  0.5% steps
+ *    2  0..7     interior level 0..200 (0..100%)  0.5% steps
+ * \endcode
+ *
+ */
+#define CANID_2_DIMMING                0x308
 
-//! switches units and language
+/**
+ * \def CANID_2_LANGUAGE_AND_UNIT
+ * \brief switches units and language
+ */
 #define CANID_2_LANGUAGE_AND_UNIT      0x2B0
 
-//! config status 2 - rear view camera present
+/**
+ * \def CANID_2_CONFIG_STATUS2
+ * \brief config status 2 - rear view camera present
+ */
 #define CANID_2_CONFIG_STATUS2         0x21E
 
-//! navigation turn-by-turn information
+/**
+ * \def CANID_2_NAVI_TURN_BY_TURN
+ * \brief navigation turn-by-turn information for instrument cluster
+ */
 #define CANID_2_NAVI_TURN_BY_TURN      0x2D4
 
-//! radio station name
+/**
+ * \def CANID_2_RADIO_STATION_NAME
+ * \brief radio station name
+ */
 #define CANID_2_RADIO_STATION_NAME     0x295
 
+/*! @} */
 
 /***************************************************************************/
 /* Bit Definitions                                                         */
