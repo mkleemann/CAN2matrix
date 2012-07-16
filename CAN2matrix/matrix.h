@@ -222,7 +222,7 @@
 #define DAY_NIGHT_LOWER_LIMIT          0x40
 
 //! averaging interval (steps) for dim value
-#define DIM_STEPS_2_AVERAGE            32
+#define DIM_STEPS_2_AVERAGE            64
 
 
 /***************************************************************************/
