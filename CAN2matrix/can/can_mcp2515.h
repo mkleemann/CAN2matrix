@@ -253,6 +253,12 @@ bool can_check_message_received(eChipSelect chip);
  */
 bool can_check_free_tx_buffers(eChipSelect chip);
 
+/**
+ * @brief aborting all CAN transmissions
+ * @param  chip - select chip to use
+ */
+void can_abort_all_transmissions(eChipSelect chip);
+
 /**************************************************************************/
 /* HELPERS                                                                */
 /**************************************************************************/

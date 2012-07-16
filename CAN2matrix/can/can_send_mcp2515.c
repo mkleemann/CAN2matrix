@@ -117,4 +117,26 @@ uint8_t can_send_message(eChipSelect   chip,
 }
 
 
+/**
+ * @brief aborting all CAN transmissions
+ * @param  chip - select chip to use
+ */
+void can_abort_all_transmissions(eChipSelect chip)
+{
+   uint8_t mask = (1 << TXB2CNTRL_TXREQ) | (1 << TXB1CNTRL_TXREQ) | (1 << TXB0CNTRL_TXREQ);
+
+   // set ABAT bit to abort transmission
+   bit_modify_mcp2515(chip, CANCTRL(0), (1 << ABAT), (1 << ABAT));
+
+   // check if all buffers are empty/aborted
+   while(mask & read_status_mcp2515(chip, MCP2515_READ_STATUS))
+   {
+      // wait for TX request pending bits to be cleared
+      _delay_us(1);
+   }
+
+   // reset ABAT flag
+   bit_modify_mcp2515(chip, CANCTRL(0), (1 << ABAT), 0);
+}
+
 
