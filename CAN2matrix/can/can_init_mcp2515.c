@@ -129,7 +129,7 @@ bool can_init_mcp2515(eChipSelect chip,
       // setup TXnRTS pins as input
       write_register_mcp2515(chip, TXRTSCTRL, 0);
       // set MCP2515 into normal operations mode (no longer configurable)
-      bit_modify_mcp2515(chip, CANCTRL(0), 0xE0, 0);
+      set_mode_mcp2515(chip, NORMAL_MODE);
    }
 
    return(retVal);
