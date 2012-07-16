@@ -129,6 +129,10 @@ void sleepDetected()
    // stop adc to save power
    adc_disable();
 
+   // abort any pending CAN frames to be transmitted on CAN
+   can_abort_all_transmissions(CAN_CHIP1);
+   can_abort_all_transmissions(CAN_CHIP2);
+
    // (re)set global flags
    send_it  = 0;
 
