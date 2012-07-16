@@ -31,7 +31,16 @@
 /***************************************************************************/
 /* Definition of car CAN message ids                                       */
 /***************************************************************************/
-// currently a mix of infotainment and convenience CAN bus signals
+
+/**
+ * \addtogroup matrix_can_ids_master CAN ids of master (CAN #1)
+ * \brief all CAN ids for the first CAN bus used
+ *
+ * \note Currently a mix of infotainment and convenience CAN bus signals.
+ *
+ * @{
+ */
+
 
 //! ignition by key status
 //! another id could be 0x2C3 - verify
@@ -121,6 +130,9 @@
 //! to be verified
 #define CANID_1_NAVI_STATUS            0x436
 
+/*! @} */
+
+
 /***************************************************************************/
 /* Definition of radio CAN message ids                                     */
 /***************************************************************************/
@@ -201,6 +213,12 @@
 /* Bit Definitions                                                         */
 /***************************************************************************/
 
+/**
+ * \addtogroup matrix_bit_defs_can_1 Bit Definitions of CAN #1
+ * \brief bit definitions for CAN signals used on CAN #1
+ * @{
+ */
+
 //! Ignition CAN1
 //! clamp S
 #define IGN_1_CL_S                     0
@@ -226,6 +244,15 @@
 #define IGN_1_START_Status    ((1 << IGN_1_CL_50) | (1 << IGN_1_CL_X))
 //! ignition on status
 #define IGN_1_ON               (1 << IGN_1_CL_15)
+
+/*! @} */
+
+
+/**
+ * \addtogroup matrix_bit_defs_can_2 Bit Definitions of CAN #2
+ * \brief bit definitions for CAN signals used on CAN #2
+ * @{
+ */
 
 //! Ignition CAN2
 //! key status (in/out)
@@ -253,10 +280,18 @@
 //! night mode setup
 #define DIM_2_NIGHT_MODE       (1 << DIM_2_DAY_NIGHT)
 
+/*! @} */
+
 
 /***************************************************************************/
 /* DEFINITIONS                                                             */
 /***************************************************************************/
+
+/**
+ * \addtogroup matrix_common_definitions Definitions for The Matrix
+ * \brief Definitions for The Matrix to use for calculating CAN values
+ * @{
+ */
 
 //! when to switch from day to night mode and vice versa (hysteresis)
 //! upper limit
@@ -268,6 +303,7 @@
 //! averaging interval (steps) for dim value
 #define DIM_STEPS_2_AVERAGE            64
 
+/*! @} */
 
 /***************************************************************************/
 /* functions for matrix operations                                         */
