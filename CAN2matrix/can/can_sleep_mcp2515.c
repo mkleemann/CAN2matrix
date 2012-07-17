@@ -57,9 +57,32 @@ void mcp2515_sleep(eChipSelect         chip,
  * @brief  wakeup MCP2515 (and attached MCP2551) from sleep mode
  *
  * @param  chip - chip to use
+ * @param  mode - how/when to activate MCP2515 again
+ *
+ * If in manual wakeup mode, a special sequence is needed to wake the
+ * MCP2515 up. This is not needed, when activating the controller by CAN
+ * bus activity.
+ *
+ * \attention
+ * The MCP2515 will wake up when bus activity occurs or <b>when the MCU sets,
+ * via the SPI interface, the CANINTF.WAKIF bit to 'generate' a wake-up
+ * attempt (the CANINTE.WAKIE bit must also be set in order for the wake-up
+ * interrupt to occur).</b>
  */
-void mcp2515_wakeup(eChipSelect   chip)
+void mcp2515_wakeup(eChipSelect         chip,
+                    eInternalSleepMode  mode)
 {
+   if(INT_SLEEP_MANUAL_WAKEUP == mode)
+   {
+      // "generate" a wakeup interrupt, if MCP2515 is in manual
+      // wakeup mode
+      bit_modify_mcp2515(chip, CANINTF, (1 << WAKIF), (1 << WAKIF));
+      bit_modify_mcp2515(chip, CANINTE, (1 << WAKIE), (1 << WAKIE));
+
+      // wait for "interrupt" to be ready
+      _delay_ms(1);
+   }
+
    // reset int enable and remove the interrupt flag
    bit_modify_mcp2515(chip, CANINTE, (1 << WAKIE), 0);
    bit_modify_mcp2515(chip, CANINTF, (1 << WAKIF), 0);

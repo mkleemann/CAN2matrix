@@ -130,10 +130,10 @@ void sleepDetected()
    adc_disable();
 
    // abort any pending CAN frames to be transmitted on CAN
-   can_abort_all_transmissions(CAN_CHIP1);
+//   can_abort_all_transmissions(CAN_CHIP1);
    // wait for SPI
-   _delay_ms(1);
-   can_abort_all_transmissions(CAN_CHIP2);
+//   _delay_ms(1);
+//   can_abort_all_transmissions(CAN_CHIP2);
 
    // (re)set global flags
    send_it  = 0;
@@ -207,13 +207,13 @@ void wakeUp()
    cli();
 #ifndef ___SIMULATION___
    // wakeup all CAN busses
-   mcp2515_wakeup(CAN_CHIP1);
+   mcp2515_wakeup(CAN_CHIP1, INT_SLEEP_WAKEUP_BY_CAN);
    // wait a little for the CAN controller to be ready (Tosc * 128)
-   _delay_ms(100);
+   _delay_ms(1);
 #ifndef ___SINGLE_CAN___
-   mcp2515_wakeup(CAN_CHIP2);
+   mcp2515_wakeup(CAN_CHIP2, INT_SLEEP_MANUAL_WAKEUP);
    // wait a little for the CAN controller to be ready (Tosc * 128)
-   _delay_ms(100);
+   _delay_ms(1);
 #endif
 #endif
 
@@ -242,14 +242,14 @@ void run()
    _delay_ms(1);
 
 #ifndef ___SINGLE_CAN___
-   /**** GET MESSAGES FROM CAN2 ***********************************/
-
-   handleCan2Reception(&msg);
-   _delay_ms(1);
-
    /**** PUT MESSAGES TO CAN2 *************************************/
 
    handleCan2Transmission(&msg);
+   _delay_ms(1);
+
+   /**** GET MESSAGES FROM CAN2 ***********************************/
+
+   handleCan2Reception(&msg);
    _delay_ms(1);
 #endif
 
