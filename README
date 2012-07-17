@@ -25,16 +25,12 @@ Current state is the implementation of the dual CAN treatment. Some special
 CAN ids (minimal navigation signals) are now treated and can be tested with
 a CAN adapter or the real target radio.
 
-Additionally a simple bus sleep detection is working to put the connected CAN
-chip (MCP2515) to sleep (CAN1), w/o the MCP2551 to be able to detect CAN
-activity. CAN2 (slave) will be powered down completely with MCP2551. AVR goes
-down on power down mode with INT0 enabled to wake it up (wake on CAN
+Additionally bus sleep detection is working to put the connected CAN
+controllers (MCP2515) to sleep. For CAN1 (master) the connected MCP2551
+is not going to sleep, since it is needed for detecting CAN activity. The
+slave MCP2551 is also put into sleep mode and woken up with th econtroller.
+AVR goes into power down mode with INT0 enabled to wake it up (wake on CAN
 activity).
-
-On a solderless breadboard it works just fine. A first version on a PCB based
-one (soldered) has its difficulties to startup every time or after a sleep
-cycle. It feels like the wires are too long or have some influences to each
-other which causes this. Now to investigate...
 
 Note: Only standard CAN frames are supported right now.
 
@@ -48,7 +44,7 @@ Next Steps/Ideas:
 (D)one
 
 - (D) Power Down (all chips including AVR) by CAN bus sleep
-- (T) Wake Up by CAN activity on the (master) bus (MCP25*) - new hardware
+- (D) Wake Up by CAN activity on the (master) bus (MCP25*) - new hardware
 - (D) Wake Up by CAN activity for AVR itself
 - (P) Implement "The CAN Matrix" in code
 - (S) Additional functionality, like PDC distance showed by LEDs
