@@ -26,6 +26,8 @@
  * @brief  get error state of CAN bus
  * @param  chip - select chip to use
  * @return error state
+ *
+ * \todo Add error detection logic.
  */
 can_error_t can_get_bus_errors(eChipSelect chip)
 {
