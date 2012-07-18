@@ -427,14 +427,14 @@ void sendCan2Message(can_t* msg)
  * a too fast changing value - also for detecting darkness and switch
  * to night mode - this needs some thought. The formula to use is:
  * \code
- *    dimAverage = dimAverage - value/DIM_STEPS_2_AVERAGE + value;
+ *    dimAverage = value/DIM_STEPS_2_AVERAGE + dimAverage - dimAverage/DIM_STEPS_2_AVERAGE;
  * \endcode
  *
  */
 void setDimValue(uint16_t value)
 {
    // integral for averaging dim values
-   dimAverage = dimAverage - value/DIM_STEPS_2_AVERAGE + value;
+   dimAverage = value/DIM_STEPS_2_AVERAGE + dimAverage - dimAverage/DIM_STEPS_2_AVERAGE;
 
    // set dim level for upper 8bit of 10bit left aligned average value
    //

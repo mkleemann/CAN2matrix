@@ -301,7 +301,7 @@
 #define DAY_NIGHT_LOWER_LIMIT          0x40
 
 //! averaging interval (steps) for dim value
-#define DIM_STEPS_2_AVERAGE            64
+#define DIM_STEPS_2_AVERAGE            16
 
 /*! @} */
 
@@ -432,7 +432,7 @@ void sendCan2Message(can_t* msg);
  * a too fast changing value - also for detecting darkness and switch
  * to night mode - this needs some thought. The formula to use is:
  * \code
- *    dimAverage = dimAverage - value/DIM_STEPS_2_AVERAGE + value;
+ *    dimAverage = value/DIM_STEPS_2_AVERAGE + dimAverage - dimAverage/DIM_STEPS_2_AVERAGE;
  * \endcode
  *
  */
