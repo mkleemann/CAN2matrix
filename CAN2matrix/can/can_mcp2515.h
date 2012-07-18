@@ -97,7 +97,30 @@ typedef struct
    } flags;
 } can_filter_t;
 
-
+/**
+ * @brief CAN error states
+ */
+typedef enum
+{
+   //! Receive Buffer 1 Overflow
+   CAN_ERR_RX1_OVERFLOW = 0,
+   //! Receive Buffer 0 Overflow
+   CAN_ERR_RX0_OVERFLOW = 1,
+   //! Bus-Off Error when TEC reaches 255
+   CAN_ERR_TX_BUS_OFF   = 2,
+   //! Transmit Error-Passive when TEC is equal to or greater than 128
+   CAN_ERR_TX_PASSIVE   = 3,
+   //! Receive Error-Passive when REC is equal to or greater than 128
+   CAN_ERR_RX_PASSIVE   = 4,
+   //! Transmit Error Warning when TEC is equal to or greater than 96
+   CAN_ERR_TX_WARNING   = 5,
+   //! Receive Error Warning when REC is equal to or greater than 96
+   CAN_ERR_RX_WARNING   = 6,
+   //! Error Warning when TEC or REC is equal to or greater than 96
+   CAN_ERR_WARNING      = 7,
+   //! No Error detected
+   CAN_ERR_NO_ERROR     = 8
+} can_error_t;
 
 
 /**************************************************************************/
@@ -270,6 +293,13 @@ bool can_check_free_tx_buffers(eChipSelect chip);
  * @param  chip - select chip to use
  */
 void can_abort_all_transmissions(eChipSelect chip);
+
+/**
+ * @brief  get error state of CAN bus
+ * @param  chip - select chip to use
+ * @return error state
+ */
+can_error_t can_get_bus_errors(eChipSelect chip);
 
 /**************************************************************************/
 /* HELPERS                                                                */
