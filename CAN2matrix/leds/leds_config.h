@@ -44,9 +44,10 @@ typedef enum
 } eLED;
 
 /**
+ * \def P_LEDS
  * @brief defines for global array to access port pins directly via port address
  *
- * Note: The definitions here correspond to the LED names above.
+ * Note: The definitions here correspond to the LED names in eLED.
  */
 #define P_LEDS    {&DDR(C), &PORT(C), PINC1}, \
                   {&DDR(C), &PORT(C), PINC2}, \
