@@ -212,7 +212,7 @@ void fillInfoToCAN2(can_t* msg)
                          (storage.dimLevel < DAY_NIGHT_LOWER_LIMIT)) ||
                         ((true == nightMode) &&
                          (storage.dimLevel < DAY_NIGHT_UPPER_LIMIT));
-         msg->data[0] = (nightMode) ? DIM_2_NIGHT_MODE : DIM_2_DAY_MODE;
+         msg->data[0] = (nightMode) ? DIM_2_DAY_MODE : DIM_2_NIGHT_MODE;
          msg->data[1] = storage.dimLevel; // radio
          msg->data[2] = storage.dimLevel; // interior
          break;
