@@ -258,10 +258,6 @@ void run()
    handleCan1Transmission(&msg);
    _delay_ms(1);
 
-   // check and set dim value
-   uint16_t dimValue = adc_get();
-   setDimValue(dimValue);
-
 #else
    if (send500ms)   // approx. 500ms 4MHz@1024 prescale factor
    {
@@ -481,6 +477,10 @@ void handleCan2Transmission(can_t* msg)
 
       sendCan2_100ms(msg);
 
+      // sample and set dim value
+      uint16_t dimValue = adc_get();
+      setDimValue(dimValue);
+
       // signal activity
       led_toggle(txCan2LED);
    }
@@ -488,10 +488,6 @@ void handleCan2Transmission(can_t* msg)
    if (send500ms)   // approx. 500ms 4MHz@1024 prescale factor
    {
       send500ms = false;
-
-      // check and set dim value
-      uint16_t dimValue = adc_get();
-      setDimValue((uint8_t) dimValue);  // ADC config set to 8bit resolution
 
       sendCan2_500ms(msg);
 
