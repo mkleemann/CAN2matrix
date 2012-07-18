@@ -115,6 +115,10 @@ typedef enum
 
 /**
  * @brief Go to sleep mode. Deactivate CAN and set the sleep mode.
+ *
+ * Sleep trigger was detected (no CAN activity on master bus). All timers are
+ * stopped and ADC disabled. CAN controllers are put to sleep and AVR is
+ * preparing for sleep mode.
  */
 void sleepDetected(void);
 
@@ -122,8 +126,8 @@ void sleepDetected(void);
 /**
  * @brief enter AVR sleep mode
  *
- * AVR also wakes up in this function, so some intial steps need to
- * be done here.
+ * AVR enters sleep mode and also wakes up in this state, so some intial
+ * steps to set wakeup interrupt need to be done here.
  *
  * The three \c _NOP(); instructions are a safety, since older AVRs may
  * skip the next couple of instructions after sleep mode.
@@ -136,6 +140,9 @@ void sleeping(void);
 
 /**
  * @brief wake up CAN and reinitialize the timers
+ *
+ * Now the AVR has woken up. Timers needs to be restarted, ADC to be enabled
+ * again and the CAN controllers will also need to enter their working mode.
  */
 void wakeUp(void);
 

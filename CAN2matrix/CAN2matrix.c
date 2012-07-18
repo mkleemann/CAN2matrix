@@ -47,6 +47,10 @@ static volatile state_t fsmState     = INIT;
 
 /**
  * @brief main loop
+ *
+ * The main loop consists of the FSM and calls all necessary init sequences
+ * before entering it. Any error in the init process will result in
+ * entering the error state. This is indicated by a blinking LED.
  **/
 int main(void)
 {
@@ -118,7 +122,11 @@ int main(void)
 /***************************************************************************/
 
 /**
- * @brief Deactivate CAN and timers.
+ * @brief Deactivate CAN and timers
+ *
+ * Sleep trigger was detected (no CAN activity on master bus). All timers are
+ * stopped and ADC disabled. CAN controllers are put to sleep and AVR is
+ * preparing for sleep mode.
  */
 void sleepDetected()
 {
@@ -160,8 +168,8 @@ void sleepDetected()
 /**
  * @brief enter AVR sleep mode
  *
- * AVR also wakes up in this function, so some intial steps need to
- * be done here.
+ * AVR enters sleep mode and also wakes up in this state, so some intial
+ * steps to set wakeup interrupt need to be done here.
  *
  * The three \c _NOP(); instructions are a safety, since older AVRs may
  * skip the next couple of instructions after sleep mode.
@@ -201,6 +209,9 @@ void sleeping()
 
 /**
  * @brief wake up CAN and reinitialize the timers
+ *
+ * Now the AVR has woken up. Timers needs to be restarted, ADC to be enabled
+ * again and the CAN controllers will also need to enter their working mode.
  */
 void wakeUp()
 {
