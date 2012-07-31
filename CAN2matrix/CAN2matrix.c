@@ -137,11 +137,13 @@ void sleepDetected()
    // stop adc to save power
    adc_disable();
 
+#ifdef ___TEST_TX_ABORT__
    // abort any pending CAN frames to be transmitted on CAN
-//   can_abort_all_transmissions(CAN_CHIP1);
+   can_abort_all_transmissions(CAN_CHIP1);
    // wait for SPI
-//   _delay_ms(1);
-//   can_abort_all_transmissions(CAN_CHIP2);
+   _delay_ms(1);
+   can_abort_all_transmissions(CAN_CHIP2);
+#endif
 
    // (re)set global flags
    send_it  = 0;
