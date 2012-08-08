@@ -54,7 +54,11 @@
  *
  * Comment this defintion to avoid using this feature.
  */
+#ifdef __DOXYGEN__
+   #define BAR_INVERTED
+#else
 //#define BAR_INVERTED
+#endif
 
 /***************************************************************************/
 /* PORT/PIN DEFINITIONS                                                    */
@@ -89,7 +93,11 @@
  *
  * Comment this defintion to avoid using this feature.
  */
+#ifdef __DOXYGEN__
+   #define P_BAR_CS        D,5
+#else
 //#define P_BAR_CS        D,5
+#endif
 
 /**
  * @brief define if chip select pin is inverted
@@ -99,7 +107,10 @@
  *
  * Comment this defintion to avoid using this feature.
  */
+#ifdef __DOXYGEN__
+   #define P_BAR_CS_INVERTED
+#else
 //#define P_BAR_CS_INVERTED
-
+#endif
 
 #endif
