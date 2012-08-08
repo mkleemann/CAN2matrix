@@ -40,9 +40,13 @@
  *    1    1    1 External clock source on T0 pin. Clock on rising edge
  * \endcode
  *
- * TIMER0 with prescaler clkI/O/1024
+ * Example sets TIMER0 with prescaler clkI/O/1024
  */
+#ifdef __DOXYGEN__
+   #define TIMER0_PRESCALER      (1 << CS02) | (1 << CS00)
+#else
 //#define TIMER0_PRESCALER      (1 << CS02) | (1 << CS00)
+#endif
 
 /**
  * \def TIMER1_PRESCALER
@@ -64,7 +68,11 @@
  */
 #define TIMER1_PRESCALER      (1 << CS12) | (1 << CS10)
 
-//! ~15s (4MHz@1024 prescale value)
+/**
+ * @brief Timer 1 Output Compare Value
+ *
+ * The value given calculates to approx. 15s (4MHz@1024 prescale value).
+ */
 #define TIMER1_COMPARE_VALUE  0xE4E1
 
 /**
@@ -87,8 +95,13 @@
  */
 #define TIMER2_PRESCALER      (1 << CS22) | (1 << CS21) | (1 << CS20)
 
-//! TIMER2 output compare value - default is max. 0xFF (255)
-//! --> value 99 is ~25ms (4MHz@1024 prescale factor)
+/**
+ * @brief Timer 2 Output Compare Value
+ *
+ * The value given calculates to approx. 25ms (4MHz@1024 prescale factor).
+ *
+ * Default value should be set to MAX (0xFF)
+ */
 #define TIMER2_COMPARE_VALUE  99
 
 #endif
