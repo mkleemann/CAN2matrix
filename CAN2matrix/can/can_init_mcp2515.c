@@ -69,10 +69,12 @@ static uint8_t  mcp2515_cnf[NUM_OF_CAN_BITRATES][3] = {
  *
  * @param  chip      - select chip to use
  * @param  bitrate   - CAN bitrate of chip selected
+ * @param  mode      - mode of operation of MCP2515 after init
  * @return true if ok, false if error
  */
 bool can_init_mcp2515(eChipSelect chip,
-                      eCanBitRate bitrate)
+                      eCanBitRate bitrate,
+                      uint8_t mode)
 {
    bool retVal = false;
 
@@ -129,7 +131,7 @@ bool can_init_mcp2515(eChipSelect chip,
       // setup TXnRTS pins as input
       write_register_mcp2515(chip, TXRTSCTRL, 0);
       // set MCP2515 into normal operations mode (no longer configurable)
-      set_mode_mcp2515(chip, NORMAL_MODE);
+      set_mode_mcp2515(chip, mode);
    }
 
    return(retVal);

@@ -139,11 +139,12 @@ typedef enum
  *
  * @param  chip      - select chip to use
  * @param  bitrate   - CAN bitrate of chip selected
+ * @param  mode      - mode of operation of MCP2515 after init
  * @return true if ok, false if error
  */
 bool can_init_mcp2515(eChipSelect chip,
-                      eCanBitRate bitrate);
-
+                      eCanBitRate bitrate,
+                      uint8_t mode);
 
 /**
  * @brief  write to MCP2515 registers

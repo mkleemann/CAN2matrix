@@ -353,7 +353,7 @@ bool initCAN()
 
 #ifndef ___SIMULATION___
    // init can interface 1
-   if (false == can_init_mcp2515(CAN_CHIP1, CAN_BITRATE_100_KBPS))
+   if (false == can_init_mcp2515(CAN_CHIP1, CAN_BITRATE_100_KBPS, NORMAL_MODE))
    {
       // signal error on initialization
       led_on(errCan1LED);
@@ -363,7 +363,7 @@ bool initCAN()
    _delay_ms(1);
 #ifndef ___SINGLE_CAN___
    // init can interface 2
-   if (false == can_init_mcp2515(CAN_CHIP2, CAN_BITRATE_125_KBPS))
+   if (false == can_init_mcp2515(CAN_CHIP2, CAN_BITRATE_125_KBPS, NORMAL_MODE))
    {
       // signal error on initialization
       led_on(errCan2LED);
