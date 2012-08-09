@@ -8,6 +8,8 @@ bar\bar.c
 
 CAN2matrix.c
 
+can\can_error_mcp2515.c
+
 can\can_filter_mcp2515.c
 
 can\can_init_mcp2515.c

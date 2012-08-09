@@ -53,6 +53,7 @@ C_SRCS +=  \
 ./adc/adc.c \
 ./bar/bar.c \
 ./CAN2matrix.c \
+./can/can_error_mcp2515.c \
 ./can/can_filter_mcp2515.c \
 ./can/can_init_mcp2515.c \
 ./can/can_receive_mcp2515.c \
@@ -65,16 +66,17 @@ C_SRCS +=  \
 ./uart/uart.c
 
 
-PREPROCESSING_SRCS +=
+PREPROCESSING_SRCS += 
 
 
-ASM_SRCS +=
+ASM_SRCS += 
 
 
 OBJS +=  \
 adc/adc.o \
 bar/bar.o \
 CAN2matrix.o \
+can/can_error_mcp2515.o \
 can/can_filter_mcp2515.o \
 can/can_init_mcp2515.o \
 can/can_receive_mcp2515.o \
@@ -91,6 +93,7 @@ OBJS_AS_ARGS +=  \
 adc/adc.o \
 bar/bar.o \
 CAN2matrix.o \
+can/can_error_mcp2515.o \
 can/can_filter_mcp2515.o \
 can/can_init_mcp2515.o \
 can/can_receive_mcp2515.o \
@@ -107,6 +110,7 @@ C_DEPS +=  \
 adc/adc.d \
 bar/bar.d \
 CAN2matrix.d \
+can/can_error_mcp2515.d \
 can/can_filter_mcp2515.d \
 can/can_init_mcp2515.d \
 can/can_receive_mcp2515.d \
@@ -123,6 +127,7 @@ C_DEPS_AS_ARGS +=  \
 adc/adc.d \
 bar/bar.d \
 CAN2matrix.d \
+can/can_error_mcp2515.d \
 can/can_filter_mcp2515.d \
 can/can_init_mcp2515.d \
 can/can_receive_mcp2515.d \
@@ -138,6 +143,7 @@ TEMPS += \
 adc.i \
 bar.i \
 CAN2matrix.i \
+can_error_mcp2515.i \
 can_filter_mcp2515.i \
 can_init_mcp2515.i \
 can_receive_mcp2515.i \
@@ -153,6 +159,7 @@ S_SRCS += \
 adc.s \
 bar.s \
 CAN2matrix.s \
+can_error_mcp2515.s \
 can_filter_mcp2515.s \
 can_init_mcp2515.s \
 can_receive_mcp2515.s \
