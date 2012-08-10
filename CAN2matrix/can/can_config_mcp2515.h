@@ -54,7 +54,7 @@ typedef enum
 /* SETTINGS                                                               */
 /**************************************************************************/
 
-// Port definitions to access the two MCP2515
+// Port definitions to access the defined MCP2515
 
 /**
  * \def CHIP1_CS_PIN
