@@ -22,7 +22,8 @@
 #define LEDS_CONFIG_H_
 
 /**
- * @brief define LEDs connected to your controller
+ * \enum eLED
+ * \brief define LEDs connected to your controller
  *
  * Name them as you wish, but keep in mind that it matches the
  * port/pin definitions below.
@@ -45,9 +46,10 @@ typedef enum
 
 /**
  * \def P_LEDS
- * @brief defines for global array to access port pins directly via port address
+ * \brief defines for global array to access port pins directly via port address
  *
- * Note: The definitions here correspond to the LED names in eLED.
+ * Note: The definitions here correspond to the LED names in eLED. They also
+ *       correspond to the type definition of ledType in leds.h.
  */
 #define P_LEDS    {&DDR(C), &PORT(C), PINC1}, \
                   {&DDR(C), &PORT(C), PINC2}, \
