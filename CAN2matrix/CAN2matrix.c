@@ -24,6 +24,7 @@
 #include <avr/sleep.h>
 #include <avr/cpufunc.h>
 #include <util/delay.h>
+//#include <stdlib.h>
 
 #include "util/util.h"
 #include "spi/spi.h"
@@ -31,6 +32,7 @@
 #include "timer/timer.h"
 #include "leds/leds.h"
 #include "adc/adc.h"
+//#include "uart/uart.h"
 #include "CAN2matrix.h"
 #include "matrix.h"
 
@@ -333,6 +335,9 @@ void initHardware()
    // initialize adc
    adc_init();
 
+   // initialize uart
+//   uart_init();
+
    // set wakeup interrupt trigger on low level
    MCUCR |= EXTERNAL_INT0_TRIGGER;
 }
@@ -496,6 +501,10 @@ void handleCan2Transmission(can_t* msg)
 
       // signal activity
       led_toggle(txCan2LED);
+
+//      char asc[7];
+//      uart_puts(utoa(dimValue, asc, 16));
+//      uart_puts("\r");
    }
 
    if (send500ms)   // approx. 500ms 4MHz@1024 prescale factor
