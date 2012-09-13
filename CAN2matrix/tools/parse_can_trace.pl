@@ -8,8 +8,7 @@ use File::Find;
 ##############################################################################
 #
 #   filename     : parse_can_trace.pl
-#   description  : generates plotfiles for import in Istanbul to show
-#                  memory usage by Hydra depending on location
+#   description  : generates parsed output from trace files by given IDs
 #
 #   prog lang    : Perl
 #   platform     : ActiveState ActivePerl 5.8 (Win32)
@@ -148,7 +147,7 @@ or if Perl isn't included in your search path
       parse test.trc for any entry with ID 05E4 or 0271 and writes it to
       _05E4_0271.csv.
 
-   hydra_heap_plotter.pl -help
+   parse_can_trace.pl -help
       show this help
 
 =head1 AUTHOR
