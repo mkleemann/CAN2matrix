@@ -170,10 +170,10 @@ void fillInfoToCAN2(can_t* msg)
          // byte 2/3: vehicle speed : not used here
          // byte 4/5: wheel count left
          // byte 6/7: wheel count right
-         msg->data[4] = storage.wheel1U;
-         msg->data[5] = storage.wheel1L;
-         msg->data[6] = storage.wheel2U;
-         msg->data[7] = storage.wheel2L;
+         msg->data[4] = storage.wheelU;
+         msg->data[5] = storage.wheelL;
+         msg->data[6] = storage.wheelU;
+         msg->data[7] = storage.wheelL;
          break;
       }
 
@@ -282,15 +282,15 @@ void transferGearStatus(can_t* msg)
    uint8_t byte7  = msg->data[6];
 
    // get information (automatic PRND)
-   if(7 == byte8)
+   if(7 == byte7)
    {  // reverse gear
       status |= 0x01;
    }
-   else if(6 == byte8)
+   else if(6 == byte7)
    {  // neutral
       status |= 0x02;
    }
-   else if(8 != byte8)
+   else if(8 != byte7)
    {  // drive/sport/tip/... (not parking)
       status |= 0x04;
    }
