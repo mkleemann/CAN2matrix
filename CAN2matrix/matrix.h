@@ -42,33 +42,132 @@
  */
 
 
-//! ignition by key status
-//! another id could be 0x2C3 - verify
+/**
+ * \def CANID_1_IGNITION
+ * \brief ignition by key status
+ * verified:
+ *
+ * \code
+ * byte 0: IGN Status
+ *  bit 0: key in 1; out 0
+ *  bit 1: clamp 15 - ignition on 1; off 0
+ *  bit 2: clamp X  - see clamp 15 except for ignition
+ *  bit 3: clamp 50 - starter on 1; off 0
+ *  bit 4: clamp P  - parking light mode on 1; off 0
+ *  bit 5: not used
+ *  bit 6: clamp 15 - SV circuits on 1; off 0
+ *  bit 7: clamp L  - charge control
+ *
+ * byte 1: Diagnosis Error Status
+ *  bit 0..6: not used
+ *  bit    7: at least one error entry is available
+ * \endcode
+ */
 #define CANID_1_IGNITION               0x271
 
-//! wheel count values for navigation
-//! also via gateway signal 0x351 (old!)
-#define CANID_1_WHEEL_DATA             0x455
+/**
+ * \def CANID_1_WHEEL_GEAR_DATA
+ * \brief wheel count and speed (gateway)
+ *
+ * verified:
+ *
+ * \code
+ * byte 0:
+ *  bit 1: reverse gear/reverse lights on
+ *
+ * byte 1..2:
+ *  bit 0    : signal source 1 - ABS; 0 - Speedometer
+ *  bit 1..15: speed
+ *
+ * example:
+ *    "xx 01 00 xx xx xx xx" =  0.00 km/h
+ *    "xx DB 01 xx xx xx xx" =  2.37 km/h
+ *    "xx 71 17 xx xx xx xx" = 30.00 km/h
+ *
+ * byte 3..4:
+ *  bit 0..10: wheel impulse count
+ *  bit 11   : at least one overrun (1) or reset/no overrun (0)
+ *  bit 12   : ABS active
+ *  bit 13   : speed instead of wheel impulse count (defect)
+ *
+ * byte 5:
+ *  bit 0..7 : temperature (outside) in 0.5°C
+ *             -50..77°C (1..254)
+ *             0x00 - not available
+ *             0xFF - error
+ *
+ * byte 6:
+ *  bit 0..3 : gear box status
+ *  bit 4    :
+ *  bit 5    :
+ *  bit 6    :
+ *  bit 7    :
+ *
+ * \endcode
+ *
+ * \todo: verify gear box status values PRND/tip
+ */
+#define CANID_1_WHEEL_GEAR_DATA        0x351
 
-//! gear box status via gateway signal
-#define CANID_1_REVERSE_GEAR           0x351
-
-//! status of lights
-//! to be verified
+/**
+ * \def CANID_1_LIGHT_STATUS
+ * \brief status of lights
+ * to be verified
+ */
 #define CANID_1_LIGHT_STATUS           0x531
 
-//! automatic and manual dimming
+/**
+ * \def CANID_1_DIMMING
+ * \brief automatic and manual dimming
+ * to be verified
+ */
 #define CANID_1_DIMMING                0x635
 
-//! also a gateway signal
+/**
+ * \def CANID_1_LANGUAGE_AND_UNIT
+ * \brief also a gateway signal
+ * to be verified
+ */
 #define CANID_1_LANGUAGE_AND_UNIT      0x653
 
-//! park distance control values
-//! to be verified
+/**
+ * \def CANID_1_PDC_STATUS
+ * \brief park distance control values
+ *
+ * verified:
+ *
+ * \code
+ * 0xFF      : no object in range
+ * 0xFE      : sensor not available
+ * 0x00..0xFD: distance in cm.
+ *
+ * byte 0: front left
+ * byte 1: front right
+ * byte 2: rear left
+ * byte 3: rear right
+ * byte 4: front mid left
+ * byte 5: front mid right
+ * byte 6: rear mid left
+ * byte 7: rear mid right
+ * \endcode
+ */
 #define CANID_1_PDC_STATUS             0x54B
 
-//! time and odometer
-//! to be verified, but may also available via cluster
+/**
+ * \def CANID_1_TIME_AND_ODO
+ * \brief time and odometer
+ *
+ * verified:
+ *
+ * byte 1..3 - Odometer: The values are sent in reverse order, meaning that
+ * the byte 3 is the highest byte and byte 1 the lowest. A value of 125302km
+ * (hex 01E976) translates to a byte sequence of "xx 76 E9 01 xx xx xx xx"
+ * in the message.
+ *
+ *
+ * byte 4..7 - Time
+ * \todo: decode time information
+ */
 #define CANID_1_TIME_AND_ODO           0x65D
 
 //! vehicle identification number

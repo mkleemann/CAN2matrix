@@ -33,22 +33,10 @@
  */
 typedef struct
 {
-   //! wheel signal 1 upper byte (as-is)
-   uint8_t wheel1U;
-   //! wheel signal 1 lower byte (as-is)
-   uint8_t wheel1L;
-   //! wheel signal 2 upper byte (as-is)
-   uint8_t wheel2U;
-   //! wheel signal 2 lower byte (as-is)
-   uint8_t wheel2L;
-   //! wheel signal 3 upper byte (as-is)
-   uint8_t wheel3U;
-   //! wheel signal 3 lower byte (as-is)
-   uint8_t wheel3L;
-   //! wheel signal 4 upper byte (as-is)
-   uint8_t wheel4U;
-   //! wheel signal 4 lower byte (as-is)
-   uint8_t wheel4L;
+   //! wheel signal upper byte (as-is)
+   uint8_t wheelU;
+   //! wheel signal lower byte (as-is)
+   uint8_t wheelL;
    //! ignition key status (destination)
    uint8_t ignition;
    //! gear box status (destination)
@@ -85,14 +73,9 @@ void fetchInfoFromCAN1(can_t* msg)
          break;
       }
 
-      case CANID_1_WHEEL_DATA:
+      case CANID_1_WHEEL_GEAR_DATA:
       {
          transferWheelCount(msg);
-         break;
-      }
-
-      case CANID_1_REVERSE_GEAR:
-      {
          transferGearStatus(msg);
          break;
       }
@@ -280,14 +263,8 @@ void transferIgnStatus(can_t* msg)
 void transferWheelCount(can_t* msg)
 {
    // only 10 bits per wheel for count value
-   storage.wheel1U = msg->data[0] & 0x3;  // FL
-   storage.wheel1L = msg->data[1];
-   storage.wheel2U = msg->data[2] & 0x3;  // FR
-   storage.wheel2L = msg->data[3];
-   storage.wheel3U = msg->data[4] & 0x3;  // RL
-   storage.wheel3L = msg->data[5];
-   storage.wheel4U = msg->data[6] & 0x3;  // RR
-   storage.wheel4L = msg->data[7];
+   storage.wheelL = msg->data[3];
+   storage.wheelU = msg->data[4] & 0x3;
 }
 
 /**
@@ -296,11 +273,13 @@ void transferWheelCount(can_t* msg)
  * Direction from CAN1 to CAN2
  *
  * @param msg - pointer to CAN message
+ *
+ * \todo evaluate correct gear box status from master
  */
 void transferGearStatus(can_t* msg)
 {
    uint8_t status = 0;  // position P
-   uint8_t byte8  = msg->data[7];
+   uint8_t byte7  = msg->data[6];
 
    // get information (automatic PRND)
    if(7 == byte8)
