@@ -91,7 +91,18 @@ while (<TRACE2PARSE>) {
          # $3 CAN ID
          # $4 message length
          # $5 payload (data bytes)
-         printf(OUT "%s\t%s\t%s\t%s\n", $1, $3, $4, $5);
+         my @bytes = split(/[ \t]/, $5);
+
+         printf(OUT "%s\t%s\t%s\t%s - ", $1, $3, $4, $5);
+         foreach $character (@bytes) {
+            my $value = hex($character);
+            if ($value > 0x1F) {
+               printf(OUT "%s", chr($value));
+            } else {
+               printf(OUT ".");
+            }
+         }
+         printf(OUT "\n");
       }
    }
 }
