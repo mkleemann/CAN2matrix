@@ -53,39 +53,60 @@ my $outfile = ".parsed";
 my $initial = 0;
 my @id_storage;
 my %id_lookup;
+my $all = 0;
 
 # get arguments
 while ($_ = shift @ARGV) {
-   if ( /^-help/) {           # need help
+   if (/^-help/) {            # need help
       usagePrint();
       exit;
    }
-   if (0 == $initial) {
+   if (/^-all/) {             # need all messages
+      $all = 1;
+      next;
+   }
+   if (0 == $initial) {       # get tracefile
       $trace2parse = $_;
       $initial = 1;
       next;
    }
-   # get ids
-   push(@id_storage, uc $_);
+   if ($all) {
+      next;
+   } else {                   # get id filter
+      # get ids
+      push(@id_storage, uc $_);
+   }
+}
+
+# no filename given
+if (0 == $initial) {
+   usagePrint();
+   exit;
 }
 
 # fill hash from argument array to fast lookup availability
 @id_lookup{@id_storage} = ();
 
-foreach $element (@id_storage) {
-   $outfile = join($element, "_", $outfile);
+# create filename for result
+if ($all) {
+   $outfile = join($trace2parse, "_", $outfile);
+} else {
+   foreach $element (@id_storage) {
+      $outfile = join($element, "_", $outfile);
+   }
 }
 
 open(TRACE2PARSE, "<$trace2parse") or die "Could not open $trace2parse.";
 open(OUT, ">$outfile") or die "Could not create $outfile.";
 
+# header
 printf(OUT "ID\tLength\tData\tTimestamp\n");
 
 while (<TRACE2PARSE>) {
    # example of line to parse
    #      1)    755889.9  Rx         0591  3  00 00 89
    if (/[0-9]*\)[\t ]*([0-9.]*)[\t ]*(T|R)x[\t ]*([0-9A-F]{4})[\t ]*([0-8]{1})[\t ]*(.*)/) {
-      if (exists $id_lookup{$3}) {
+      if (exists $id_lookup{$3} || $all) {
          # $1 timestamp
          # $2 Rx/Tx
          # $3 CAN ID
@@ -147,7 +168,8 @@ This script is parsing logfiles written by PCAN toolchain. It filters by
 IDs given by program arguments.
 
 The output is written to a file. The name is compiled by IDs given in
-arguments and other information.
+arguments or other information. The case of the ids given is not relevant,
+but the leading 0 is.
 
 =head2 File Associations on a Win32 System
 
@@ -168,12 +190,17 @@ or if Perl isn't included in your search path
 =head2 [option(s)]
 
    -help                - show this help
+   -all                 - no filter, given IDs are ignored
 
 =head1 EXAMPLES
 
    parse_can_trace.pl test.trc 05E4 0271
       parse test.trc for any entry with ID 05E4 or 0271 and writes it to
-      _05E4_0271.csv.
+      _05E4_0271.parsed
+
+   parse_can_trace.pl -all test.trc 05E4 0271
+      parse test.trc, ignore any ID given and create a full reformatted
+      output in file _test.trc.parsed
 
    parse_can_trace.pl -help
       show this help
