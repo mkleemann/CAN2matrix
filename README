@@ -8,8 +8,9 @@ Single CAN solutions exist, but often they lack in something or other. So I
 used the tips and tricks to combine such solutions.
 
 *****************************************************************************
-* Note: The project is AVRStudio 5 based. A makefile for WINAVR or any      *
-*       other VAR toolchain is only maintained from time to time.           *
+* Note: The project is AVRStudio 5/Atmel Studio 6 based. A makefile for     *
+*       WINAVR or any other AVR toolchain is only maintained from time to   *
+*       time. Documentation via doxygen (e.g. "make docu").                 *
 *****************************************************************************
 
 Both CAN buses (could) use a different bitrate. Only a small number of
@@ -23,7 +24,13 @@ Current Stage:
 
 Current state is the implementation of the dual CAN treatment. Some special
 CAN ids (minimal navigation signals) are now treated and can be tested with
-a CAN adapter or the real target radio.
+a CAN adapter or the real target radio. It shows, that not all IDs are right
+the first time the implementation took place. This needs some fine tuning.
+
+Some further testing is also needed to get all information from the car CAN
+bus and treat them as necessary. Especially the communication to the
+instrument cluster to show some station information like the original car
+radio would be nice.
 
 Additionally bus sleep detection is working to put the connected CAN
 controllers (MCP2515) to sleep. For CAN1 (master) the connected MCP2551
@@ -47,13 +54,17 @@ Next Steps/Ideas:
 - (D) Power Down (all chips including AVR) by CAN bus sleep
 - (D) Wake Up by CAN activity on the (master) bus (MCP25*) - new hardware
 - (D) Wake Up by CAN activity for AVR itself
-- (P) Implement "The CAN Matrix" in code
-- (S) Additional functionality, like PDC distance showed by LEDs
+- (T) Implement "The CAN Matrix" in code
 - (D) dim unit using a light dependent resistor
+- (M) implement CAN message filtering to get only IDs used
 - (O) EEPROM use for message matrix
-- (O) make use of other AVRs to include CAN2analog or Analog2CAN possibility
-- (O) turn lights using fog lights with fade out
 - (O) implement support for extended CAN frames
+
+Postponed or different projects
+===============================
+- PDC distance showed by LEDs (see PDCViewer project)
+- make use of other AVRs to include CAN2analog or Analog2CAN possibility
+- turn lights using fog lights with fade out
 
 Have fun!
 
