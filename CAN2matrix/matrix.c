@@ -275,6 +275,8 @@ void transferWheelCount(can_t* msg)
  * @param msg - pointer to CAN message
  *
  * \todo evaluate correct gear box status from master
+ *
+ * \todo add definitions for destination gear box (CAN2)
  */
 void transferGearStatus(can_t* msg)
 {

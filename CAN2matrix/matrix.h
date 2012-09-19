@@ -97,15 +97,13 @@
  *             0xFF - error
  *
  * byte 6:
- *  bit 0..3 : gear box status
- *  bit 4    :
- *  bit 5    :
- *  bit 6    :
- *  bit 7    :
- *
+ *  bit 0..7 : temperature (outside) in 0.5°C
+ *             -50..77°C (1..254)
+ *             0x00 - not available
+ *             0xFF - error
  * \endcode
  *
- * \todo: verify gear box status values PRND/tip
+ * \todo verify gear box status values PRND/tip
  */
 #define CANID_1_WHEEL_GEAR_DATA        0x351
 
@@ -166,7 +164,7 @@
  *
  *
  * byte 4..7 - Time
- * \todo: decode time information
+ * \todo decode time information
  */
 #define CANID_1_TIME_AND_ODO           0x65D
 
