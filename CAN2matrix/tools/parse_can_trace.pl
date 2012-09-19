@@ -79,7 +79,7 @@ foreach $element (@id_storage) {
 open(TRACE2PARSE, "<$trace2parse") or die "Could not open $trace2parse.";
 open(OUT, ">$outfile") or die "Could not create $outfile.";
 
-printf(OUT "Timestamp\tID\tLength\tData\n");
+printf(OUT "ID\tLength\tData\tTimestamp\n");
 
 while (<TRACE2PARSE>) {
    # example of line to parse
@@ -92,8 +92,18 @@ while (<TRACE2PARSE>) {
          # $4 message length
          # $5 payload (data bytes)
          my @bytes = split(/[ \t]/, $5);
+         my $datalen = @bytes;
 
-         printf(OUT "%s\t%s\t%s\t%s - ", $1, $3, $4, $5);
+         # print data from logfile
+         printf(OUT "%s\t%s\t%s", $3, $4, $5);
+
+         # fill with spaces for alignment (formatting reasons)
+         for ($i = $datalen; $i < 8; $i++) {
+            printf(OUT "   ");
+         }
+
+         # add ASCII representation for readability
+         printf(OUT " - ");
          foreach $character (@bytes) {
             my $value = hex($character);
             if ($value > 0x1F) {
@@ -102,7 +112,14 @@ while (<TRACE2PARSE>) {
                printf(OUT ".");
             }
          }
-         printf(OUT "\n");
+
+         # fill with spaces for timestamp alignment
+         for ($i = $datalen; $i < 8; $i++) {
+            printf(OUT " ");
+         }
+
+         # print timestamp as last entry
+         printf(OUT "\t%s\n", $1);
       }
    }
 }
