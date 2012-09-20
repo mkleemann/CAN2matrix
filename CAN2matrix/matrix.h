@@ -164,6 +164,8 @@
  *
  *
  * byte 4..7 - Time
+ *  byte 7: seconds (2x byte 7 + bit 7 of byte 6)
+ *  byte 6: minutes (bit 0..6 >> 1)
  * \todo decode time information
  */
 #define CANID_1_TIME_AND_ODO           0x65D
@@ -303,6 +305,17 @@
  * \brief radio station name
  */
 #define CANID_2_RADIO_STATION_NAME     0x295
+
+/**
+ * \def CANID_2_ODO_AND_TEMP
+ * \brief Odometer and ambient temperature
+ *
+ * \code
+ * byte 0..3: odometer in 0.1km
+ * byte 5..6: average ambient temperature in 0.01°C (-40°C..85°C - 0..12500)
+ * \endcode
+ */
+#define CANID_2_ODO_AND_TEMP           0x214
 
 /*! @} */
 
@@ -445,22 +458,16 @@ void fillInfoToCAN2(can_t* msg);
 void transferIgnStatus(can_t* msg);
 
 /**
- * @brief transfer wheel count values to storage
+ * @brief transfer wheel/reverse/temperature status to storage
  *
  * Direction from CAN1 to CAN2
  *
  * @param msg - pointer to CAN message
+ *
+ * \todo add definitions for destination gear box (CAN2)
  */
-void transferWheelCount(can_t* msg);
+void transferWheelGearTemp(can_t* msg);
 
-/**
- * @brief transfer gear box status (reverse gear)
- *
- * Direction from CAN1 to CAN2
- *
- * @param msg - pointer to CAN message
- */
-void transferGearStatus(can_t* msg);
 
 /***************************************************************************/
 /* Helpers to be called by main routine                                    */

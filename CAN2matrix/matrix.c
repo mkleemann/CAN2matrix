@@ -45,6 +45,10 @@ typedef struct
    uint8_t headlights;
    //! dimming of display (destination) 0..255
    uint8_t dimLevel;
+   //! odometer value
+   uint8_t odo[3];
+   //! ambient temperature
+   uint8_t temp;
 } storeVals_t;
 
 //! temporary storage for any values comming via CAN
@@ -75,8 +79,24 @@ void fetchInfoFromCAN1(can_t* msg)
 
       case CANID_1_WHEEL_GEAR_DATA:
       {
-         transferWheelCount(msg);
-         transferGearStatus(msg);
+         transferWheelGearTemp(msg);
+         break;
+      }
+
+      case CANID_1_TIME_AND_ODO:
+      {
+         uint8_t i;
+         uint8_t tmp = 0;
+         for(i = 0; i < 3; ++i)
+         {
+            // store odo value and change resolution from 1.0km to 0.1km
+            storage.odo[i] = (msg->data[i+1] << 1) | tmp;
+            // get MSB to put into LSB of next byte
+            if(i < 2)
+            {
+               tmp = (msg->data[i+1] & 0x80) ? 0x01 : 0x00;
+            }
+         }
          break;
       }
 
@@ -140,6 +160,8 @@ void fillInfoToCAN1(can_t* msg)
 /**
  * @brief put information from storage to CAN2
  * @param msg - CAN message to fill
+ *
+ * \todo add values of temperature
  */
 void fillInfoToCAN2(can_t* msg)
 {
@@ -201,6 +223,16 @@ void fillInfoToCAN2(can_t* msg)
          break;
       }
 
+      case CANID_2_ODO_AND_TEMP:
+      {
+         uint8_t i;
+         for(i = 0; i < 3; ++i)
+         {
+            msg->data[i] = storage.odo[i];
+         }
+         break;
+      }
+
       default:
       {
          // do nothing!
@@ -254,53 +286,25 @@ void transferIgnStatus(can_t* msg)
 }
 
 /**
- * @brief transfer wheel count values to storage
+ * @brief transfer wheel/reverse/temperature status to storage
  *
  * Direction from CAN1 to CAN2
  *
  * @param msg - pointer to CAN message
- */
-void transferWheelCount(can_t* msg)
-{
-   // only 10 bits per wheel for count value
-   storage.wheelL = msg->data[3];
-   storage.wheelU = msg->data[4] & 0x3;
-}
-
-/**
- * @brief transfer gear box status (reverse gear)
- *
- * Direction from CAN1 to CAN2
- *
- * @param msg - pointer to CAN message
- *
- * \todo evaluate correct gear box status from master
  *
  * \todo add definitions for destination gear box (CAN2)
  */
-void transferGearStatus(can_t* msg)
+void transferWheelGearTemp(can_t* msg)
 {
-   uint8_t status = 0;  // position P
-   uint8_t byte7  = msg->data[6];
-
-   // get information (automatic PRND)
-   if(7 == byte7)
-   {  // reverse gear
-      status |= 0x01;
-   }
-   else if(6 == byte7)
-   {  // neutral
-      status |= 0x02;
-   }
-   else if(8 != byte7)
-   {  // drive/sport/tip/... (not parking)
-      status |= 0x04;
-   }
-   // else status = 0 -> parking or manual gear box
-
-   // store information
-   storage.gearBox = status;
+   // store information: bit 1: 1 - reverse; 0 - not reverse (assume D(rive))
+   storage.gearBox = (msg->data[0] & 0x02) ? 0x01 : 0x04;
+   // only 10 bits per wheel for count value
+   storage.wheelL = msg->data[3];
+   storage.wheelU = msg->data[4] & 0x3;
+   // store temperature too
+   storage.temp = msg->data[6];
 }
+
 
 /***************************************************************************/
 /* Helpers to be called by main routine                                    */
@@ -361,6 +365,9 @@ void sendCan2_100ms(can_t* msg)
    sendCan2Message(msg);
 
    msg->msgId = CANID_2_WHEEL_DATA;  // should be 50ms, but keep it
+   sendCan2Message(msg);
+
+   msg->msgId = CANID_2_ODO_AND_TEMP;
    sendCan2Message(msg);
 }
 
