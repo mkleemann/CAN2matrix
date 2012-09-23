@@ -88,13 +88,13 @@ if (0 == $initial) {
 @id_lookup{@id_storage} = ();
 
 # create filename for result
-if ($all) {
-   $outfile = join($trace2parse, "_", $outfile);
-} else {
+if (!$all) {
    foreach $element (@id_storage) {
       $outfile = join($element, "_", $outfile);
    }
 }
+
+$outfile = join($trace2parse, "_", $outfile);
 
 open(TRACE2PARSE, "<$trace2parse") or die "Could not open $trace2parse.";
 open(OUT, ">$outfile") or die "Could not create $outfile.";
