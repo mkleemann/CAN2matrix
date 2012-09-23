@@ -100,7 +100,7 @@ open(TRACE2PARSE, "<$trace2parse") or die "Could not open $trace2parse.";
 open(OUT, ">$outfile") or die "Could not create $outfile.";
 
 # header
-printf(OUT "ID\tLength\tData\tTimestamp\n");
+printf(OUT "ID\tLength\tB0 B1 B2 B3 B4 B5 B6 B7   ASCII   \tTimestamp\n");
 
 while (<TRACE2PARSE>) {
    # example of line to parse
@@ -124,7 +124,7 @@ while (<TRACE2PARSE>) {
          }
 
          # add ASCII representation for readability
-         printf(OUT " - ");
+         printf(OUT "  ");
          foreach $character (@bytes) {
             my $value = hex($character);
             if ($value > 0x1F) {
