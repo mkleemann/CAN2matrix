@@ -108,23 +108,10 @@
 #define CANID_1_WHEEL_GEAR_DATA        0x351
 
 /**
- * \def CANID_1_LIGHT_STATUS
- * \brief status of lights
- * to be verified
- */
-#define CANID_1_LIGHT_STATUS           0x531
-
-/**
- * \def CANID_1_DIMMING
- * \brief automatic and manual dimming
- * to be verified
- */
-#define CANID_1_DIMMING                0x635
-
-/**
  * \def CANID_1_LANGUAGE_AND_UNIT
  * \brief also a gateway signal
- * to be verified
+ *
+ * verified
  */
 #define CANID_1_LANGUAGE_AND_UNIT      0x653
 
@@ -170,64 +157,28 @@
  */
 #define CANID_1_TIME_AND_ODO           0x65D
 
-//! vehicle identification number
-//! to be verified
-#define CANID_1_VIN                    0x65F
-
-//! steering wheel angle
-//! to be verified
-#define CANID_1_STEERING_WHEEL         0x3C3
-
-//! switch status, e.g. lights, horn, wipers, BC, ...
-//! to be verified
-#define CANID_1_TURN_SIGNAL_CTRL       0x2C1
-
-//! cruise control status
-//! to be verified
-#define CANID_1_CRUISE_CONTROL         0x289
-
-//! instrument cluster status, e.g. warning lights
-//! to be verified
-#define CANID_1_COM_CLUSTER_STATUS1    0x621
-
-//! instrument cluster status, e.g. date/time
-//! to be verified
-#define CANID_1_COM_CLUSTER_STATUS2    0x623
-
-//! multi function display status (sent by display!)
-//! to be verified
-#define CANID_1_COM_DISPLAY_STATUS     0x62F
-
-//! start signal for display communication
-//! to be verified
+/**
+ * \def CANID_1_COM_DISP_START
+ * \brief start signal for central display communication (Instrument Cluster)
+ *
+ * verified
+ */
 #define CANID_1_COM_DISP_START         0x2E8
 
-//! communication channels
-//! to be verified
-#define CANID_1_COM_RADIO_CLUSTER1     0x680
-//! communication channels
-//! to be verified
-#define CANID_1_COM_RADIO_CLUSTER2     0x681
-//! communication channels
-//! to be verified
-#define CANID_1_COM_NAVI_CLUSTER1      0x682
-//! communication channels
-//! to be verified
-#define CANID_1_COM_NAVI_CLUSTER2      0x683
-//! communication channels
-//! to be verified
-#define CANID_1_COM_PHONE_CLUSTER      0x685
-//! communication channels
-//! to be verified
-#define CANID_1_COM_COMPASS_CLUSTER    0x689
-
-//! radio status signal, e.g. on/off, locked, ...
-//! to be verified
-#define CANID_1_RADIO_STATUS           0x661
-
-//! navigation status, e.g. wake up, bus sleep, ...
-//! to be verified
-#define CANID_1_NAVI_STATUS            0x436
+/**
+ * \def CANID_1_COM_RADIO_2_CLUSTER
+ * \brief communication channel from Radio to Instrument Cluster
+ *
+ * verified
+ */
+#define CANID_1_COM_RADIO_2_CLUSTER    0x69B
+/**
+ * \def CANID_1_COM_CLUSTER_2_RADIO
+ * \brief communication channel from Instrument Cluster to Radio
+ *
+ * verified
+ */
+#define CANID_1_COM_CLUSTER_2_RADIO    0x699
 
 /*! @} */
 

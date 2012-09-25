@@ -33,10 +33,12 @@
  */
 typedef struct
 {
-   //! wheel signal upper byte (as-is)
-   uint8_t wheelU;
-   //! wheel signal lower byte (as-is)
-   uint8_t wheelL;
+   //! wheel signal (as-is)
+   uint8_t wheel[2];
+   //! engine RPM (as-is)
+   uint8_t rpm[2];
+   //! vehicle speed
+   uint8_t speed[2];
    //! ignition key status (destination)
    uint8_t ignition;
    //! gear box status (destination)
@@ -188,14 +190,18 @@ void fillInfoToCAN2(can_t* msg)
       {
          // message is 8 bytes long
          msg->header.len = 8;
-         // byte 0/1: engine PRM    : not used here
-         // byte 2/3: vehicle speed : not used here
+         // byte 0/1: engine PRM
+         msg->data[0] = storage.rpm[0];
+         msg->data[1] = storage.rpm[1];
+         // byte 2/3: vehicle speed
+         msg->data[2] = storage.speed[0];
+         msg->data[3] = storage.speed[1];
          // byte 4/5: wheel count left
+         msg->data[4] = storage.wheel[0];
+         msg->data[5] = storage.wheel[1];
          // byte 6/7: wheel count right
-         msg->data[4] = storage.wheelU;
-         msg->data[5] = storage.wheelL;
-         msg->data[6] = storage.wheelU;
-         msg->data[7] = storage.wheelL;
+         msg->data[6] = storage.wheel[0];
+         msg->data[7] = storage.wheel[1];
          break;
       }
 
@@ -298,11 +304,15 @@ void transferWheelGearTemp(can_t* msg)
 {
    // store information: bit 1: 1 - reverse; 0 - not reverse (assume D(rive))
    storage.gearBox = (msg->data[0] & 0x02) ? 0x01 : 0x04;
+   // store speed information: CAN1 uses approx. half of the resolution of
+   // CAN2 speed signal.
+   storage.speed[0] = msg->data[1] << 1;
+   storage.speed[1] = msg->data[2] << 1 | ((msg->data[0] & 0x80) ? 1 : 0);
    // only 10 bits per wheel for count value
-   storage.wheelL = msg->data[3];
-   storage.wheelU = msg->data[4] & 0x3;
+   storage.wheel[0] = msg->data[3];
+   storage.wheel[1] = msg->data[4] & 0x3;
    // store temperature too
-   storage.temp = msg->data[6];
+   storage.temp = msg->data[5];
 }
 
 
