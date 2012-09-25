@@ -96,9 +96,17 @@ void fetchInfoFromCAN1(can_t* msg)
             // get MSB to put into LSB of next byte
             if(i < 2)
             {
-               tmp = (msg->data[i+1] & 0x80) ? 0x01 : 0x00;
+               tmp = (msg->data[i+1] & 0x80) >> 7;
             }
          }
+         break;
+      }
+
+      case CANID_1_RPM_STATUS:
+      {
+         // 0.25 rpm to 1.0 rpm
+         storage.rpm[0] = (msg->data[1] >> 2) | (msg->data[2] << 6);
+         storage.rpm[1] = msg->data[2] >> 2;
          break;
       }
 
@@ -307,7 +315,7 @@ void transferWheelGearTemp(can_t* msg)
    // store speed information: CAN1 uses approx. half of the resolution of
    // CAN2 speed signal.
    storage.speed[0] = msg->data[1] << 1;
-   storage.speed[1] = msg->data[2] << 1 | ((msg->data[0] & 0x80) ? 1 : 0);
+   storage.speed[1] = msg->data[2] << 1 | ((msg->data[0] & 0x80) >> 7);
    // only 10 bits per wheel for count value
    storage.wheel[0] = msg->data[3];
    storage.wheel[1] = msg->data[4] & 0x3;

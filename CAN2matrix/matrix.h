@@ -108,6 +108,18 @@
 #define CANID_1_WHEEL_GEAR_DATA        0x351
 
 /**
+ * \def CANID_1_RPM_STATUS
+ * \brief Engine RPM (gateway)
+ *
+ * \code
+ * byte 1..2: engine RPM in 0.25 rpm
+ * byte 3   : engine temperature
+ * byte 5   : engine fan status in %
+ * \endcode
+ */
+#define CANID_1_RPM_STATUS             0x353
+
+/**
  * \def CANID_1_LANGUAGE_AND_UNIT
  * \brief also a gateway signal
  *
