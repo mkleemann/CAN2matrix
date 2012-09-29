@@ -146,41 +146,85 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[7] = 0x00;
             sendCan1Message(msg);
             // 21 0A 00 T E S T -
-            msg->data[0] = 0x21;
+            msg->data[0] = 0x21; // lower nibble continues counting
             msg->data[1] = 0x0A;
             msg->data[2] = 0x00;
-            msg->data[3] = 'T';
-            msg->data[4] = 'E';
-            msg->data[5] = 'S';
-            msg->data[6] = 'T';
-            msg->data[7] = '-';
+            msg->data[3] = 'T';  // payload 5 bytes
+            msg->data[4] = 'E';  //      - " -
+            msg->data[5] = 'S';  //      - " -
+            msg->data[6] = 'T';  //      - " -
+            msg->data[7] = '-';  //      - " -
             sendCan1Message(msg);
             // 22 a b c 57 08 03 06
-            msg->data[0] = 0x22;
-            msg->data[1] = 'a';
-            msg->data[2] = 'b';
-            msg->data[3] = 'c';
+            msg->data[0] = 0x22; // lower nibble continues counting
+            msg->data[1] = 'a';  // payload 3 bytes
+            msg->data[2] = 'b';  //      - " -
+            msg->data[3] = 'c';  // payload ends here
             msg->data[4] = 0x57;
             msg->data[5] = 0x08;
             msg->data[6] = 0x03;
             msg->data[7] = 0x06;
             sendCan1Message(msg);
-            // 03 00 00 00 46 4D 31 57
+            // 03 00 00 00 A M D 57
             msg->data[0] = 0x03; // last of current sequence
-            msg->data[1] = 0x00;
-            msg->data[2] = 0x00;
-            msg->data[3] = 0x00;
-            msg->data[4] = 'A';  // usually frequency band (e.g. FMx)
-            msg->data[5] = 'M';
-            msg->data[6] = 'D';
+            msg->data[1] = 0x00; // possibly also payload (e.g. INFO)
+            msg->data[2] = 0x00; //         - " -
+            msg->data[3] = 0x00; //         - " -
+            msg->data[4] = 'A';  // usually frequency band (e.g. FMx) 'F'
+            msg->data[5] = 'M';  //                                   'M'
+            msg->data[6] = 'D';  //                                   '1'
             msg->data[7] = 0x57;
             sendCan1Message(msg);
             // now wait for 0xB4 from cluster instrument
          }
+         // next sequence
          if(msg->data[0] == 0xB4)
          {
+            // answer with information for central display - fixed for now
+            msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
+            msg->header.len = 8;
+            // 24 07 03 2A 00 00 00 T
+            msg->data[0] = 0x24; // lower nibble continues counting
+            msg->data[1] = 0x07;
+            msg->data[2] = 0x03;
+            msg->data[3] = 0x2A;
+            msg->data[4] = 0x00; // possibly also payload (e.g. station memory position)
+            msg->data[5] = 0x00; //         - " -
+            msg->data[6] = 0x00; //         - " -
+            msg->data[7] = 'T';  // 'T' from TP (Traffic Programme)
+            sendCan1Message(msg);
 
+            // last information message
+            msg->header.len = 3;
+            // 15 P 08
+            msg->data[0] = 0x15; // last of current sequence
+            msg->data[1] = 'P';  // 'P' from TP (Traffic Programme)
+            msg->data[2] = 0x08;
+            sendCan1Message(msg);
+            // now wait for 0xB6 from cluster instrument
          }
+
+         // closing sequence starts...
+         if(msg->data[0] == 0xB6)
+         {
+            // wait for "10 27 BE 01"
+         }
+
+         // ...and ends.
+         // 10 27 BE 01
+         if(msg->data[0] == 0x10)
+         {
+            // Last part of sequence...
+            msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
+            msg->header.len = 1;
+            msg->data[0] = 0xB1;
+            sendCan1Message(msg);
+
+            // ...and done.
+            msg->data[0] = 0xA8;
+            sendCan1Message(msg);
+         }
+
          break;
       }
 
