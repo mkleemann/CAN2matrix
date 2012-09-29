@@ -145,6 +145,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[6] = 0x06;
             msg->data[7] = 0x00;
             sendCan1Message(msg);
+            // lower line in info display
             // 21 0A 00 T E S T -
             msg->data[0] = 0x21; // lower nibble continues counting
             msg->data[1] = 0x0A;
@@ -165,6 +166,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[6] = 0x03;
             msg->data[7] = 0x06;
             sendCan1Message(msg);
+            // upper line in info display
             // 03 00 00 00 A M D 57
             msg->data[0] = 0x03; // last of current sequence
             msg->data[1] = 0x00; // possibly also payload (e.g. INFO)
@@ -183,6 +185,7 @@ void fetchInfoFromCAN1(can_t* msg)
             // answer with information for central display - fixed for now
             msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
             msg->header.len = 8;
+            // upper line in info display
             // 24 07 03 2A 00 00 00 T
             msg->data[0] = 0x24; // lower nibble continues counting
             msg->data[1] = 0x07;
