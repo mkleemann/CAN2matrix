@@ -113,16 +113,21 @@ void fetchInfoFromCAN1(can_t* msg)
       case CANID_1_COM_DISP_START:
       {
          // Byte 2 is 0x99? Seems to signal the communication channel.
-         // 0x99 -> CAN IDs 0699/0x6B9
-         msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
-         msg->header.len = 6;
-         // A0 04 54 54 4A B2
-         msg->data[0] = 0xA0;
-         msg->data[1] = 0x04;
-         msg->data[2] = 0x54;
-         msg->data[3] = 0x54;
-         msg->data[4] = 0x4A;
-         msg->data[5] = 0xB2;
+         // 99 -> CAN IDs 0699/06B9
+         // usually starts with "39 D0 99"
+         if(msg->data[2] == 0x99)
+         {
+            msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
+            msg->header.len = 6;
+            // A0 04 54 54 4A B2
+            msg->data[0] = 0xA0;
+            msg->data[1] = 0x04;
+            msg->data[2] = 0x54;
+            msg->data[3] = 0x54;
+            msg->data[4] = 0x4A;
+            msg->data[5] = 0xB2;
+            sendCan1Message(msg);
+         }
          break;
       }
 
@@ -138,18 +143,18 @@ void fetchInfoFromCAN1(can_t* msg)
             // 20 09 BE 57 0D 03 06 00
             msg->data[0] = 0x20; // lower nibble starts counting
             msg->data[1] = 0x09;
-            msg->data[2] = 0xBE;
-            msg->data[3] = 0x57;
+            msg->data[2] = 0xBE; // '¥'
+            msg->data[3] = 0x57; // 'W'
             msg->data[4] = 0x0D;
-            msg->data[5] = 0x03;
-            msg->data[6] = 0x06;
+            msg->data[5] = 0x03; // start of line?
+            msg->data[6] = 0x06; // start of line?
             msg->data[7] = 0x00;
             sendCan1Message(msg);
             // lower line in info display
             // 21 0A 00 T E S T -
             msg->data[0] = 0x21; // lower nibble continues counting
-            msg->data[1] = 0x0A;
-            msg->data[2] = 0x00;
+            msg->data[1] = 0x0A; // length with starting 0 and closing W?
+            msg->data[2] = 0x00; // possibly also payload or start trigger
             msg->data[3] = 'T';  // payload 5 bytes
             msg->data[4] = 'E';  //      - " -
             msg->data[5] = 'S';  //      - " -
@@ -161,10 +166,10 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[1] = 'a';  // payload 3 bytes
             msg->data[2] = 'b';  //      - " -
             msg->data[3] = 'c';  // payload ends here
-            msg->data[4] = 0x57;
-            msg->data[5] = 0x08;
-            msg->data[6] = 0x03;
-            msg->data[7] = 0x06;
+            msg->data[4] = 0x57; // 'W'
+            msg->data[5] = 0x08; // end of line trigger?
+            msg->data[6] = 0x03; // start of line?
+            msg->data[7] = 0x06; // start of line?
             sendCan1Message(msg);
             // upper line in info display
             // 03 00 00 00 A M D 57
@@ -175,7 +180,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[4] = 'A';  // usually frequency band (e.g. FMx) 'F'
             msg->data[5] = 'M';  //                                   'M'
             msg->data[6] = 'D';  //                                   '1'
-            msg->data[7] = 0x57;
+            msg->data[7] = 0x57; // 'W'
             sendCan1Message(msg);
             // now wait for 0xB4 from cluster instrument
          }
@@ -190,7 +195,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[0] = 0x24; // lower nibble continues counting
             msg->data[1] = 0x07;
             msg->data[2] = 0x03;
-            msg->data[3] = 0x2A;
+            msg->data[3] = 0x2A; // '*'
             msg->data[4] = 0x00; // possibly also payload (e.g. station memory position)
             msg->data[5] = 0x00; //         - " -
             msg->data[6] = 0x00; //         - " -
@@ -202,7 +207,7 @@ void fetchInfoFromCAN1(can_t* msg)
             // 15 P 08
             msg->data[0] = 0x15; // last of current sequence
             msg->data[1] = 'P';  // 'P' from TP (Traffic Programme)
-            msg->data[2] = 0x08;
+            msg->data[2] = 0x08; // end of line trigger?
             sendCan1Message(msg);
             // now wait for 0xB6 from cluster instrument
          }
