@@ -110,6 +110,80 @@ void fetchInfoFromCAN1(can_t* msg)
          break;
       }
 
+      case CANID_1_COM_DISP_START:
+      {
+         // Byte 2 is 0x99? Seems to signal the communication channel.
+         // 0x99 -> CAN IDs 0699/0x6B9
+         msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
+         msg->header.len = 6;
+         // A0 04 54 54 4A B2
+         msg->data[0] = 0xA0;
+         msg->data[1] = 0x04;
+         msg->data[2] = 0x54;
+         msg->data[3] = 0x54;
+         msg->data[4] = 0x4A;
+         msg->data[5] = 0xB2;
+         break;
+      }
+
+      case CANID_1_COM_CLUSTER_2_RADIO:
+      {
+         // answer to communication startup
+         // A1 04 8A 85 43 94
+         if(msg->data[0] == 0xA1)
+         {
+            // answer with information for central display - fixed for now
+            msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
+            msg->header.len = 8;
+            // 20 09 BE 57 0D 03 06 00
+            msg->data[0] = 0x20; // lower nibble starts counting
+            msg->data[1] = 0x09;
+            msg->data[2] = 0xBE;
+            msg->data[3] = 0x57;
+            msg->data[4] = 0x0D;
+            msg->data[5] = 0x03;
+            msg->data[6] = 0x06;
+            msg->data[7] = 0x00;
+            sendCan1Message(msg);
+            // 21 0A 00 T E S T -
+            msg->data[0] = 0x21;
+            msg->data[1] = 0x0A;
+            msg->data[2] = 0x00;
+            msg->data[3] = 'T';
+            msg->data[4] = 'E';
+            msg->data[5] = 'S';
+            msg->data[6] = 'T';
+            msg->data[7] = '-';
+            sendCan1Message(msg);
+            // 22 a b c 57 08 03 06
+            msg->data[0] = 0x22;
+            msg->data[1] = 'a';
+            msg->data[2] = 'b';
+            msg->data[3] = 'c';
+            msg->data[4] = 0x57;
+            msg->data[5] = 0x08;
+            msg->data[6] = 0x03;
+            msg->data[7] = 0x06;
+            sendCan1Message(msg);
+            // 03 00 00 00 46 4D 31 57
+            msg->data[0] = 0x03; // last of current sequence
+            msg->data[1] = 0x00;
+            msg->data[2] = 0x00;
+            msg->data[3] = 0x00;
+            msg->data[4] = 'A';  // usually frequency band (e.g. FMx)
+            msg->data[5] = 'M';
+            msg->data[6] = 'D';
+            msg->data[7] = 0x57;
+            sendCan1Message(msg);
+            // now wait for 0xB4 from cluster instrument
+         }
+         if(msg->data[0] == 0xB4)
+         {
+
+         }
+         break;
+      }
+
       default:
       {
          // do nothing!
