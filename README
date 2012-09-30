@@ -56,8 +56,8 @@ Next Steps/Ideas:
 - (D) Wake Up by CAN activity for AVR itself
 - (T) Implement "The CAN Matrix" in code
 - (D) dim unit using a light dependent resistor
-- (M) implement CAN message filtering to get only IDs used
-- (M) implement CAN error treatment/signalling
+- (S) implement CAN message filtering to get only IDs used
+- (S) implement CAN error treatment/signalling
 - (O) EEPROM use for message matrix
 - (O) implement support for extended CAN frames
 
