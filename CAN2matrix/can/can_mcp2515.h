@@ -187,6 +187,12 @@ typedef enum
  * \par SPI
  * MCP2515 init routine does NOT initializes SPI. This has to be done before.
  *
+ * \par Filters
+ * The filters are cleared here, to allow simply every CAN message to be
+ * received, which is for testing purposes the right choice. Any special
+ * filter needs to be set up by the main program. The mode of operation needs
+ * to be the configuration mode for that.
+ *
  * \param  chip      - select chip to use
  * \param  bitrate   - CAN bitrate of chip selected
  * \param  mode      - mode of operation of MCP2515 after init
