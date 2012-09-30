@@ -40,7 +40,7 @@
  */
 
 /**
- * @brief index of MCP2515 chips connected
+ * \brief index of MCP2515 chips connected
  *
  * Any adaption here may need to adapt the source. If you keep the naming
  * scheme like CAN_CHIPx, it's easier because of macros using the definitions.
