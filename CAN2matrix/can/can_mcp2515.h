@@ -329,11 +329,34 @@ bool can_check_free_tx_buffers(eChipSelect chip);
 void can_abort_all_transmissions(eChipSelect chip);
 
 /**
- * \brief  get error state of CAN bus
+ * \brief  get TX error state of CAN bus
  * \param  chip - select chip to use
  * \return error state
+ *
+ * \sa TXBO, TXEP, TXWAR
  */
-can_error_t can_get_bus_errors(eChipSelect chip);
+can_error_t can_get_tx_bus_errors(eChipSelect chip);
+
+/**
+ * \brief  get RX error state of CAN bus
+ * \param  chip - select chip to use
+ * \return error state
+ *
+ * \sa RX1OVR, RX0OVR, RXEP, RXWAR
+ */
+can_error_t can_get_rx_bus_errors(eChipSelect chip);
+
+/**
+ * \brief detect any unusual error count (TEC/REC)
+ * \param  chip - select chip to use
+ * \return error state
+ *
+ * Set when TEC or REC is equal to or greater than 96 (TXWAR or RXWAR = 1)
+ * and reset when both REC and TEC are less than 96.
+ *
+ * \sa EWARN, TXWAR, RXWAR
+ */
+can_error_t can_get_general_bus_errors(eChipSelect chip);
 
 /**************************************************************************/
 /* HELPERS                                                                */
