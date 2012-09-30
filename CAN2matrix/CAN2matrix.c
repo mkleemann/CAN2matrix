@@ -54,7 +54,11 @@ static volatile state_t fsmState     = INIT;
  * before entering it. Any error in the init process will result in
  * entering the error state. This is indicated by a blinking LED.
  **/
+#ifdef __DOXYGEN__
+int main(void)
+#else
 int __attribute__((OS_main)) main(void)
+#endif
 {
    initHardware();
 
