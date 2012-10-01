@@ -398,27 +398,31 @@ void transferIgnStatus(can_t* msg)
    uint8_t status = 0;
    uint8_t byte1  = msg->data[0];
 
-   // check key in event
    // Note: Byte2 (start status) is set to SNA (7) or normal start (1) when
    //       sending destination message.
-   status |= (byte1 & IGN_1_KEY_Status);  // bit 0 - Key In Ignition (IGN_2_KeyIn)
 
-   // check ACC status
+   // check Key In/ACC status
    if(byte1 & IGN_1_ACC_Status)
    {
-      status |= IGN_2_ACC_On_IGN_Off;     // bits 5-7 - IGN off and ACC on
+      // bit  0   - Key In Ignition
+      // bits 5-7 - IGN off and ACC on
+      status = (IGN_2_ACC_On_IGN_Off | IGN_2_KeyIn);
    }
 
    // check IGN start status
    if(byte1 & IGN_1_START_Status)
    {
-      status |= IGN_2_IGN_Start;          // bits 5-7 - IGN start
+      // bit  0   - Key In Ignition
+      // bits 5-7 - IGN start
+      status = (IGN_2_IGN_Start | IGN_2_KeyIn);
    }
 
    // check IGN on status
    if(byte1 & IGN_1_ON)
    {
-      status |= IGN_2_ON;                 // bit 5-7 - IGN on
+      // bit  0   - Key In Ignition
+      // bit 5-7 - IGN on
+      status = (IGN_2_ON | IGN_2_KeyIn);
    }
 
    // store information

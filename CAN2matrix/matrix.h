@@ -36,7 +36,8 @@
  * \addtogroup matrix_can_ids_master CAN ids of master (CAN #1)
  * \brief all CAN ids for the first CAN bus used
  *
- * \note Currently a mix of infotainment and convenience CAN bus signals.
+ * All verified CAN IDs are part of the communication on the entertainment
+ * CAN bus. Convenience or motor CAN signals are not part here.
  *
  * @{
  */
@@ -49,14 +50,14 @@
  *
  * \code
  * byte 0: IGN Status
- *  bit 0: key in 1; out 0
- *  bit 1: clamp 15 - ignition on 1; off 0
- *  bit 2: clamp X  - see clamp 15 except for ignition
- *  bit 3: clamp 50 - starter on 1; off 0
- *  bit 4: clamp P  - parking light mode on 1; off 0
+ *  bit 0: ACC/key in - on 1; off 0
+ *  bit 1: clamp 15   - ignition on 1; off 0
+ *  bit 2: clamp X    - consumers relevant for start are switched off
+ *  bit 3: clamp 50   - starter on 1; off 0
+ *  bit 4: not used
  *  bit 5: not used
- *  bit 6: clamp 15 - SV circuits on 1; off 0
- *  bit 7: clamp L  - charge control
+ *  bit 6: not used
+ *  bit 7: clamp ER   - engine runs 1; turned off 0
  *
  * byte 1: Diagnosis Error Status
  *  bit 0..6: not used
@@ -289,30 +290,27 @@
 /**
  * \addtogroup matrix_bit_defs_can_1 Bit Definitions of CAN #1
  * \brief bit definitions for CAN signals used on CAN #1
+ *
+ * Clamps/contact identifier according to German guidelines in Automotive
+ * Industry. See: http://de.wikipedia.org/wiki/Klemmenbezeichnung
  * @{
  */
 
 //! Ignition CAN1
-//! clamp S
-#define IGN_1_CL_S                     0
-//! clamp 15
+//! clamp "ACC" - key in/ACC
+#define IGN_1_CL_ACC                   0
+//! clamp 15 - ignition on
 #define IGN_1_CL_15                    1
-//! clamp X
+//! clamp X - consumers not relevant for engine start are switched off
 #define IGN_1_CL_X                     2
-//! clamp 50
+//! clamp 50 - engine start
 #define IGN_1_CL_50                    3
-//! clamp P
-#define IGN_1_CL_P                     4
-//! clamp 15 SV
-#define IGN_1_CL_15SV                  6
-//! clamp L
-#define IGN_1_CL_L                     7
+//! clamp "ER" - engine runs
+#define IGN_1_CL_ER                    7
 
 //! combinations for CAN1
-//! key status (in/out)
-#define IGN_1_KEY_Status       (1 << IGN_1_CL_S)
-//! switch ACC
-#define IGN_1_ACC_Status      ((1 << IGN_1_CL_L) | (1 << IGN_1_CL_15SV))
+//! switched ACC and key in
+#define IGN_1_ACC_Status       (1 << IGN_1_CL_ACC)
 //! switch to start engine
 #define IGN_1_START_Status    ((1 << IGN_1_CL_50) | (1 << IGN_1_CL_X))
 //! ignition on status
