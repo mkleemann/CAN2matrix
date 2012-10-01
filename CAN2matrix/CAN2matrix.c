@@ -243,6 +243,7 @@ void run()
 {
 #ifndef ___SIMULATION___
    can_t msg;
+   can_error_t error;
 
    /**** GET MESSAGES FROM CAN1 ***********************************/
 
@@ -263,6 +264,27 @@ void run()
 
    handleCan1Transmission(&msg);
    _delay_ms(1);
+
+   /**** CHECK CAN STATUS *****************************************/
+   error = can_get_general_bus_errors(CAN_CHIP1);
+   if(CAN_ERR_NO_ERROR == error)
+   {
+      led_off(errCan1LED);
+   }
+   else
+   {
+      led_on(errCan1LED);
+   }
+
+   error = can_get_general_bus_errors(CAN_CHIP2);
+   if(CAN_ERR_NO_ERROR == error)
+   {
+      led_off(errCan2LED);
+   }
+   else
+   {
+      led_on(errCan2LED);
+   }
 
 #else
    if (send500ms)   // approx. 500ms 4MHz@1024 prescale factor
