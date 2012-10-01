@@ -36,8 +36,6 @@
 #include "CAN2matrix.h"
 #include "matrix.h"
 
-#define ___AVR_SLEEP_ON___
-
 //! counter to evaluate timing to send CAN messages
 static volatile uint8_t send_it      = 0;
 //! flag to send 100ms cycle CAN messages
@@ -191,7 +189,6 @@ void sleeping()
    // enable wakeup interrupt INT0
    GICR  |= EXTERNAL_INT0_ENABLE;
 
-#ifdef ___AVR_SLEEP_ON___
    // let's sleep...
    set_sleep_mode(AVR_SLEEP_MODE);
    // sleep_mode() has a possible race condition in it, so splitting it
@@ -207,10 +204,6 @@ void sleeping()
 
    // disable interrupt: precaution, if signal lies too long on pin
    GICR  &= ~(EXTERNAL_INT0_ENABLE);
-
-#else
-   sei();
-#endif
 }
 
 /**
@@ -410,11 +403,7 @@ ISR(TIMER2_COMP_vect)
  **/
 ISR(INT0_vect)
 {
-#ifndef ___AVR_SLEEP_ON___
-   // disable interrupt: precaution, if signal lies too long on pin
-   GICR  &= ~(EXTERNAL_INT0_ENABLE);
-#endif
-   led_toggle(errCan2LED);
+   // needs to be here, even if empty
 }
 
 /***************************************************************************/
