@@ -54,9 +54,6 @@ typedef enum
 // use this to cut off all CAN handling
 //#define ___SIMULATION___
 
-// use only CAN1
-//#define ___SINGLE_CAN___
-
 /**
  * @brief INT0 trigger definition
  *

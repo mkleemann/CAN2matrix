@@ -159,11 +159,9 @@ void sleepDetected()
    // This has to be done before master CAN goes to sleep, because
    // the clock of the slave chip may be taken from master CAN chip's
    // CLKOUT pin.
-#ifndef ___SINGLE_CAN___
    mcp2515_sleep(CAN_CHIP2, INT_SLEEP_MANUAL_WAKEUP);
    // wait for SPI
    _delay_ms(1);
-#endif
 
    // put MCP2515 to sleep and wait for activity interrupt
    mcp2515_sleep(CAN_CHIP1, INT_SLEEP_WAKEUP_BY_CAN);
@@ -229,11 +227,9 @@ void wakeUp()
    mcp2515_wakeup(CAN_CHIP1, INT_SLEEP_WAKEUP_BY_CAN);
    // wait a little for the CAN controller to be ready (Tosc * 128)
    _delay_ms(1);
-#ifndef ___SINGLE_CAN___
    mcp2515_wakeup(CAN_CHIP2, INT_SLEEP_MANUAL_WAKEUP);
    // wait a little for the CAN controller to be ready (Tosc * 128)
    _delay_ms(1);
-#endif
 #endif
 
    restartTimer1();
@@ -260,7 +256,6 @@ void run()
    handleCan1Reception(&msg);
    _delay_ms(1);
 
-#ifndef ___SINGLE_CAN___
    /**** PUT MESSAGES TO CAN2 *************************************/
 
    handleCan2Transmission(&msg);
@@ -270,7 +265,6 @@ void run()
 
    handleCan2Reception(&msg);
    _delay_ms(1);
-#endif
 
    /**** PUT MESSAGES TO CAN1 *************************************/
 
@@ -370,7 +364,6 @@ bool initCAN()
    }
    // wait for SPI
    _delay_ms(1);
-#ifndef ___SINGLE_CAN___
    // init can interface 2
    if (false == can_init_mcp2515(CAN_CHIP2, CAN_BITRATE_125_KBPS, NORMAL_MODE))
    {
@@ -378,7 +371,6 @@ bool initCAN()
       led_on(errCan2LED);
       retVal = false;
    }
-#endif
 #endif
 
    return retVal;
@@ -477,14 +469,12 @@ void handleCan2Reception(can_t* msg)
  */
 void handleCan1Transmission(can_t* msg)
 {
-#ifdef ___SINGLE_CAN___
    if (send500ms)   // approx. 500ms 4MHz@1024 prescale factor
    {
       send500ms = false;
 
       sendCan1_500ms(msg);
    }
-#endif
 }
 
 /**
