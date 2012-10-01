@@ -22,8 +22,6 @@
 #include <stdbool.h>
 #include "matrix.h"
 
-// Not taken over from CAN2matrix.h!
-//#define ___SINGLE_CAN___
 
 /***************************************************************************/
 /* Definition of global variables to store CAN values.                     */
@@ -110,6 +108,7 @@ void fetchInfoFromCAN1(can_t* msg)
          break;
       }
 
+#ifdef ___COMM_TEST___
       case CANID_1_COM_DISP_START:
       {
          // Byte 2 is 0x99? Seems to signal the communication channel.
@@ -126,7 +125,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[3] = 0x54;
             msg->data[4] = 0x4A;
             msg->data[5] = 0xB2;
-            sendCan1Message(msg);
+            can_send_message(CAN_CHIP1, msg);
          }
          break;
       }
@@ -149,7 +148,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[5] = 0x03; // start of line?
             msg->data[6] = 0x06; // start of line?
             msg->data[7] = 0x00;
-            sendCan1Message(msg);
+            can_send_message(CAN_CHIP1, msg);
             // lower line in info display
             // 21 0A 00 T E S T -
             msg->data[0] = 0x21; // lower nibble continues counting
@@ -160,7 +159,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[5] = 'S';  //      - " -
             msg->data[6] = 'T';  //      - " -
             msg->data[7] = '-';  //      - " -
-            sendCan1Message(msg);
+            can_send_message(CAN_CHIP1, msg);
             // 22 a b c 57 08 03 06
             msg->data[0] = 0x22; // lower nibble continues counting
             msg->data[1] = 'a';  // payload 3 bytes
@@ -170,7 +169,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[5] = 0x08; // end of line trigger?
             msg->data[6] = 0x03; // start of line?
             msg->data[7] = 0x06; // start of line?
-            sendCan1Message(msg);
+            can_send_message(CAN_CHIP1, msg);
             // upper line in info display
             // 03 00 00 00 A M D 57
             msg->data[0] = 0x03; // last of current sequence
@@ -181,7 +180,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[5] = 'M';  //                                   'M'
             msg->data[6] = 'D';  //                                   '1'
             msg->data[7] = 0x57; // 'W'
-            sendCan1Message(msg);
+            can_send_message(CAN_CHIP1, msg);
             // now wait for 0xB4 from cluster instrument
          }
          // next sequence
@@ -200,7 +199,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[5] = 0x00; //         - " -
             msg->data[6] = 0x00; //         - " -
             msg->data[7] = 'T';  // 'T' from TP (Traffic Programme)
-            sendCan1Message(msg);
+            can_send_message(CAN_CHIP1, msg);
 
             // last information message
             msg->header.len = 3;
@@ -208,7 +207,7 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->data[0] = 0x15; // last of current sequence
             msg->data[1] = 'P';  // 'P' from TP (Traffic Programme)
             msg->data[2] = 0x08; // end of line trigger?
-            sendCan1Message(msg);
+            can_send_message(CAN_CHIP1, msg);
             // now wait for 0xB6 from cluster instrument
          }
 
@@ -226,15 +225,16 @@ void fetchInfoFromCAN1(can_t* msg)
             msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
             msg->header.len = 1;
             msg->data[0] = 0xB1;
-            sendCan1Message(msg);
+            can_send_message(CAN_CHIP1, msg);
 
             // ...and done.
             msg->data[0] = 0xA8;
-            sendCan1Message(msg);
+            can_send_message(CAN_CHIP1, msg);
          }
 
          break;
       }
+#endif
 
       default:
       {
@@ -258,30 +258,15 @@ void fetchInfoFromCAN2(can_t* msg)
  */
 void fillInfoToCAN1(can_t* msg)
 {
+#if 0  // currently nothing to do here
    // remove any old values
    for(int i = 0; i < 8; ++i)
    {
       msg->data[i] = 0;
    }
 
-#ifdef ___SINGLE_CAN___
-   // testing with id from CAN2
    switch(msg->msgId)
    {
-      case CANID_2_DIMMING:
-      {
-         // message is 3 bytes long
-         msg->header.len = 3;
-         // byte 1 bit 0 - day/night switch
-         nightMode    = ((false == nightMode) &&
-                         (storage.dimLevel < DAY_NIGHT_LOWER_LIMIT)) ||
-                        ((true == nightMode) &&
-                         (storage.dimLevel < DAY_NIGHT_UPPER_LIMIT));
-         msg->data[0] = (nightMode) ? DIM_2_NIGHT_MODE : DIM_2_DAY_MODE;
-         msg->data[1] = storage.dimLevel; // radio
-         msg->data[2] = storage.dimLevel; // interior
-         break;
-      }
 
       default:
       {
@@ -289,7 +274,6 @@ void fillInfoToCAN1(can_t* msg)
          break;
       }
    }
-
 #endif
 }
 
@@ -366,10 +350,15 @@ void fillInfoToCAN2(can_t* msg)
       case CANID_2_ODO_AND_TEMP:
       {
          uint8_t i;
+         // message is 7 bytes long
+         msg->header.len = 7;
          for(i = 0; i < 3; ++i)
          {
             msg->data[i] = storage.odo[i];
          }
+         // temperature needs to be stored here
+         //msg->data[4] = storage.temp;
+         //msg->data[5] = storage.temp;
          break;
       }
 
@@ -437,6 +426,7 @@ void transferIgnStatus(can_t* msg)
  * @param msg - pointer to CAN message
  *
  * \todo add definitions for destination gear box (CAN2)
+ * \todo make function interrupt save
  */
 void transferWheelGearTemp(can_t* msg)
 {
@@ -472,10 +462,6 @@ void sendCan1_100ms(can_t* msg)
  */
 void sendCan1_500ms(can_t* msg)
 {
-#ifdef ___SINGLE_CAN___
-   msg->msgId = CANID_2_DIMMING;
-   sendCan1Message(msg);
-#endif
 }
 
 /**
@@ -495,11 +481,8 @@ void sendCan1_1000ms(can_t* msg)
  */
 void sendCan1Message(can_t* msg)
 {
-#ifdef ___SINGLE_CAN___
    fillInfoToCAN1(msg);
-
    can_send_message(CAN_CHIP1, msg);
-#endif
 }
 
 
