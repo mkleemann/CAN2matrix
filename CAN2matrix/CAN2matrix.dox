@@ -66,6 +66,29 @@
  *
  * \endcode
  *
+ * \subsubsection c2m_comm_ic_seq_radio_startup Special Startup Information Sequence
+ *
+ * When starting up the radio a special sequence takes place. The first
+ * ending sequence of the IC is different from any later one. Also the
+ * number "9" may be of interest.
+ * \code
+ *             CAN    Instrument     Example
+ * Radio        ID      Cluster
+ *   _                     _
+ *   |     --- 6B9 -->     |         10 15 39 00 01 01         ..9...
+ *   |     <-- 699 ---     |         B1
+ *   |     <-- 699 ---     |         10 35
+ *   |     --- 6B9 -->     |         B1
+ *   :                     :
+ *   |     --- 6B9 -->     |         20 02 80 39 20 41 55 44    .Ç9 AUD
+ *   |     --- 6B9 -->     |         11 49 4F                  .IO
+ *   |     <-- 699 ---     |         B2
+ *   |     <-- 699 ---     |         10 23 02 01
+ *   |     --- 6B9 -->     |         B1
+ * \endcode
+ *
+ * \subsubsection c2m_comm_ic_seq_radio_normal Normal Information Sequences
+ *
  * After the first sequence starts the text information sequence. The first
  * byte (upper nibble) signals the type of the message.
  *
@@ -95,7 +118,6 @@
  *   |     <-- 699 ---     |         B2
  *   |     <-- 699 ---     |         10 23 02 01
  *   |     --- 6B9 -->     |         B1
- *
  * \endcode
  *
  * Now two things can happen. Either the communication ends here, which is
@@ -162,7 +184,8 @@
  * not have been sent after FM1 in the example above, the frame would end with
  * "15 08" as message content.
  *
- * <b>Guesswork:</b>
+ * \subsubsection c2m_comm_ic_seq_radio_format Formatting of Text Information
+ *
  * It is currently not clear how the formatting takes place and if the
  * first line has a fixed command/format set. The sequences like "57 XX 03"
  * look interesting enough, since it is part of the start of any text
