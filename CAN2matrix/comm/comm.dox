@@ -232,7 +232,7 @@
  * Looks like:
  * +--------+
  * |  INFO  |
- * |  NDR 2 |
+ * | NDR 2  |
  * +--------+
  *
  * \endcode
@@ -240,6 +240,25 @@
  * The end of the information for the first line is always 08. If "TP" would
  * not have been sent after FM1 in the example above, the frame would end with
  * "15 08" as message content.
+ *
+ *
+ * \subsubsection c2m_comm_ic_seq_radio_begin First Bytes of Text Information
+ *
+ * Currently different sequences are known. A special one, described in
+ * \ref c2m_comm_ic_seq_radio_startup and some others are sent in Radio mode
+ * or when sending Traffic Programme information.
+ *
+ *- 02 80: startup
+ *- 09 02: radio information
+ *- 09 0E: traffic information
+ *
+ * Binary representation of sequences above:
+ * \code
+ * 0000 0010  1000 0000
+ * 0000 1001  0000 0010
+ * 0000 1001  0000 1110
+ * \endcode
+ *
  *
  * \subsubsection c2m_comm_ic_seq_radio_format Formatting of Text Information
  *
@@ -333,12 +352,12 @@
  * 0010 0000  0000 0000  0000 1010  0000 0000  - centered     , 8 characters
  * \endcode
  *
- * <b>Wrong!</b>
+ * <b>To be verified!</b>
  * The first byte looks like it controls the formatting. The upper nibble
  * looks like:
  *- 0000: left
  *- 0001: center
- *- 0010: right
+ *- 0010: right / how fits TP?
  *
  * The third byte looks to handle the line itself. It may also be the position
  * in characters/bytes itself, assuming a hidden character (e.g. return) after
