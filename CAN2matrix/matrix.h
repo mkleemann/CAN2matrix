@@ -46,7 +46,6 @@
 /**
  * \def CANID_1_IGNITION
  * \brief ignition by key status
- * verified:
  *
  * \code
  * byte 0: IGN Status
@@ -69,8 +68,6 @@
 /**
  * \def CANID_1_WHEEL_GEAR_DATA
  * \brief wheel count and speed (gateway)
- *
- * verified:
  *
  * \code
  * byte 0:
@@ -123,16 +120,12 @@
 /**
  * \def CANID_1_LANGUAGE_AND_UNIT
  * \brief also a gateway signal
- *
- * verified
  */
 #define CANID_1_LANGUAGE_AND_UNIT      0x653
 
 /**
  * \def CANID_1_PDC_STATUS
  * \brief park distance control values
- *
- * verified:
  *
  * \code
  * 0xFF      : no object in range
@@ -155,8 +148,6 @@
  * \def CANID_1_TIME_AND_ODO
  * \brief time and odometer
  *
- * verified:
- *
  * byte 1..3 - Odometer: The values are sent in reverse order, meaning that
  * the byte 3 is the highest byte and byte 1 the lowest. A value of 125302km
  * (hex 01E976) translates to a byte sequence of "xx 76 E9 01 xx xx xx xx"
@@ -173,23 +164,23 @@
 /**
  * \def CANID_1_COM_DISP_START
  * \brief start signal for central display communication (Instrument Cluster)
- *
- * verified
  */
 #define CANID_1_COM_DISP_START         0x2E8
 
 /**
+ * \def CANID_1_COM_RADIO_START
+ * \brief start signal for central display communication (Radio)
+ */
+#define CANID_1_COM_RADIO_START        0x4D9
+
+/**
  * \def CANID_1_COM_RADIO_2_CLUSTER
  * \brief communication channel from Radio to Instrument Cluster
- *
- * verified
  */
 #define CANID_1_COM_RADIO_2_CLUSTER    0x6B9
 /**
  * \def CANID_1_COM_CLUSTER_2_RADIO
  * \brief communication channel from Instrument Cluster to Radio
- *
- * verified
  */
 #define CANID_1_COM_CLUSTER_2_RADIO    0x699
 

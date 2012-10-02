@@ -295,8 +295,8 @@
  * 0010 1010  0000 0000  0000 0000  0000 0000  - right aligned, 2 characters
  *
  * Traffic Programme:
- * 0010 0000  0000 0000  0000 0000  0000 0000  - centered     , 4 character
- * 0010 0000  0000 0000  0000 1010  0000 0000  - centered     , 8 character
+ * 0010 0000  0000 0000  0000 0000  0000 0000  - centered     , 4 characters
+ * 0010 0000  0000 0000  0000 1010  0000 0000  - centered     , 8 characters
  * \endcode
  *
  * <b>Wrong!</b>
