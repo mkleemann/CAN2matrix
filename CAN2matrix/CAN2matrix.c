@@ -26,15 +26,15 @@
 #include <util/delay.h>
 //#include <stdlib.h>
 
-#include "util/util.h"
-#include "spi/spi.h"
-#include "can/can_mcp2515.h"
-#include "timer/timer.h"
-#include "leds/leds.h"
 #include "adc/adc.h"
+#include "can/can_mcp2515.h"
+#include "comm/matrix.h"
+#include "leds/leds.h"
+#include "spi/spi.h"
+#include "timer/timer.h"
 //#include "uart/uart.h"
+#include "util/util.h"
 #include "CAN2matrix.h"
-#include "matrix.h"
 
 //! counter to evaluate timing to send CAN messages
 static volatile uint8_t send_it      = 0;

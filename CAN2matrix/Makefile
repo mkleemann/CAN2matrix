@@ -44,6 +44,7 @@ DOC_CONF := doxygen.conf
 # Every subdirectory with source files must be described here
 SUBDIRS :=  \
 ./can \
+./comm \
 ./leds \
 ./bar \
 ./adc \
@@ -64,8 +65,8 @@ C_SRCS +=  \
 ./can/can_receive_mcp2515.c \
 ./can/can_sleep_mcp2515.c \
 ./can/can_send_mcp2515.c \
+./comm/matrix.c \
 ./leds/leds.c \
-./matrix.c \
 ./spi/spi.c \
 ./timer/timer.c \
 ./uart/uart.c
@@ -87,8 +88,8 @@ can/can_init_mcp2515.o \
 can/can_receive_mcp2515.o \
 can/can_sleep_mcp2515.o \
 can/can_send_mcp2515.o \
+comm/matrix.o \
 leds/leds.o \
-matrix.o \
 spi/spi.o \
 timer/timer.o \
 uart/uart.o
@@ -104,8 +105,8 @@ can/can_init_mcp2515.o \
 can/can_receive_mcp2515.o \
 can/can_sleep_mcp2515.o \
 can/can_send_mcp2515.o \
+comm/matrix.o \
 leds/leds.o \
-matrix.o \
 spi/spi.o \
 timer/timer.o \
 uart/uart.o
@@ -121,8 +122,8 @@ can/can_init_mcp2515.d \
 can/can_receive_mcp2515.d \
 can/can_sleep_mcp2515.d \
 can/can_send_mcp2515.d \
+comm/matrix.d \
 leds/leds.d \
-matrix.d \
 spi/spi.d \
 timer/timer.d \
 uart/uart.d
@@ -138,8 +139,8 @@ can/can_init_mcp2515.d \
 can/can_receive_mcp2515.d \
 can/can_sleep_mcp2515.d \
 can/can_send_mcp2515.d \
+comm/matrix.d \
 leds/leds.d \
-matrix.d \
 spi/spi.d \
 timer/timer.d \
 uart/uart.d
@@ -154,8 +155,8 @@ can_init_mcp2515.i \
 can_receive_mcp2515.i \
 can_sleep_mcp2515.i \
 can_send_mcp2515.i \
-leds.i \
 matrix.i \
+leds.i \
 spi.i \
 timer.i \
 uart.i
@@ -170,8 +171,8 @@ can_init_mcp2515.s \
 can_receive_mcp2515.s \
 can_sleep_mcp2515.s \
 can_send_mcp2515.s \
-leds.s \
 matrix.s \
+leds.s \
 spi.s \
 timer.s \
 uart.s
@@ -248,6 +249,12 @@ bar/%.o: ./bar/%.c
 	@echo Finished building: $<
 
 can/%.o: ./can/%.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler
+	$(QUOTE)$(AVR_APP_PATH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	@echo Finished building: $<
+
+comm/%.o: ./comm/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler
 	$(QUOTE)$(AVR_APP_PATH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
