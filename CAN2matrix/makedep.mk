@@ -20,9 +20,9 @@ can\can_sleep_mcp2515.c
 
 can\can_send_mcp2515.c
 
-leds\leds.c
+comm\matrix.c
 
-matrix.c
+leds\leds.c
 
 spi\spi.c
 
