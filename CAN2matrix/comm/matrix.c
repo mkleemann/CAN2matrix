@@ -111,8 +111,8 @@ void fetchInfoFromCAN1(can_t* msg)
 #ifdef ___COMM_TEST___
       case CANID_1_COM_DISP_START:
       {
-         // Byte 2 is 0x99? Seems to signal the communication channel.
-         // 99 -> CAN IDs 0699/06B9
+         // Byte 2 is 0x99. Seems to signal the communication channel.
+         // 99 -> CAN IDs 0699
          // usually starts with "39 D0 99"
          if(msg->data[2] == 0x99)
          {

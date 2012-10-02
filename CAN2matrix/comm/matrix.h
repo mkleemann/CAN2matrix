@@ -33,7 +33,7 @@
 /***************************************************************************/
 
 /**
- * \addtogroup matrix_can_ids_master CAN ids of master (CAN #1)
+ * \addtogroup matrix_can_ids_master CAN IDs of Master (CAN #1)
  * \brief all CAN ids for the first CAN bus used
  *
  * All verified CAN IDs are part of the communication on the entertainment
@@ -193,7 +193,7 @@
 
 
 /**
- * \addtogroup matrix_can_ids_slave CAN ids of slave (CAN #2)
+ * \addtogroup matrix_can_ids_slave CAN IDs of Slave (CAN #2)
  * \brief all CAN ids for the second CAN bus used
  * @{
  */
