@@ -208,7 +208,37 @@
     <Folder Include="spi" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="adc\adc.dox">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="bar\bar.dox">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="CAN2matrix.dox">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="can\can_mcp2515.dox">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="doxygen.conf">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="leds\leds.dox">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="makedep.mk">
+      <SubType>compile</SubType>
+    </None>
     <None Include="Makefile">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="spi\spi.dox">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="timer\timer.dox">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="uart\uart.dox">
       <SubType>compile</SubType>
     </None>
   </ItemGroup>
