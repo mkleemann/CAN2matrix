@@ -158,6 +158,9 @@
  * line with frequency band, station memory number and traffic programme
  * indicator.
  *
+ * For Traffic Programme indication itself, the lines are sent in the "right"
+ * order. Here the information is centered in both lines.
+ *
  * Example of two lines with 4 text information parts:
  * \code
  *             CAN    Instrument     Example
@@ -178,6 +181,26 @@
  * |FM1 2 TP|
  * |  NDR 2 |
  * +--------+
+ *
+ * Traffic Programme:
+ *
+ *             CAN    Instrument     Example
+ * Radio        ID      Cluster
+ *   _                     _
+ *   |     --- 6B9 -->     |         20 09 0E 57 09 23 20 00
+ *   |     --- 6B9 -->     |         21 00 00 TX TX TX TX 57  "INFO"
+ *   |     --- 6B9 -->     |         22 0D 23 20 00 0A 00 TX  " "
+ *   |     --- 6B9 -->     |         03 TX TX TX TX TX TX TX  "NDR 2  "
+ *   |     <-- 699 ---     |         B4
+ *   |     --- 6B9 -->     |         14 08
+ *   |     <-- 699 ---     |         B5
+ *
+ * Looks like:
+ * +--------+
+ * |  INFO  |
+ * |  NDR 2 |
+ * +--------+
+ *
  * \endcode
  *
  * The end of the information for the first line is always 08. If "TP" would
@@ -197,6 +220,10 @@
  *- 57 08 03: first line, first part
  *- 57 07 03: first line, last part
  *
+ * Traffic Programme Coding:
+ *- 57 09 23: first line, middle  e.g. "INFO"
+ *- 57 0D 23: second line, middle e.g. " NDR 2  "
+ *
  * Between the first, middle and last part seems to be a space (20) set
  * automatically.
  *
@@ -211,11 +238,14 @@
  *- 57 0A 03 - 5 characters
  *- 57 0C 03 - 7 characters
  *
- * Sequence in binary representation:
+ * Sequences in binary representation:
  * \code
  * Second Line - left aligned:
  * 0101 0111  0000 1101  0000 0011  - 8 characters
  * 0101 0111  0000 1011  0000 0011  - 6 characters
+ *
+ * Second Line - center aligned:
+ * 0101 0111  0000 1101  0010 0011  - 8 characters (TP)
  *
  * First Line - left aligned:
  * 0101 0111  0000 1000  0000 0011  - 3 characters
@@ -223,40 +253,53 @@
  *
  * First Line - center aligned:
  * 0101 0111  0000 0110  0000 0011  - 1 character
+ * 0101 0111  0000 1001  0010 0011  - 4 characters (TP)
  *
  * First Line - right aligned:
  * 0101 0111  0000 0111  0000 0011  - 2 characters
  * \endcode
  *
  * The lower nibble of the second byte looks like it controls the character
- * length. It is found and, in case of 5 and 7 characters, determined as
- * follows:
+ * length. It is found as follows:
  *- 0110: 1 character
  *- 0111: 2 characters
  *- 1000: 3 characters
  *- 1001: 4 characters
- *- 1010: 5 characters
+ *- 1010: 5 characters*
  *- 1011: 6 characters
- *- 1100: 7 characters
+ *- 1100: 7 characters*
  *- 1101: 8 characters
+ *
+ * (*) not verified
  *
  * Another sequence jumps in sight, when looking to the messages below. After
  * the afore mentioned sequence, starting with "57 XX 03" the next sequences
  * are:
  *
+ * Station Info/Seek:
  *- 06 00 0A 00: second line
  *- 1E 00 00 00: first line, middle part
  *- 06 00 00 00: first line, first part
  *- 2A 00 00 00: first line, last part
  *
+ * Traffic Programme:
+ *- 20 00 00 00: first line, middle part
+ *- 20 00 0A 00: second line, middle part
+ *
  * Sequence in binary representation:
  * \code
+ * Station Info/Seek:
  * 0000 0110  0000 0000  0000 1010  0000 0000  - left aligned , 8 characters
  * 0001 1110  0000 0000  0000 0000  0000 0000  - centered     , 1 character
  * 0000 0110  0000 0000  0000 0000  0000 0000  - left aligned , 3 characters
  * 0010 1010  0000 0000  0000 0000  0000 0000  - right aligned, 2 characters
+ *
+ * Traffic Programme:
+ * 0010 0000  0000 0000  0000 0000  0000 0000  - centered     , 4 character
+ * 0010 0000  0000 0000  0000 1010  0000 0000  - centered     , 8 character
  * \endcode
  *
+ * <b>Wrong!</b>
  * The first byte looks like it controls the formatting. The upper nibble
  * looks like:
  *- 0000: left
