@@ -8,9 +8,9 @@ Single CAN solutions exist, but often they lack in something or other. So I
 used the tips and tricks to combine such solutions.
 
 *****************************************************************************
-* Note: The project is AVRStudio 5/Atmel Studio 6 based. A makefile for     *
-*       WINAVR or any other AVR toolchain is only maintained from time to   *
-*       time. Documentation via doxygen (e.g. "make docu").                 *
+* Note: The project is Atmel Studio 6 based. A makefile for WINAVR or any   *
+*       other AVR toolchain is only maintained from time to time.           *
+*       Documentation via doxygen ("make docu" or "doxygen doxygen.conf").  *
 *****************************************************************************
 
 Both CAN buses (could) use a different bitrate. Only a small number of
@@ -57,7 +57,7 @@ Next Steps/Ideas:
 - (T) Implement "The CAN Matrix" in code
 - (D) dim unit using a light dependent resistor
 - (S) implement CAN message filtering to get only IDs used
-- (S) implement CAN error treatment/signalling
+- (D) implement (simple) CAN error treatment/signalling
 - (O) EEPROM use for message matrix
 - (O) implement support for extended CAN frames
 
