@@ -265,8 +265,7 @@
  * It is currently not clear how the formatting takes place and if the
  * first line has a fixed command/format set. The sequences like "57 XX 03"
  * look interesting enough, since it is part of the start of any text
- * information. The XX byte may stand for the line and/or position of the
- * text.
+ * information. The XX byte stands most probably for the length of the text.
  *
  *- 57 0D 03: second line
  *- 57 06 03: first line, middle part
@@ -278,7 +277,7 @@
  *- 57 0D 23: second line, middle e.g. " NDR 2  "
  *
  * Between the first, middle and last part seems to be a space (20) set
- * automatically.
+ * automatically, when not sent as one block.
  *
  * Sequence for writing SEEK into the first line:
  *- 57 09 03: first line, first part
@@ -287,7 +286,7 @@
  *- 57 0B 03: second line
  *
  * <b>To be verified:</b>
- * Sequence for 5 and 7 bytes, left aligned:
+ * Sequence for 5 and 7 bytes:
  *- 57 0A 03 - 5 characters
  *- 57 0C 03 - 7 characters
  *
@@ -330,10 +329,10 @@
  * are:
  *
  * Station Info/Seek:
- *- 06 00 0A 00: second line
- *- 1E 00 00 00: first line, middle part
- *- 06 00 00 00: first line, first part
- *- 2A 00 00 00: first line, last part
+ *- 1E 00 00 00: first line , middle part
+ *- 06 00 00 00: first line , first part
+ *- 2A 00 00 00: first line , last part
+ *- 06 00 0A 00: second line, full
  *
  * Traffic Programme:
  *- 20 00 00 00: first line, middle part
