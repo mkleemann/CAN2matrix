@@ -66,6 +66,7 @@ C_SRCS +=  \
 ./can/can_sleep_mcp2515.c \
 ./can/can_send_mcp2515.c \
 ./comm/matrix.c \
+./comm/ic_comm.c \
 ./leds/leds.c \
 ./spi/spi.c \
 ./timer/timer.c \
@@ -89,6 +90,7 @@ can/can_receive_mcp2515.o \
 can/can_sleep_mcp2515.o \
 can/can_send_mcp2515.o \
 comm/matrix.o \
+comm/ic_comm.o \
 leds/leds.o \
 spi/spi.o \
 timer/timer.o \
@@ -106,6 +108,7 @@ can/can_receive_mcp2515.o \
 can/can_sleep_mcp2515.o \
 can/can_send_mcp2515.o \
 comm/matrix.o \
+comm/ic_comm.o \
 leds/leds.o \
 spi/spi.o \
 timer/timer.o \
@@ -123,6 +126,7 @@ can/can_receive_mcp2515.d \
 can/can_sleep_mcp2515.d \
 can/can_send_mcp2515.d \
 comm/matrix.d \
+comm/ic_comm.d \
 leds/leds.d \
 spi/spi.d \
 timer/timer.d \
@@ -140,6 +144,7 @@ can/can_receive_mcp2515.d \
 can/can_sleep_mcp2515.d \
 can/can_send_mcp2515.d \
 comm/matrix.d \
+comm/ic_comm.d \
 leds/leds.d \
 spi/spi.d \
 timer/timer.d \
@@ -156,6 +161,7 @@ can_receive_mcp2515.i \
 can_sleep_mcp2515.i \
 can_send_mcp2515.i \
 matrix.i \
+comm/ic_comm.i \
 leds.i \
 spi.i \
 timer.i \
@@ -172,6 +178,7 @@ can_receive_mcp2515.s \
 can_sleep_mcp2515.s \
 can_send_mcp2515.s \
 matrix.s \
+ic_comm.s \
 leds.s \
 spi.s \
 timer.s \

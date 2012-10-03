@@ -22,6 +22,8 @@ can\can_send_mcp2515.c
 
 comm\matrix.c
 
+comm\ic_comm.c
+
 leds\leds.c
 
 spi\spi.c
