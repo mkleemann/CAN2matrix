@@ -150,6 +150,12 @@
     <Compile Include="can\can_send_mcp2515.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="comm\ic_comm.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="comm\ic_comm.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="comm\matrix.c">
       <SubType>compile</SubType>
     </Compile>
