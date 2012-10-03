@@ -161,7 +161,7 @@ can_receive_mcp2515.i \
 can_sleep_mcp2515.i \
 can_send_mcp2515.i \
 matrix.i \
-comm/ic_comm.i \
+ic_comm.i \
 leds.i \
 spi.i \
 timer.i \
