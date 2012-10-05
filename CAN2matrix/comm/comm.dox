@@ -211,10 +211,10 @@
  *   |     <-- 699 ---     |         B7
  *
  * Looks like:
- * +--------+
- * |FM1 2 TP|
- * |  NDR 2 |
- * +--------+
+ * +-12345678-+
+ * | FM1 2 TP |
+ * |   NDR 2  |
+ * +----------+
  *
  * Traffic Programme:
  *
@@ -230,10 +230,10 @@
  *   |     <-- 699 ---     |         B5
  *
  * Looks like:
- * +--------+
- * |  INFO  |
- * | NDR 2  |
- * +--------+
+ * +-12345678-+
+ * |   INFO   |
+ * |  NDR 2   |
+ * +----------+
  *
  * \endcode
  *
@@ -356,7 +356,7 @@
  * looks like:
  *- 0000: left
  *- 0001: center
- *- 0010: right / how fits TP?
+ *- 0010: right / TP may fit (at least second row)
  *
  * The third byte looks to handle the line itself. It may also be the position
  * in characters/bytes itself, assuming a hidden character (e.g. return) after
