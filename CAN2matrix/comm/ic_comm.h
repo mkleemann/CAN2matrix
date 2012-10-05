@@ -61,8 +61,17 @@ typedef enum
 
 /**
  * \brief FSM for communicating with instrument cluster
+ * \param msg - pointer to CAN message
+ *
+ * FSM needs to be called after any other CAN activity for that cycle. It
+ * manipulates the message received to sent the buffer as needed.
  */
-void ic_comm_fsm(void);
+void ic_comm_fsm(can_t* msg);
+
+/**
+ * \brief reset flags for next startup
+ */
+void ic_comm_reset4start();
 
 
 #endif /* IC_COMM_H_ */
