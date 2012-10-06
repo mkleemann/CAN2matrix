@@ -27,6 +27,14 @@
 /* DEFINITIONS                                                             */
 /***************************************************************************/
 
+/**
+ * \def IC_COMM_INFO_LENGTH
+ * \brief length of max info lines
+ *
+ * Currently the maximum length of 8 characters per line is known. Each
+ * string ends with 0x00.
+ */
+#define IC_COMM_INFO_LENGTH      18
 
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */
@@ -73,5 +81,10 @@ void ic_comm_fsm(can_t* msg);
  */
 void ic_comm_reset4start();
 
+/**
+ * \brief setup text to send to instrument cluster
+ * \param text - pointer to text buffer
+ */
+void ic_comm_set_text(uint8_t* text);
 
 #endif /* IC_COMM_H_ */

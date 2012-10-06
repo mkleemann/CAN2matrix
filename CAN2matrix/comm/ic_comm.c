@@ -29,6 +29,13 @@ ic_comm_fsm_t ic_comm_states = IC_COMM_IDLE;
 //! special startup sequence for instrument cluster (state AUDIO)
 bool firstStart = true;
 
+//! text information to be shown in cluster
+uint8_t info[IC_COMM_INFO_LENGTH];
+
+//! sequence number for sending
+uint8_t seqTx = 0;
+
+
 /**
  * \brief FSM for communicating with instrument cluster
  * \param msg - pointer to CAN message
@@ -105,6 +112,37 @@ void ic_comm_fsm(can_t* msg)
 
       case IC_COMM_WAIT_4_ACK:
       {
+         // get acknowledge packet from instrument cluster
+         //              CAN    Instrument     Example
+         // Radio        ID      Cluster
+         //   _                     _
+         //   |     <-- 699 ---     |         Bx
+         if((CANID_1_COM_CLUSTER_2_RADIO == msg->msgId) &&
+            ((0xB0 | (seqTx+1)) == msg->data[0]))
+         {
+            // get ack for info frames
+            ++seqTx;
+            // next info frame
+            ic_comm_states = IC_COMM_INFO;
+         }
+
+         // get close of communication sequence fro minstrument cluster
+         //              CAN    Instrument     Example
+         // Radio        ID      Cluster
+         //   _                     _
+         //   |     <-- 699 ---     |         10 23 02 01
+         if((CANID_1_COM_CLUSTER_2_RADIO == msg->msgId) &&
+            (0 == (0xE0 & msg->data[0]))) // 1x
+         {
+            msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
+            msg->header.len = 1;
+            // add sequence number (+1) to acknowledge Bx
+            msg->data[0] = 0xB0 | ((0x0F & msg->data[0]) + 1);
+            can_send_message(CAN_CHIP1, msg);
+
+            ic_comm_states = IC_COMM_STOP;
+         }
+
          break;
       }
 
@@ -115,6 +153,19 @@ void ic_comm_fsm(can_t* msg)
 
       case IC_COMM_STOP:
       {
+         // reset sequence numbers
+         seqRx = 0;
+         seqTx = 0;
+         //              CAN    Instrument     Example
+         // Radio        ID      Cluster
+         //   _                     _
+         //   |     --- 6B9 -->     |         A8
+         msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
+         msg->header.len = 1;
+         msg->data[0] = 0xA8;
+         can_send_message(CAN_CHIP1, msg);
+
+         ic_comm_states = IC_COMM_IDLE;
          break;
       }
 
@@ -133,3 +184,19 @@ void ic_comm_reset4start()
 {
    firstStart = true;
 }
+
+/**
+ * \brief setup text to send to instrument cluster
+ * \param text - pointer to text buffer
+ */
+void ic_comm_set_text(uint8_t* text)
+{
+   uint8_t i;
+
+   for(i = 0; i < IC_COMM_INFO_LENGTH; ++i)
+   {
+      info[i] = text[i];
+   }
+}
+
+
