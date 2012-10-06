@@ -53,9 +53,9 @@ typedef enum
    //! preamble: \ref c2m_comm_ic_seq_radio
    //! starting with 6B9/699 and A0/A1 data
    IC_COMM_PREAMBLE = 2,
-   //! wait for acknowledges: \ref c2m_comm_ic_seq_radio_normal
+   //! wait for cluster info, e.g. acknowledges: \ref c2m_comm_ic_seq_radio_normal
    //! Bx messages and 699: 10 23 02 01
-   IC_COMM_WAIT_4_ACK = 3,
+   IC_COMM_WAIT_4_CLUSTER = 3,
    //! send information frames: \ref c2m_comm_ic_seq_radio_normal
    IC_COMM_INFO = 4,
    //! stop communication: \ref c2m_comm_ic_seq_radio_normal

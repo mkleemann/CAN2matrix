@@ -110,7 +110,7 @@ void ic_comm_fsm(can_t* msg)
          break;
       }
 
-      case IC_COMM_WAIT_4_ACK:
+      case IC_COMM_WAIT_4_CLUSTER:
       {
          // get acknowledge packet from instrument cluster
          //              CAN    Instrument     Example
@@ -132,7 +132,7 @@ void ic_comm_fsm(can_t* msg)
          //   _                     _
          //   |     <-- 699 ---     |         10 23 02 01
          if((CANID_1_COM_CLUSTER_2_RADIO == msg->msgId) &&
-            (0 == (0xE0 & msg->data[0]))) // 1x
+            (0 == (0xE0 & msg->data[0]))) // 1x/0x frames
          {
             msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
             msg->header.len = 1;
