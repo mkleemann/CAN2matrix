@@ -154,7 +154,6 @@ void ic_comm_fsm(can_t* msg)
       case IC_COMM_STOP:
       {
          // reset sequence numbers
-         seqRx = 0;
          seqTx = 0;
          //              CAN    Instrument     Example
          // Radio        ID      Cluster
