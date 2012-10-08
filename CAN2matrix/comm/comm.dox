@@ -351,7 +351,7 @@
  * 0010 0000  0000 0000  0000 1010  0000 0000  - centered     , 8 characters
  * \endcode
  *
- * <b>To be verified!</b>
+ * \par To be verified!
  * The first byte looks like it controls the formatting. The upper nibble
  * looks like:
  *- 0000: left
@@ -359,9 +359,66 @@
  *- 0010: right / TP may fit (at least second row)
  *
  * The third byte looks to handle the line itself. It may also be the position
- * in characters/bytes itself, assuming a hidden character (e.g. return) after
- * the first 8 characters of the upper line:
+ * in characters/bytes itself, assuming hidden characters (e.g. return (\\r\\n))
+ * or a possible length of 10 characters for each line:
  *- 00: first line or position 0
  *- 0A: second line or position 10
+ *
+ * \subsubsection c2m_comm_ic_seq_radio_test Test Pattern for IC Communication
+ *
+ * For testing let's define some pattern, which repeat through the messages
+ * for communication. Any "00" may be overwritten with information here.
+ *
+ * \code
+ * IC_COMM_START_PATTERN              09 02
+ * IC_COMM_PREAMBLE_PATTERN           57 00 03
+ * IC_COMM_FORMAT_PATTERN             00 00 00 00
+ * IC_COMM_END_PATTERN                08
+ * \endcode
+ *
+ * <b>Try Pattern</b>
+ *
+ * First normal (known) formatting with different text:
+ *
+ * \code
+ * 20 09 02 57 0D 03 06 00
+ * 21 0A 00 TX TX TX TX TX   "Test "
+ * 22 TX TX TX 57 06 03 1E   "Me!"
+ * 03 00 00 00 TX 57 08 03   "9"
+ * 24 06 00 00 00 TX TX TX   "HDD"
+ * 25 57 07 03 2A 00 00 00
+ * 16 TX TX 08               "TP"
+ * \endcode
+ *
+ * Only one line (second):
+ *
+ * \code
+ * 20 09 02 57 0D 03 06 00
+ * 21 0A 00 TX TX TX TX TX   "2nd l"
+ * 12 TX TX TX 08            "ine"
+ * \endcode
+ *
+ * Only one line (first):
+ *
+ * \code
+ * 20 09 02 57 0D 03 06 00
+ * 21 00 00 TX TX TX TX TX   "1st l"
+ * 12 TX TX TX 08            "ine"
+ * \endcode
+ *
+ * Formatting: center 3 characters in second line
+ *
+ * \code
+ * 20 09 02 57 08 03 1E 00
+ * 11 0A 00 TX TX TX 08      "2nd"
+ * \endcode
+ *
+ * Formatting: right 3 characters in second line
+ *
+ * \code
+ * 20 09 02 57 08 03 2A 00
+ * 11 0A 00 TX TX TX 08      "2nd"
+ * \endcode
+ *
  */
 
