@@ -358,6 +358,7 @@
 //! when to switch from day to night mode and vice versa (hysteresis)
 //! upper limit
 #define DAY_NIGHT_UPPER_LIMIT          0x60
+
 //! when to switch from day to night mode and vice versa (hysteresis)
 //! lower limit
 #define DAY_NIGHT_LOWER_LIMIT          0x40
@@ -367,31 +368,49 @@
 
 /*! @} */
 
+
+/**
+ * \addtogroup ic_comm_definitions Definitions for Communication with Instrument Cluster
+ * \brief definitions and types for communication with instrument cluster
+ * @{
+ */
+
+/**
+ * \def IC_COMM_INFO_LENGTH
+ * \brief length of max info lines
+ *
+ * Currently the maximum length of 8 characters per line is known. Each
+ * string ends with 0x00.
+ */
+#define IC_COMM_INFO_LENGTH            18
+
+/*! @} */
+
 /***************************************************************************/
 /* functions for matrix operations                                         */
 /***************************************************************************/
 
 /**
- * @brief fetch information from CAN1 and put to storage
- * @param msg - CAN message to extract
+ * \brief fetch information from CAN1 and put to storage
+ * \param msg - CAN message to extract
  */
 void fetchInfoFromCAN1(can_t* msg);
 
 /**
- * @brief fetch information from CAN2 and put to storage
- * @param msg - CAN message to extract
+ * \brief fetch information from CAN2 and put to storage
+ * \param msg - CAN message to extract
  */
 void fetchInfoFromCAN2(can_t* msg);
 
 /**
- * @brief put information from storage to CAN1
- * @param msg - CAN message to fill
+ * \brief put information from storage to CAN1
+ * \param msg - CAN message to fill
  */
 void fillInfoToCAN1(can_t* msg);
 
 /**
- * @brief put information from storage to CAN2
- * @param msg - CAN message to fill
+ * \brief put information from storage to CAN2
+ * \param msg - CAN message to fill
  */
 void fillInfoToCAN2(can_t* msg);
 
@@ -401,20 +420,20 @@ void fillInfoToCAN2(can_t* msg);
 /***************************************************************************/
 
 /**
- * @brief match different IGN status messages
+ * \brief match different IGN status messages
  *
  * Direction from CAN1 to CAN2!
  *
- * @param msg - pointer to CAN message
+ * \param msg - pointer to CAN message
  */
 void transferIgnStatus(can_t* msg);
 
 /**
- * @brief transfer wheel/reverse/temperature status to storage
+ * \brief transfer wheel/reverse/temperature status to storage
  *
  * Direction from CAN1 to CAN2
  *
- * @param msg - pointer to CAN message
+ * \param msg - pointer to CAN message
  *
  * \todo add definitions for destination gear box (CAN2)
  */
@@ -426,62 +445,62 @@ void transferWheelGearTemp(can_t* msg);
 /***************************************************************************/
 
 /**
- * @brief send CAN1 message every 100ms
- * @param msg - pointer to message struct
+ * \brief send CAN1 message every 100ms
+ * \param msg - pointer to message struct
  */
 void sendCan1_100ms(can_t* msg);
 
 /**
- * @brief send CAN1 message every 500ms
- * @param msg - pointer to message struct
+ * \brief send CAN1 message every 500ms
+ * \param msg - pointer to message struct
  */
 void sendCan1_500ms(can_t* msg);
 
 /**
- * @brief send CAN1 message every 1000ms
- * @param msg - pointer to message struct
+ * \brief send CAN1 message every 1000ms
+ * \param msg - pointer to message struct
  */
 void sendCan1_1000ms(can_t* msg);
 
 /**
- * @brief sends message to CAN1 and filling up converted data
+ * \brief sends message to CAN1 and filling up converted data
  *
  * Note: Set message id before calling this function.
  *
- * @param msg - pointer to CAN message with set msg id
+ * \param msg - pointer to CAN message with set msg id
  */
 void sendCan1Message(can_t* msg);
 
 /**
- * @brief send CAN2 message every 100ms
- * @param msg - pointer to message struct
+ * \brief send CAN2 message every 100ms
+ * \param msg - pointer to message struct
  */
 void sendCan2_100ms(can_t* msg);
 
 /**
- * @brief send CAN2 message every 500ms
- * @param msg - pointer to message struct
+ * \brief send CAN2 message every 500ms
+ * \param msg - pointer to message struct
  */
 void sendCan2_500ms(can_t* msg);
 
 /**
- * @brief send CAN2 message every 1000ms
- * @param msg - pointer to message struct
+ * \brief send CAN2 message every 1000ms
+ * \param msg - pointer to message struct
  */
 void sendCan2_1000ms(can_t* msg);
 
 /**
- * @brief sends message to CAN2 and filling up converted data
+ * \brief sends message to CAN2 and filling up converted data
  *
  * Note: Set message id before calling this function.
  *
- * @param msg - pointer to CAN message with set msg id
+ * \param msg - pointer to CAN message with set msg id
  */
 void sendCan2Message(can_t* msg);
 
 /**
- * @brief gets a dim value to be sent via CAN
- * @param value - dim value 0..65535 (left aligned from ADC)
+ * \brief gets a dim value to be sent via CAN
+ * \param value - dim value 0..65535 (left aligned from ADC)
  *
  * This function uses an integral to get an averaged value to set
  * the dimlevel of the target unit (CAN). Since nobody wants to have
@@ -493,6 +512,12 @@ void sendCan2Message(can_t* msg);
  *
  */
 void setDimValue(uint16_t value);
+
+/**
+ * \brief get text for showing in instrument cluster
+ * \return pointer to string (0 terminated)
+ */
+uint8_t* getInfoText(void);
 
 #endif /* MATRIX_H_ */
 

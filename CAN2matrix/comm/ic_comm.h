@@ -11,11 +11,11 @@
  *
  * ----------------------------------------------------------------------------
  *
- *
  * \file ic_comm.h
  *
  * \date Created: 03.10.2012 13:51:10
  * \author Matthias Kleemann
+ *
  */
 
 
@@ -28,13 +28,29 @@
 /***************************************************************************/
 
 /**
- * \def IC_COMM_INFO_LENGTH
- * \brief length of max info lines
- *
- * Currently the maximum length of 8 characters per line is known. Each
- * string ends with 0x00.
+ * \addtogroup ic_comm_definitions Definitions for Communication with Instrument Cluster
+ * \brief definitions and types for communication with instrument cluster
+ * @{
  */
-#define IC_COMM_INFO_LENGTH      18
+
+
+/**
+ * \def IC_COMM_ALIGN_LEFT
+ * \brief left alignment
+ */
+#define IC_COMM_ALIGN_LEFT       0x00
+
+/**
+ * \def IC_COMM_ALIGN_CENTER
+ * \brief left alignment
+ */
+#define IC_COMM_ALIGN_CENTER     0x10
+
+/**
+ * \def IC_COMM_ALIGN_RIGHT
+ * \brief left alignment
+ */
+#define IC_COMM_ALIGN_RIGHT      0x20
 
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */
@@ -63,6 +79,8 @@ typedef enum
    IC_COMM_STOP = 5
 } ic_comm_fsm_t;
 
+/*! @} */
+
 /***************************************************************************/
 /* FUNCTION DEFINITIONS                                                    */
 /***************************************************************************/
@@ -80,11 +98,5 @@ void ic_comm_fsm(can_t* msg);
  * \brief reset flags for next startup
  */
 void ic_comm_reset4start();
-
-/**
- * \brief setup text to send to instrument cluster
- * \param text - pointer to text buffer
- */
-void ic_comm_set_text(uint8_t* text);
 
 #endif /* IC_COMM_H_ */

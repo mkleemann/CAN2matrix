@@ -29,9 +29,6 @@ ic_comm_fsm_t ic_comm_states = IC_COMM_IDLE;
 //! special startup sequence for instrument cluster (state AUDIO)
 bool firstStart = true;
 
-//! text information to be shown in cluster
-uint8_t info[IC_COMM_INFO_LENGTH];
-
 //! sequence number for sending
 uint8_t seqTx = 0;
 
@@ -126,7 +123,8 @@ void ic_comm_fsm(can_t* msg)
             ic_comm_states = IC_COMM_INFO;
          }
 
-         // get close of communication sequence fro minstrument cluster
+         // last frame/data packet from instrument cluster, e.g.
+         // "close of communication" sequence
          //              CAN    Instrument     Example
          // Radio        ID      Cluster
          //   _                     _
@@ -184,18 +182,6 @@ void ic_comm_reset4start()
    firstStart = true;
 }
 
-/**
- * \brief setup text to send to instrument cluster
- * \param text - pointer to text buffer
- */
-void ic_comm_set_text(uint8_t* text)
-{
-   uint8_t i;
 
-   for(i = 0; i < IC_COMM_INFO_LENGTH; ++i)
-   {
-      info[i] = text[i];
-   }
-}
 
 
