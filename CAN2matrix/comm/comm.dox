@@ -422,5 +422,24 @@
  * IC_COMM_END_PATTERN                08
  * \endcode
  *
+ * EEPROM pattern:
+ * \code
+ * 00 - 09 02 57 00 03 00 00 00  ..W.....
+ * 08 - 00 08 00 00 00 00 00 00  ........
+ * \endcode
+ *
+ * Offsets and lengths to/of EEPROM patterns for easy access:
+ * \code
+ * #define IC_COMM_EEP_START_OFFSET     0
+ * #define IC_COMM_EEP_PREAMBLE_OFFSET  2
+ * #define IC_COMM_EEP_FORMAT_OFFSET    5
+ * #define IC_COMM_EEP_STOP_OFFSET      9
+ *
+ * #define IC_COMM_EEP_START_LENGTH     (IC_COMM_EEP_PREAMBLE_OFFSET - IC_COMM_EEP_START_OFFSET)
+ * #define IC_COMM_EEP_PREAMBLE_LENGTH  (IC_COMM_EEP_FORMAT_OFFSET - IC_COMM_EEP_PREAMBLE_OFFSET)
+ * #define IC_COMM_EEP_FORMAT_LENGTH    (IC_COMM_EEP_STOP_OFFSET - IC_COMM_EEP_FORMAT_OFFSET)
+ * #define IC_COMM_EEP_STOP_OFFSET      1
+ * \endcode
+ *
  */
 

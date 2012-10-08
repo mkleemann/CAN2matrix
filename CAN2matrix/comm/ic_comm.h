@@ -52,6 +52,42 @@
  */
 #define IC_COMM_ALIGN_RIGHT      0x20
 
+/**
+ * \def IC_COMM_EEP_START_OFFSET
+ * \brief offset to start pattern in EEPROM
+ *
+ * \def IC_COMM_EEP_PREAMBLE_OFFSET
+ * \brief offset to preamble pattern in EEPROM
+ *
+ * \def IC_COMM_EEP_FORMAT_OFFSET
+ * \brief offset to format pattern in EEPROM
+ *
+ * \def IC_COMM_EEP_STOP_OFFSET
+ * \brief offset to stop pattern in EEPROM
+ */
+#define IC_COMM_EEP_START_OFFSET     0
+#define IC_COMM_EEP_PREAMBLE_OFFSET  2
+#define IC_COMM_EEP_FORMAT_OFFSET    5
+#define IC_COMM_EEP_STOP_OFFSET      9
+
+/**
+ * \def IC_COMM_EEP_START_LENGTH
+ * \brief length of start pattern in EEPROM
+ *
+ * \def IC_COMM_EEP_PREAMBLE_LENGTH
+ * \brief length of preamble pattern in EEPROM
+ *
+ * \def IC_COMM_EEP_FORMAT_LENGTH
+ * \brief length of format pattern in EEPROM
+ *
+ * \def IC_COMM_EEP_STOP_OFFSET
+ * \brief length of stop pattern in EEPROM
+ */
+#define IC_COMM_EEP_START_LENGTH     (IC_COMM_EEP_PREAMBLE_OFFSET - IC_COMM_EEP_START_OFFSET)
+#define IC_COMM_EEP_PREAMBLE_LENGTH  (IC_COMM_EEP_FORMAT_OFFSET - IC_COMM_EEP_PREAMBLE_OFFSET)
+#define IC_COMM_EEP_FORMAT_LENGTH    (IC_COMM_EEP_STOP_OFFSET - IC_COMM_EEP_FORMAT_OFFSET)
+#define IC_COMM_EEP_STOP_OFFSET      1
+
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */
 /***************************************************************************/
