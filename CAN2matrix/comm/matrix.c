@@ -26,6 +26,7 @@
 /***************************************************************************/
 /* Definition of global variables to store CAN values.                     */
 /***************************************************************************/
+
 /**
  * @brief storage struct to keep values to send to CAN2
  */
@@ -59,26 +60,9 @@ volatile uint16_t    dimAverage  = 0x7F00;
 volatile bool        nightMode   = false;
 //! text information to be shown in cluster (fixed for now)
 uint8_t info[IC_COMM_INFO_LENGTH] = {
-   '0',
-   '1',
-   '2',
-   '3',
-   '4',
-   '5',
-   '6',
-   '7',
-   0x00,
-   'T',
-   'e',
-   's',
-   't',
-   ' ',
-   'M',
-   'e',
-   '!',
-   0x00
+   '0', '1', '2', '3', '4', '5', '6', '7', 0x00,
+   'T', 'e', 's', 't', ' ', 'M', 'e', '!', 0x00
    };
-
 
 
 /***************************************************************************/
