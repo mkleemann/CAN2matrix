@@ -37,38 +37,16 @@
 /**
  * \def IC_COMM_ALIGN_LEFT
  * \brief left alignment
- */
-#define IC_COMM_ALIGN_LEFT       0x00
-
-/**
+ *
  * \def IC_COMM_ALIGN_CENTER
  * \brief left alignment
- */
-#define IC_COMM_ALIGN_CENTER     0x10
-
-/**
+ *
  * \def IC_COMM_ALIGN_RIGHT
  * \brief left alignment
  */
+#define IC_COMM_ALIGN_LEFT       0x00
+#define IC_COMM_ALIGN_CENTER     0x10
 #define IC_COMM_ALIGN_RIGHT      0x20
-
-/**
- * \def IC_COMM_EEP_START_OFFSET
- * \brief offset to start pattern in EEPROM
- *
- * \def IC_COMM_EEP_PREAMBLE_OFFSET
- * \brief offset to preamble pattern in EEPROM
- *
- * \def IC_COMM_EEP_FORMAT_OFFSET
- * \brief offset to format pattern in EEPROM
- *
- * \def IC_COMM_EEP_STOP_OFFSET
- * \brief offset to stop pattern in EEPROM
- */
-#define IC_COMM_EEP_START_OFFSET     0
-#define IC_COMM_EEP_PREAMBLE_OFFSET  2
-#define IC_COMM_EEP_FORMAT_OFFSET    5
-#define IC_COMM_EEP_STOP_OFFSET      9
 
 /**
  * \def IC_COMM_EEP_START_LENGTH
@@ -80,13 +58,22 @@
  * \def IC_COMM_EEP_FORMAT_LENGTH
  * \brief length of format pattern in EEPROM
  *
- * \def IC_COMM_EEP_STOP_OFFSET
+ * \def IC_COMM_EEP_STOP_LENGTH
  * \brief length of stop pattern in EEPROM
  */
-#define IC_COMM_EEP_START_LENGTH     (IC_COMM_EEP_PREAMBLE_OFFSET - IC_COMM_EEP_START_OFFSET)
-#define IC_COMM_EEP_PREAMBLE_LENGTH  (IC_COMM_EEP_FORMAT_OFFSET - IC_COMM_EEP_PREAMBLE_OFFSET)
-#define IC_COMM_EEP_FORMAT_LENGTH    (IC_COMM_EEP_STOP_OFFSET - IC_COMM_EEP_FORMAT_OFFSET)
-#define IC_COMM_EEP_STOP_OFFSET      1
+#define IC_COMM_EEP_START_LENGTH     2
+#define IC_COMM_EEP_PREAMBLE_LENGTH  3
+#define IC_COMM_EEP_FORMAT_LENGTH    4
+#define IC_COMM_EEP_STOP_LENGTH      1
+
+/**
+ * \def IC_COMM_MAX_LENGTH_OF_FRAME
+ * \brief length of messages for 2 communication frames
+ *
+ * A communication frame for the instrument cluster consists of 4 CAN
+ * messages maximum. The buffer fits for 2 frames.
+ */
+#define IC_COMM_MAX_LENGTH_OF_FRAME  64
 
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */

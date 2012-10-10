@@ -22,6 +22,10 @@
 #include "ic_comm.h"
 
 #include <stdbool.h>
+#include <avr/eeprom.h>
+
+
+/**** VARIABLES *************************************************************/
 
 //! states of the FSM to send information to the instrument cluster
 ic_comm_fsm_t ic_comm_states = IC_COMM_IDLE;
@@ -32,6 +36,53 @@ bool firstStart = true;
 //! sequence number for sending
 uint8_t seqTx = 0;
 
+/**
+ * \brief buffer to setup a communication frame
+ */
+uint8_t frame[IC_COMM_MAX_LENGTH_OF_FRAME];
+
+
+/**** EEPROM VARIABLES ******************************************************/
+
+/**
+ * \brief offset to start pattern in EEPROM
+ */
+#ifdef __DOXYGEN__
+uint8_t ic_comm_eep_start[IC_COMM_EEP_START_LENGTH]             = { 0x09, 0x02 };
+#else
+uint8_t ic_comm_eep_start[IC_COMM_EEP_START_LENGTH] EEMEM       = { 0x09, 0x02 };
+#endif
+
+/**
+ * \brief offset to preamble pattern in EEPROM
+ */
+#ifdef __DOXYGEN__
+uint8_t ic_comm_eep_preamble[IC_COMM_EEP_PREAMBLE_LENGTH]       = { 0x57, 0x00, 0x03 };
+#else
+uint8_t ic_comm_eep_preamble[IC_COMM_EEP_PREAMBLE_LENGTH] EEMEM = { 0x57, 0x00, 0x03 };
+#endif
+
+/**
+ * \brief offset to format pattern in EEPROM
+ */
+#ifdef __DOXYGEN__
+uint8_t ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH]           = { 0x00, 0x00, 0x00, 0x00 };
+#else
+uint8_t ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH] EEMEM     = { 0x00, 0x00, 0x00, 0x00 };
+#endif
+
+/**
+ * \brief offset to stop pattern in EEPROM
+ */
+#ifdef __DOXYGEN__
+uint8_t ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH]               = { 0x08 };
+#else
+uint8_t ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH] EEMEM         = { 0x08 };
+#endif
+
+
+
+/**** FUNCTIONS *************************************************************/
 
 /**
  * \brief FSM for communicating with instrument cluster
@@ -146,6 +197,8 @@ void ic_comm_fsm(can_t* msg)
 
       case IC_COMM_INFO:
       {
+
+
          break;
       }
 
@@ -182,6 +235,31 @@ void ic_comm_reset4start()
    firstStart = true;
 }
 
+/**
+ * \brief setup for frame to send to cluster
+ *
+ * Fill frame buffer with control and information sequences.
+ */
+void ic_comm_framesetup(void)
+{
+//   uint8_t* text = getInfoText();
+   uint8_t bytes = 0;
 
+   // start with frame: signal and sequence
+   frame[bytes] = 0x20 | seqTx;
+   ++bytes;
+
+   // information start sequence (once in frame)
+   eeprom_read_block(&frame[bytes],
+                     ic_comm_eep_start,
+                     IC_COMM_EEP_START_LENGTH);
+   bytes += IC_COMM_EEP_START_LENGTH;
+
+   eeprom_read_block(&frame[bytes],
+                     ic_comm_eep_start,
+                     IC_COMM_EEP_PREAMBLE_LENGTH);
+   bytes += IC_COMM_EEP_PREAMBLE_LENGTH;
+
+}
 
 
