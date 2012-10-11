@@ -56,7 +56,7 @@ uint8_t frame[IC_COMM_MAX_LENGTH_OF_FRAME];
 #ifdef __DOXYGEN__
 uint8_t ic_comm_eep_start[IC_COMM_EEP_START_LENGTH]         = { 0x09, 0x02 };
 #else
-uint8_t ic_comm_eep_start[IC_COMM_EEP_START_LENGTH] EEMEM   = { 0x09, 0x02 };
+uint8_t EEMEM ic_comm_eep_start[IC_COMM_EEP_START_LENGTH]   = { 0x09, 0x02 };
 #endif
 
 /**
@@ -65,7 +65,7 @@ uint8_t ic_comm_eep_start[IC_COMM_EEP_START_LENGTH] EEMEM   = { 0x09, 0x02 };
 #ifdef __DOXYGEN__
 uint8_t ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH]       = { 0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00 };
 #else
-uint8_t ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH] EEMEM = { 0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00 };
+uint8_t EEMEM ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH] = { 0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00 };
 #endif
 
 /**
@@ -74,7 +74,7 @@ uint8_t ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH] EEMEM = { 0x57, 0x00, 0x03
 #ifdef __DOXYGEN__
 uint8_t ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH]           = { 0x08 };
 #else
-uint8_t ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH] EEMEM     = { 0x08 };
+uint8_t EEMEM ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH]     = { 0x08 };
 #endif
 
 
