@@ -270,6 +270,12 @@ void run()
 
    /**** RADIO TEXT ***********************************************/
 
+   // TEST CODE!
+   if(CANID_2_RADIO_STATION_NAME == msg.msgId)
+   {
+      ic_comm_framesetup();
+   }
+
    ic_comm_fsm(&msg);
 
    /**** CHECK CAN STATUS *****************************************/
