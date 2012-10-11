@@ -166,10 +166,8 @@ void ic_comm_fsm(can_t* msg)
          //   _                     _
          //   |     <-- 699 ---     |         Bx
          if((CANID_1_COM_CLUSTER_2_RADIO == msg->msgId) &&
-            ((0xB0 | (seqTx+1)) == msg->data[0]))
+            ((0xB0 | seqTx) == msg->data[0]))
          {
-            // get ack for info frames
-            ++seqTx;
             // next info frame
             ic_comm_states = IC_COMM_INFO;
          }
@@ -181,7 +179,7 @@ void ic_comm_fsm(can_t* msg)
          //   _                     _
          //   |     <-- 699 ---     |         10 23 02 01
          if((CANID_1_COM_CLUSTER_2_RADIO == msg->msgId) &&
-            (0 == (0xE0 & msg->data[0]))) // 1x/0x frames
+            (0 == (IC_COMM_EOF_MASK & msg->data[0]))) // 1x/0x frames
          {
             msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
             msg->header.len = 1;
@@ -197,8 +195,22 @@ void ic_comm_fsm(can_t* msg)
 
       case IC_COMM_INFO:
       {
+         msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
 
+         // byte 0: IC_COMM_SOF  | seqTx  -> next info message
+         // byte 0: IC_COMM_EOF  | seqTx  -> wait for ack, stop
+         // byte 0: IC_COMM_W4NF | seqTx  -> wait for ack, next
+         msg->header.len = ic_comm_getNextMsg(msg->data);
+         can_send_message(CAN_CHIP1, msg);
 
+         // next sequence, also for ack!
+         ++seqTx;
+         // frame over? data[0] == 0x/1x
+         if(0x20 != (IC_COMM_FRAME_MASK & msg->data[0]))
+         {
+            // wait for instrument cluster response
+            ic_comm_states = IC_COMM_WAIT_4_CLUSTER;
+         }
          break;
       }
 
@@ -233,6 +245,7 @@ void ic_comm_fsm(can_t* msg)
 void ic_comm_reset4start()
 {
    firstStart = true;
+   ic_comm_states = IC_COMM_IDLE;
 }
 
 /**
@@ -246,20 +259,42 @@ void ic_comm_framesetup(void)
    uint8_t bytes = 0;
 
    // start with frame: signal and sequence
-   frame[bytes] = 0x20 | seqTx;
+   frame[bytes] = 0x20 | seqTx;                                   // 0
    ++bytes;
 
    // information start sequence (once in frame)
-   eeprom_read_block(&frame[bytes],
+   eeprom_read_block(&frame[bytes],                               // 1..2
                      ic_comm_eep_start,
                      IC_COMM_EEP_START_LENGTH);
    bytes += IC_COMM_EEP_START_LENGTH;
 
-   eeprom_read_block(&frame[bytes],
+   eeprom_read_block(&frame[bytes],                               // 3..5
                      ic_comm_eep_start,
                      IC_COMM_EEP_PREAMBLE_LENGTH);
    bytes += IC_COMM_EEP_PREAMBLE_LENGTH;
 
+   // byte 4: setup length of first string (len + 5)
+
+   eeprom_read_block(&frame[bytes],                               // 6..9
+                     ic_comm_eep_start,
+                     IC_COMM_EEP_PREAMBLE_LENGTH);
+   bytes += IC_COMM_EEP_FORMAT_LENGTH;
+
+   // byte 6: format
+   // byte 8: line indicator
+
+   // first string: 1..8 bytes
+
+   // next sequence or stop
 }
 
+/**
+ * \brief get next message from frame buffer
+ * \param data - pointer to destination buffer
+ * \return length of buffer copied
+ */
+uint8_t ic_comm_getNextMsg(uint8_t* data)
+{
+   return(1);
+}
 

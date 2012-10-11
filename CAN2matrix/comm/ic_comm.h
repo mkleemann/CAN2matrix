@@ -49,6 +49,47 @@
 #define IC_COMM_ALIGN_RIGHT      0x20
 
 /**
+ * \def IC_COMM_SOF
+ * \brief start of frame
+ *
+ * \def IC_COMM_EOF
+ * \brief end of frame
+ *
+ * \def IC_COMM_W4NF
+ * \brief wait for next frame
+ */
+#define IC_COMM_SOF              0x20
+#define IC_COMM_EOF              0x10
+#define IC_COMM_W4NF             0x00
+
+/**
+ * \def IC_COMM_FRAME_MASK
+ * \brief mask for frame message signature
+ *
+ * \def IC_COMM_EOF_MASK
+ * \brief mask for frame message signature (1x/0x)
+ *
+ * Test
+ * \code
+ * if(0 == (byte & IC_COMM_EOF_MASK))
+ * { ... }
+ * \endcode
+ * and the value is either 0x or 1x.
+ *
+ * \def IC_COMM_FRAME_SEQ_MASK
+ * \brief mask for sequence number
+ *
+ * Sequence number is:
+ * \code
+ * (byte | IC_COMM_FRAME_SEQ_MASK)
+ * \endcode
+ *
+ */
+#define IC_COMM_FRAME_MASK       0xF0
+#define IC_COMM_EOF_MASK         0xE0
+#define IC_COMM_FRAME_SEQ_MASK   0x0F
+
+/**
  * \def IC_COMM_EEP_START_LENGTH
  * \brief length of start pattern in EEPROM
  *
@@ -121,5 +162,19 @@ void ic_comm_fsm(can_t* msg);
  * \brief reset flags for next startup
  */
 void ic_comm_reset4start();
+
+/**
+ * \brief setup for frame to send to cluster
+ *
+ * Fill frame buffer with control and information sequences.
+ */
+void ic_comm_framesetup(void);
+
+/**
+ * \brief get next message from frame buffer
+ * \param data - pointer to destination buffer
+ * \return length of buffer copied
+ */
+uint8_t ic_comm_getNextMsg(uint8_t* data);
 
 #endif /* IC_COMM_H_ */
