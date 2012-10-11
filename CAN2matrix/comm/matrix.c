@@ -136,23 +136,6 @@ void fetchInfoFromCAN2(can_t* msg)
  */
 void fillInfoToCAN1(can_t* msg)
 {
-#if 0  // currently nothing to do here
-   // remove any old values
-   for(int i = 0; i < 8; ++i)
-   {
-      msg->data[i] = 0;
-   }
-
-   switch(msg->msgId)
-   {
-
-      default:
-      {
-         // do nothing!
-         break;
-      }
-   }
-#endif
 }
 
 /**
