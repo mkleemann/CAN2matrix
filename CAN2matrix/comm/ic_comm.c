@@ -36,6 +36,12 @@ bool firstStart = true;
 //! sequence number for sending
 uint8_t seqTx = 0;
 
+//! number of bytes in frame
+uint8_t bytesInFrame = 0;
+
+//! pointer to next message in frame
+uint8_t nextMsg = 0;
+
 /**
  * \brief buffer to setup a communication frame
  */
@@ -48,36 +54,27 @@ uint8_t frame[IC_COMM_MAX_LENGTH_OF_FRAME];
  * \brief offset to start pattern in EEPROM
  */
 #ifdef __DOXYGEN__
-uint8_t ic_comm_eep_start[IC_COMM_EEP_START_LENGTH]             = { 0x09, 0x02 };
+uint8_t ic_comm_eep_start[IC_COMM_EEP_START_LENGTH]         = { 0x09, 0x02 };
 #else
-uint8_t ic_comm_eep_start[IC_COMM_EEP_START_LENGTH] EEMEM       = { 0x09, 0x02 };
-#endif
-
-/**
- * \brief offset to preamble pattern in EEPROM
- */
-#ifdef __DOXYGEN__
-uint8_t ic_comm_eep_preamble[IC_COMM_EEP_PREAMBLE_LENGTH]       = { 0x57, 0x00, 0x03 };
-#else
-uint8_t ic_comm_eep_preamble[IC_COMM_EEP_PREAMBLE_LENGTH] EEMEM = { 0x57, 0x00, 0x03 };
+uint8_t ic_comm_eep_start[IC_COMM_EEP_START_LENGTH] EEMEM   = { 0x09, 0x02 };
 #endif
 
 /**
  * \brief offset to format pattern in EEPROM
  */
 #ifdef __DOXYGEN__
-uint8_t ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH]           = { 0x00, 0x00, 0x00, 0x00 };
+uint8_t ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH]       = { 0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00 };
 #else
-uint8_t ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH] EEMEM     = { 0x00, 0x00, 0x00, 0x00 };
+uint8_t ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH] EEMEM = { 0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00 };
 #endif
 
 /**
  * \brief offset to stop pattern in EEPROM
  */
 #ifdef __DOXYGEN__
-uint8_t ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH]               = { 0x08 };
+uint8_t ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH]           = { 0x08 };
 #else
-uint8_t ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH] EEMEM         = { 0x08 };
+uint8_t ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH] EEMEM     = { 0x08 };
 #endif
 
 
@@ -203,8 +200,6 @@ void ic_comm_fsm(can_t* msg)
          msg->header.len = ic_comm_getNextMsg(msg->data);
          can_send_message(CAN_CHIP1, msg);
 
-         // next sequence, also for ack!
-         ++seqTx;
          // frame over? data[0] == 0x/1x
          if(0x20 != (IC_COMM_FRAME_MASK & msg->data[0]))
          {
@@ -244,7 +239,11 @@ void ic_comm_fsm(can_t* msg)
  */
 void ic_comm_reset4start()
 {
+   // reset for clean startup in communication
    firstStart = true;
+   bytesInFrame = 0;
+   nextMsg = 0;
+   seqTx = 0;
    ic_comm_states = IC_COMM_IDLE;
 }
 
@@ -255,37 +254,64 @@ void ic_comm_reset4start()
  */
 void ic_comm_framesetup(void)
 {
-//   uint8_t* text = getInfoText();
-   uint8_t bytes = 0;
+   uint8_t* text = getInfoText();
+   uint8_t i;
 
    // start with frame: signal and sequence
-   frame[bytes] = 0x20 | seqTx;                                   // 0
-   ++bytes;
+   frame[bytesInFrame] = IC_COMM_SOF | seqTx;                            // 0
+   ++bytesInFrame;
+   // next sequence, also for ack!
+   ++seqTx;
 
    // information start sequence (once in frame)
-   eeprom_read_block(&frame[bytes],                               // 1..2
+   eeprom_read_block(&frame[bytesInFrame],                               // 1..2
                      ic_comm_eep_start,
                      IC_COMM_EEP_START_LENGTH);
-   bytes += IC_COMM_EEP_START_LENGTH;
+   bytesInFrame += IC_COMM_EEP_START_LENGTH;
 
-   eeprom_read_block(&frame[bytes],                               // 3..5
-                     ic_comm_eep_start,
-                     IC_COMM_EEP_PREAMBLE_LENGTH);
-   bytes += IC_COMM_EEP_PREAMBLE_LENGTH;
+   eeprom_read_block(&frame[bytesInFrame],                               // 3..9
+                     ic_comm_eep_format,
+                     IC_COMM_EEP_FORMAT_LENGTH);
+   bytesInFrame += IC_COMM_EEP_FORMAT_LENGTH;
 
    // byte 4: setup length of first string (len + 5)
-
-   eeprom_read_block(&frame[bytes],                               // 6..9
-                     ic_comm_eep_start,
-                     IC_COMM_EEP_PREAMBLE_LENGTH);
-   bytes += IC_COMM_EEP_FORMAT_LENGTH;
-
+   frame[4] = 8 + 5; // test 8 byte sequence                             // 4
    // byte 6: format
-   // byte 8: line indicator
+   frame[6] = 0x03;  // test left                                        // 6
 
-   // first string: 1..8 bytes
+   // next CAN message
+   frame[8]  = IC_COMM_SOF | seqTx;                                      // 8
+   // next sequence, also for ack!
+   ++seqTx;
 
-   // next sequence or stop
+   // copy information                                                   // 10
+   frame[10] = frame[9];
+   // byte 9: line indicator
+   frame[9] = 0x0A;  // test second line                                 // 9
+
+   // first string: 1..5 bytesInFrame
+   // testing here!
+   for(i = 0; i < 5; ++i, ++bytesInFrame)                                // 11..15
+   {
+      frame[bytesInFrame] = text[i];
+   }
+
+   // next CAN message
+   frame[bytesInFrame]  = IC_COMM_EOF | seqTx;                           // 16
+   // next sequence, also for ack!
+   ++seqTx;
+
+   // first string: 1..5 bytesInFrame
+   // testing here!
+   for(i = 5; i < 8; ++i, ++bytesInFrame)                                // 17..19
+   {
+      frame[bytesInFrame] = text[i];
+   }
+
+   eeprom_read_block(&frame[bytesInFrame],                               // 20
+                     ic_comm_eep_stop,
+                     IC_COMM_EEP_STOP_LENGTH);
+   bytesInFrame += IC_COMM_EEP_STOP_LENGTH;
 }
 
 /**
@@ -295,6 +321,29 @@ void ic_comm_framesetup(void)
  */
 uint8_t ic_comm_getNextMsg(uint8_t* data)
 {
-   return(1);
+   uint8_t length = 8;
+   uint8_t i;
+
+   // copy data
+   for(i = nextMsg; i < nextMsg + 8; ++i)
+   {
+      data[i - nextMsg] = frame[i];
+   }
+
+   // set pointer to next message
+   nextMsg += 8;
+
+   if(0 == (IC_COMM_EOF_MASK & data[0]))  // 1x/0x
+   {
+      // last number of bytes in CAN message
+      length = bytesInFrame % 8;
+      // restart frame
+      nextMsg = 0;
+   }
+
+   return(length);
 }
+
+
+
 

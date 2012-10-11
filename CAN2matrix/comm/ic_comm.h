@@ -93,18 +93,14 @@
  * \def IC_COMM_EEP_START_LENGTH
  * \brief length of start pattern in EEPROM
  *
- * \def IC_COMM_EEP_PREAMBLE_LENGTH
- * \brief length of preamble pattern in EEPROM
- *
  * \def IC_COMM_EEP_FORMAT_LENGTH
- * \brief length of format pattern in EEPROM
+ * \brief length of preamble pattern in EEPROM
  *
  * \def IC_COMM_EEP_STOP_LENGTH
  * \brief length of stop pattern in EEPROM
  */
 #define IC_COMM_EEP_START_LENGTH     2
-#define IC_COMM_EEP_PREAMBLE_LENGTH  3
-#define IC_COMM_EEP_FORMAT_LENGTH    4
+#define IC_COMM_EEP_FORMAT_LENGTH    7
 #define IC_COMM_EEP_STOP_LENGTH      1
 
 /**

@@ -28,7 +28,7 @@
 
 #include "adc/adc.h"
 #include "can/can_mcp2515.h"
-//#include "comm/ic_comm.h"
+#include "comm/ic_comm.h"
 #include "comm/matrix.h"
 #include "leds/leds.h"
 #include "spi/spi.h"
@@ -226,6 +226,8 @@ void wakeUp()
    _delay_ms(1);
 #endif
 
+   ic_comm_reset4start();
+
    restartTimer1();
    restartTimer2();
 
@@ -265,6 +267,10 @@ void run()
 
    handleCan1Transmission(&msg);
    _delay_ms(1);
+
+   /**** RADIO TEXT ***********************************************/
+
+   ic_comm_fsm(&msg);
 
    /**** CHECK CAN STATUS *****************************************/
    error = can_get_general_bus_errors(CAN_CHIP1);
