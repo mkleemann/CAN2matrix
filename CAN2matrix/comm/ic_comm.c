@@ -53,29 +53,17 @@ uint8_t frame[IC_COMM_MAX_LENGTH_OF_FRAME];
 /**
  * \brief offset to start pattern in EEPROM
  */
-#ifdef __DOXYGEN__
-uint8_t ic_comm_eep_start[IC_COMM_EEP_START_LENGTH]         = { 0x09, 0x02 };
-#else
 uint8_t EEMEM ic_comm_eep_start[IC_COMM_EEP_START_LENGTH]   = { 0x09, 0x02 };
-#endif
 
 /**
  * \brief offset to format pattern in EEPROM
  */
-#ifdef __DOXYGEN__
-uint8_t ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH]       = { 0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00 };
-#else
 uint8_t EEMEM ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH] = { 0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00 };
-#endif
 
 /**
  * \brief offset to stop pattern in EEPROM
  */
-#ifdef __DOXYGEN__
-uint8_t ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH]           = { 0x08 };
-#else
 uint8_t EEMEM ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH]     = { 0x08 };
-#endif
 
 
 
