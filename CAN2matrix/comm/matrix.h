@@ -178,6 +178,7 @@
  * \brief communication channel from Radio to Instrument Cluster
  */
 #define CANID_1_COM_RADIO_2_CLUSTER    0x6B9
+
 /**
  * \def CANID_1_COM_CLUSTER_2_RADIO
  * \brief communication channel from Instrument Cluster to Radio
