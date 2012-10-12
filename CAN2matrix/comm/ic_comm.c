@@ -169,6 +169,11 @@ void ic_comm_fsm(can_t* msg)
             ic_comm_states = IC_COMM_INFO;
          }
 
+         break;
+      }
+
+      case IC_COMM_INFO:
+      {
          // last frame/data packet from instrument cluster, e.g.
          // "close of communication" sequence
          //              CAN    Instrument     Example
@@ -176,7 +181,7 @@ void ic_comm_fsm(can_t* msg)
          //   _                     _
          //   |     <-- 699 ---     |         10 23 02 01
          if((CANID_1_COM_CLUSTER_2_RADIO == msg->msgId) &&
-            (0 == (IC_COMM_EOF_MASK & msg->data[0]))) // 1x/0x frames
+            (0x10 == (IC_COMM_FRAME_MASK & msg->data[0])))
          {
             msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
             msg->header.len = 1;
@@ -186,25 +191,25 @@ void ic_comm_fsm(can_t* msg)
 
             ic_comm_states = IC_COMM_STOP;
          }
-
-         break;
-      }
-
-      case IC_COMM_INFO:
-      {
-         msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
-
-         // byte 0: IC_COMM_SOF  | seqTx  -> next info message
-         // byte 0: IC_COMM_EOF  | seqTx  -> wait for ack, stop
-         // byte 0: IC_COMM_W4NF | seqTx  -> wait for ack, next
-         msg->header.len = ic_comm_getNextMsg(msg->data);
-         can_send_message(CAN_CHIP1, msg);
-
-         // frame over? data[0] == 0x/1x
-         if(0x20 != (IC_COMM_FRAME_MASK & msg->data[0]))
+         else
          {
-            // wait for instrument cluster response
-            ic_comm_states = IC_COMM_WAIT_4_CLUSTER;
+            msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
+
+            // byte 0: IC_COMM_SOF  | seqTx  -> next info message
+            // byte 0: IC_COMM_EOF  | seqTx  -> wait for ack, stop
+            // byte 0: IC_COMM_W4NF | seqTx  -> wait for ack, next
+            msg->header.len = ic_comm_getNextMsg(msg->data);
+            can_send_message(CAN_CHIP1, msg);
+
+            // next sequence, also for ack!
+            ++seqTx;
+
+            // frame over? data[0] == 0x/1x
+            if(0x20 != (IC_COMM_FRAME_MASK & msg->data[0]))
+            {
+               // wait for instrument cluster response
+               ic_comm_states = IC_COMM_WAIT_4_CLUSTER;
+            }
          }
          break;
       }
@@ -258,10 +263,8 @@ void ic_comm_framesetup(void)
    uint8_t i;
 
    // start with frame: signal and sequence
-   frame[bytesInFrame] = IC_COMM_SOF | seqTx;                            // 0
+   frame[bytesInFrame] = IC_COMM_SOF;                                    // 0
    ++bytesInFrame;
-   // next sequence, also for ack!
-   ++seqTx;
 
    // information start sequence (once in frame)
    eeprom_read_block(&frame[bytesInFrame],                               // 1..2
@@ -280,9 +283,7 @@ void ic_comm_framesetup(void)
    frame[6] = 0x06;  // test left                                        // 6
 
    // next CAN message
-   frame[8]  = IC_COMM_SOF | seqTx;                                      // 8
-   // next sequence, also for ack!
-   ++seqTx;
+   frame[8]  = IC_COMM_SOF | 1;                                          // 8
 
    // move information                                                   // 10
    frame[10] = frame[9];
@@ -299,9 +300,7 @@ void ic_comm_framesetup(void)
    }
 
    // next CAN message
-   frame[bytesInFrame]  = IC_COMM_EOF | seqTx;                           // 16
-   // next sequence, also for ack!
-   ++seqTx;
+   frame[bytesInFrame]  = IC_COMM_EOF | 2;                               // 16
    // one byte more
    ++bytesInFrame;
 
