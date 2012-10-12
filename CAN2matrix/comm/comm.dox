@@ -321,6 +321,7 @@
  *- 1011: 6 characters
  *- 1100: 7 characters*
  *- 1101: 8 characters
+ *- 1110: 9 characters "AUX IN..."
  *
  * (*) not verified
  *
