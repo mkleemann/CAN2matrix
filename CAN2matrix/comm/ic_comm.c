@@ -277,17 +277,19 @@ void ic_comm_framesetup(void)
    // byte 4: setup length of first string (len + 5)
    frame[4] = 8 + 5; // test 8 byte sequence                             // 4
    // byte 6: format
-   frame[6] = 0x03;  // test left                                        // 6
+   frame[6] = 0x06;  // test left                                        // 6
 
    // next CAN message
    frame[8]  = IC_COMM_SOF | seqTx;                                      // 8
    // next sequence, also for ack!
    ++seqTx;
 
-   // copy information                                                   // 10
+   // move information                                                   // 10
    frame[10] = frame[9];
    // byte 9: line indicator
    frame[9] = 0x0A;  // test second line                                 // 9
+   // one byte more
+   ++bytesInFrame;
 
    // first string: 1..5 bytesInFrame
    // testing here!
@@ -300,6 +302,8 @@ void ic_comm_framesetup(void)
    frame[bytesInFrame]  = IC_COMM_EOF | seqTx;                           // 16
    // next sequence, also for ack!
    ++seqTx;
+   // one byte more
+   ++bytesInFrame;
 
    // first string: 1..5 bytesInFrame
    // testing here!
