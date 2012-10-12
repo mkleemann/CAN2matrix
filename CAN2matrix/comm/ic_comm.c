@@ -25,6 +25,136 @@
 #include <avr/eeprom.h>
 
 
+/**** EEPROM VARIABLES ******************************************************/
+
+/**
+ * \brief offset to start pattern in EEPROM
+ */
+uint8_t EEMEM ic_comm_eep_start[IC_COMM_EEP_START_LENGTH] = {
+   0x09, 0x02
+};
+
+/**
+ * \brief offset to format pattern in EEPROM
+ */
+uint8_t EEMEM ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH] = {
+   0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00
+};
+
+/**
+ * \brief offset to stop pattern in EEPROM
+ */
+uint8_t EEMEM ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH] = {
+   0x08
+};
+
+/**
+ * \brief sequence for startup
+ *
+ * \note The 3rd byte (0x39) may be of interest, since it is also sent by
+ *       the next sequence with AUDIO indicator.
+ */
+uint8_t EEMEM ic_comm_startup_seq[] = {
+   0x10, 0x15, 0x39, 0x00, 0x01, 0x01
+};
+
+/**
+ * \brief sequence for audio startup
+ *
+ * \note There is no end of sequence marker here.
+ */
+uint8_t EEMEM ic_comm_startup_audio_seq[] = {
+   0x20, 0x02, 0x80, 0x39, 0x20, 0x41, 0x55, 0x44,   // byte 6..7 "AUD"
+   0x11, 0x49, 0x4F                                  // byte 2..3 "IO"
+};
+
+/**
+ * \brief sequence for normal media information
+ *
+ * Placeholder for media information. First 8 bytes for station name or any
+ * free text in the second line. Next 1 byte (first line, middle) for
+ * memory number and at last the media information (3 bytes, left, 1st line),
+ * e.g. FM, AM, HDD, DVD or CD.
+ */
+uint8_t EEMEM ic_comm_media_info_seq[] = {
+   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,
+   0x21, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 4..8 text
+   0x22, 0x00, 0x00, 0x00, 0x57, 0x06, 0x03, 0x1E,    // byte 2..4 text
+   0x03, 0x00, 0x00, 0x00, 0x00, 0x57, 0x08, 0x03,    // byte 5    text
+   0x24, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 6..8 text
+   0x15, 0x08
+};
+
+/**
+ * \brief sequence for normal media information with traffic indicator
+ *
+ * Placeholder for media information. First 8 bytes for station name or any
+ * free text in the second line. Next 1 byte (first line, middle) for
+ * memory number and at last the media information (3 bytes, left, 1st line),
+ * e.g. FM, AM, HDD, DVD or CD.
+ *
+ * Additionally to ic_comm_media_info_seq, the TP information (2 bytes,
+ * right, 1st line) comes in too.
+ */
+uint8_t EEMEM ic_comm_media_info_tp_seq[] = {
+   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,
+   0x21, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 4..8 text
+   0x22, 0x00, 0x00, 0x00, 0x57, 0x06, 0x03, 0x1E,    // byte 2..4 text
+   0x03, 0x00, 0x00, 0x00, 0x00, 0x57, 0x08, 0x03,    // byte 5    text
+   0x24, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 6..8 text
+   0x25, 0x57, 0x07, 0x03, 0x2A, 0x00, 0x00, 0x00,
+   0x16, 0x00, 0x00, 0x08                             // byte 2..3 text
+};
+
+/**
+ * \brief sequence for traffic information frame
+ *
+ * The normal entry consists of 4 bytes (1st line, center) "INFO" and the
+ * station name (8 bytes) as second line information.
+ */
+uint8_t EEMEM ic_comm_traffic_info_seq[] = {
+   0x20, 0x09, 0x0E, 0x57, 0x09, 0x23, 0x20, 0x00,
+   0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x57,    // byte 4..7 text
+   0x22, 0x0D, 0x23, 0x20, 0x00, 0x0A, 0x00, 0x00,    // byte 8    text
+   0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 2..8 text
+   0x14, 0x08
+};
+
+/**
+ * \brief sequence for 1st line only
+ *
+ * 8 bytes, left aligned
+ */
+uint8_t EEMEM ic_comm_first_line_info_seq[] = {
+   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,
+   0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 4..8 text
+   0x12, 0x00, 0x00, 0x00, 0x08                       // byte 2..4 text
+};
+
+/**
+ * \brief sequence for 2nd line only
+ *
+ * 8 bytes, left aligned
+ */
+uint8_t EEMEM ic_comm_second_line_info_seq[] = {
+   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,
+   0x21, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 4..8 text
+   0x12, 0x00, 0x00, 0x00, 0x08                       // byte 2..4 text
+};
+
+/**
+ * \brief sequence for 2nd line and TP info
+ *
+ *-1st line: 2 bytes, right aligned
+ *-2nd line: 8 bytes, left aligned
+ */
+uint8_t EEMEM ic_comm_second_line_tp_seq[] = {
+   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,
+   0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 4..8 text
+   0x22, 0x00, 0x00, 0x00, 0x57, 0x07, 0x03, 0x2A,    // byte 2..4 text
+   0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08           // byte 5..6 text
+};
+
 /**** VARIABLES *************************************************************/
 
 //! states of the FSM to send information to the instrument cluster
@@ -47,23 +177,21 @@ uint8_t nextMsg = 0;
  */
 uint8_t frame[IC_COMM_MAX_LENGTH_OF_FRAME];
 
-
-/**** EEPROM VARIABLES ******************************************************/
-
 /**
- * \brief offset to start pattern in EEPROM
+ * \brief array of pointers to eeprom variables
+ *
+ * \attention The sequences need to meet the definition in ic_comm_seq_t.
  */
-uint8_t EEMEM ic_comm_eep_start[IC_COMM_EEP_START_LENGTH]   = { 0x09, 0x02 };
-
-/**
- * \brief offset to format pattern in EEPROM
- */
-uint8_t EEMEM ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH] = { 0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00 };
-
-/**
- * \brief offset to stop pattern in EEPROM
- */
-uint8_t EEMEM ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH]     = { 0x08 };
+uint8_t* sequence[IC_COMM_SEQ_MAX] = {
+   ic_comm_startup_seq,
+   ic_comm_startup_audio_seq,
+   ic_comm_media_info_seq,
+   ic_comm_media_info_tp_seq,
+   ic_comm_traffic_info_seq,
+   ic_comm_first_line_info_seq,
+   ic_comm_second_line_info_seq,
+   ic_comm_second_line_tp_seq
+};
 
 
 

@@ -139,6 +139,33 @@ typedef enum
    IC_COMM_STOP = 5
 } ic_comm_fsm_t;
 
+/**
+ * \brief enumeration of sequence types for radio communication
+ *
+ * For easy access to the sequence in the eeprom.
+ */
+typedef enum {
+   //! radio startup sequence
+   IC_COMM_SEQ_START = 0,
+   //! audio startup sequence
+   IC_COMM_SEQ_AUDIO = 1,
+   //! media information sequence
+   IC_COMM_SEQ_MEDIA = 2,
+   //! media information with traffic programme sequence
+   IC_COMM_SEQ_MEDIA_TP = 3,
+   //! traffic programme information sequence
+   IC_COMM_SEQ_TRAFFIC = 4,
+   //! 1st line only, 8 bytes, left aligned
+   IC_COMM_SEQ_FIRST = 5,
+   //! 2nd line only, 8 bytes, left aligned
+   IC_COMM_SEQ_SECOND = 6,
+   //! 2nd line with traffic programme sequence
+   IC_COMM_SEQ_SECOND_TP = 7,
+   //! max number of sequences
+   IC_COMM_SEQ_MAX = 8
+} ic_comm_seq_t;
+
+
 /*! @} */
 
 /***************************************************************************/
