@@ -145,8 +145,8 @@ uint8_t EEMEM ic_comm_second_line_info_seq[] = {
 /**
  * \brief sequence for 2nd line and TP info
  *
- *-1st line: 2 bytes, right aligned
- *-2nd line: 8 bytes, left aligned
+ *- 1st line: 2 bytes, right aligned
+ *- 2nd line: 8 bytes, left aligned
  */
 uint8_t EEMEM ic_comm_second_line_tp_seq[] = {
    0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,

@@ -354,10 +354,18 @@
  *
  * \par To be verified!
  * The first byte looks like it controls the formatting. The upper nibble
- * looks like:
+ * looked at first like:
  *- 0000: left
  *- 0001: center
- *- 0010: right / TP may fit (at least second row)
+ *- 0010: right
+ *
+ * The issue here was, that the TP coding did not right fit here. But the
+ * display is a dot matrix one. When counting the dots 06 right fits the
+ * "left alignment", 1E (30) is more in the middle and 2A (42) is more to
+ * the right.
+ *
+ * Next move: Count the dots in width and try with different values, starting
+ * with 0...maximum.
  *
  * The third byte looks to handle the line itself. It may also be the position
  * in characters/bytes itself, assuming hidden characters (e.g. return (\\r\\n))
