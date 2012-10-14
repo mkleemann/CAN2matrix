@@ -262,11 +262,11 @@
  *
  * \subsubsection c2m_comm_ic_seq_radio_format Formatting of Text Information
  *
- * It is currently not clear how the formatting takes place and if the
- * first line has a fixed command/format set. The sequences like "57 XX 03"
- * look interesting enough, since it is part of the start of any text
- * information. The XX byte stands most probably for the length of the text.
+ * It is currently quite clear how the formatting/positioning of the text
+ * information takes place. The sequences start with "57 XX 03". The XX byte
+ * stands for the length of the text.
  *
+ * Some sequences from CAN traces taken:
  *- 57 0D 03: second line
  *- 57 06 03: first line, center part
  *- 57 08 03: first line, first part
@@ -276,16 +276,13 @@
  *- 57 09 23: first line, center  e.g. "INFO"
  *- 57 0D 23: second line, center e.g. " NDR 2  "
  *
- * Between the first, center and last part seems to be a space (20) set
- * automatically, when not sent as one block.
- *
  * Sequence for writing SEEK into the first line:
  *- 57 09 03: first line, first part
  *
  * Sequence for writing " 98.70" into the second line:
  *- 57 0B 03: second line
  *
- * <b>To be verified:</b>
+ * <b>Not yet verified, but very possible:</b>
  * Sequence for 5 and 7 bytes:
  *- 57 0A 03 - 5 characters
  *- 57 0C 03 - 7 characters
