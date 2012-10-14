@@ -70,8 +70,8 @@
  *
  * \subsection c2m_comm_ic_seq_radio Radio Information
  *
- * The communication of the radio part (two lines with 8 characters) begins
- * with a signal by the radio to the instrument cluster (IC). The IC
+ * The communication of the radio part (two lines with usually 8 characters)
+ * begins with a signal by the radio to the instrument cluster (IC). The IC
  * acknowledges the start.
  *
  * \code
@@ -214,6 +214,8 @@
  * \endcode
  *
  * \image html station_info.png "how the station info looks like"
+ *
+ * \image html station_info_with_labels.png "marker values from CAN message"
  *
  * \code
  * Traffic Programme:
@@ -421,23 +423,22 @@
  *
  * \code
  * IC_COMM_START_PATTERN              09 02
- * IC_COMM_PREAMBLE_PATTERN           57 00 03
- * IC_COMM_FORMAT_PATTERN             00 00 00 00
+ * IC_COMM_FORMAT_PATTERN             57 00 03 00 00 00 00
  * IC_COMM_END_PATTERN                08
- * \endcode
- *
- * EEPROM pattern:
- * \code
- * 00 - 09 02 57 00 03 00 00 00  ..W.....
- * 08 - 00 08 00 00 00 00 00 00  ........
  * \endcode
  *
  * Lengths of EEPROM patterns for easy access:
  * \code
- * #define IC_COMM_EEP_START_LENGTH     2
- * #define IC_COMM_EEP_PREAMBLE_LENGTH  3
- * #define IC_COMM_EEP_FORMAT_LENGTH    4
- * #define IC_COMM_EEP_STOP_OFFSET      1
+ * #define IC_COMM_EEP_START_LENGTH   2
+ * #define IC_COMM_EEP_FORMAT_LENGTH  7
+ * #define IC_COMM_EEP_STOP_OFFSET    1
+ * \endcode
+ *
+ * Pattern offsets to overwrite string information (length, position):
+ * \code
+ * #define IC_COMM_OFFSET_LENGTH      1
+ * #define IC_COMM_OFFSET_X_AXIS      3
+ * #define IC_COMM_OFFSET_y_AXIS      5
  * \endcode
  *
  */
