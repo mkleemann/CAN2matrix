@@ -202,7 +202,7 @@
  *   _                     _
  *   |     --- 6B9 -->     |         20 09 02 57 0D 03 06 00
  *   |     --- 6B9 -->     |         21 0A 00 TX TX TX TX TX  station name
- *   |     --- 6B9 -->     |         22 TX TX TX 57 06 03 1E  e.g. "  NDR 2 "
+ *   |     --- 6B9 -->     |         22 TX TX TX 57 06 03 1E  e.g. " NDR 2  "
  *   |     --- 6B9 -->     |         03 00 00 00 TX 57 08 03  memory, e.g. "2"
  *   |     <-- 699 ---     |         B4
  *   |     --- 6B9 -->     |         24 06 00 00 00 TX TX TX  band, e.g. "FM1"
@@ -210,12 +210,12 @@
  *   |     --- 6B9 -->     |         16 TX TX 08              "TP"
  *   |     <-- 699 ---     |         B7
  *
- * Looks like:
- * +-12345678-+
- * | FM1 2 TP |
- * |   NDR 2  |
- * +----------+
  *
+ * \endcode
+ *
+ * \image html station_info.png "how the station info looks like"
+ *
+ * \code
  * Traffic Programme:
  *
  *             CAN    Instrument     Example
@@ -230,7 +230,7 @@
  *   |     <-- 699 ---     |         B5
  *
  * Looks like:
- * +-12345678-+
+ * +----------+
  * |   INFO   |
  * |  NDR 2   |
  * +----------+
@@ -268,15 +268,15 @@
  * information. The XX byte stands most probably for the length of the text.
  *
  *- 57 0D 03: second line
- *- 57 06 03: first line, middle part
+ *- 57 06 03: first line, center part
  *- 57 08 03: first line, first part
  *- 57 07 03: first line, last part
  *
  * Traffic Programme Coding:
- *- 57 09 23: first line, middle  e.g. "INFO"
- *- 57 0D 23: second line, middle e.g. " NDR 2  "
+ *- 57 09 23: first line, center  e.g. "INFO"
+ *- 57 0D 23: second line, center e.g. " NDR 2  "
  *
- * Between the first, middle and last part seems to be a space (20) set
+ * Between the first, center and last part seems to be a space (20) set
  * automatically, when not sent as one block.
  *
  * Sequence for writing SEEK into the first line:
@@ -330,48 +330,38 @@
  * are:
  *
  * Station Info/Seek:
- *- 1E 00 00 00: first line , middle part
+ *- 1E 00 00 00: first line , center part
  *- 06 00 00 00: first line , first part
  *- 2A 00 00 00: first line , last part
  *- 06 00 0A 00: second line, full
  *
  * Traffic Programme:
- *- 20 00 00 00: first line, middle part
- *- 20 00 0A 00: second line, middle part
+ *- 20 00 00 00: first line, center part
+ *- 20 00 0A 00: second line, center part
+ *
+ * The first byte controls the positioning in the x-axis. The value is set
+ * as dots in the dot matrix display. The third byte is the y-axis to set
+ * the information in that direction.
+ *
+ * It is possible that the position information make use of bytes 1/2 and 3/4
+ * as 16-bit value. The full dot matrix display is x = 64 and y = 96(?).
  *
  * Sequence in binary representation:
  * \code
  * Station Info/Seek:
- * 0000 0110  0000 0000  0000 1010  0000 0000  - left aligned , 8 characters
- * 0001 1110  0000 0000  0000 0000  0000 0000  - centered     , 1 character
- * 0000 0110  0000 0000  0000 0000  0000 0000  - left aligned , 3 characters
- * 0010 1010  0000 0000  0000 0000  0000 0000  - right aligned, 2 characters
+ *
+ *  x-axis                y-axis
+ * +-------+             +-------+
+ * |       |             |       |
+ * 0000 0110  0000 0000  0000 1010  0000 0000  - x =  6, y = 10
+ * 0001 1110  0000 0000  0000 0000  0000 0000  - x = 30, y =  0
+ * 0000 0110  0000 0000  0000 0000  0000 0000  - x =  6, y =  0
+ * 0010 1010  0000 0000  0000 0000  0000 0000  - x = 42, y =  0
  *
  * Traffic Programme:
- * 0010 0000  0000 0000  0000 0000  0000 0000  - centered     , 4 characters
- * 0010 0000  0000 0000  0000 1010  0000 0000  - centered     , 8 characters
+ * 0010 0000  0000 0000  0000 0000  0000 0000  - x = 32, y =  0
+ * 0010 0000  0000 0000  0000 1010  0000 0000  - x = 32, y = 10
  * \endcode
- *
- * \par To be verified!
- * The first byte looks like it controls the formatting. The upper nibble
- * looked at first like:
- *- 0000: left
- *- 0001: center
- *- 0010: right
- *
- * The issue here was, that the TP coding did not right fit here. But the
- * display is a dot matrix one. When counting the dots 06 right fits the
- * "left alignment", 1E (30) is more in the middle and 2A (42) is more to
- * the right.
- *
- * Next move: Count the dots in width and try with different values, starting
- * with 0...maximum.
- *
- * The third byte looks to handle the line itself. It may also be the position
- * in characters/bytes itself, assuming hidden characters (e.g. return (\\r\\n))
- * or a possible length of 10 characters for each line:
- *- 00: first line or position 0
- *- 0A: second line or position 10
  *
  * \subsubsection c2m_comm_ic_seq_radio_test Test Pattern for IC Communication
  *
@@ -401,6 +391,14 @@
  * 20 09 02 57 0D 03 06 00
  * 21 00 00 TX TX TX TX TX   "1st l"
  * 12 TX TX TX 08            "ine"
+ * \endcode
+ *
+ * Only one line (centered between line 1 and 2):
+ *
+ * \code
+ * 20 09 02 57 0D 03 06 00
+ * 21 05 00 TX TX TX TX TX   " inli"
+ * 12 TX TX TX 08            "ne "
  * \endcode
  *
  * Formatting: center 3 characters in second line
