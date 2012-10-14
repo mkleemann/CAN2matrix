@@ -35,18 +35,34 @@
 
 
 /**
- * \def IC_COMM_ALIGN_LEFT
- * \brief left alignment
+ * \def IC_COMM_ALIGN_V_TOP
+ * \brief vertical alignment top
  *
- * \def IC_COMM_ALIGN_CENTER
- * \brief left alignment
+ * Offset of 0 pixels from top.
  *
- * \def IC_COMM_ALIGN_RIGHT
- * \brief left alignment
+ * \def IC_COMM_ALIGN_V_CENTER
+ * \brief vertical center alignment
+ *
+ * Offset of 5 pixels from top
+ *
+ * \def IC_COMM_ALIGN_V_BOTTOM
+ * \brief vertical alignment bottom
+ *
+ * Offset of 10 pixels from top.
  */
-#define IC_COMM_ALIGN_LEFT       0x00
-#define IC_COMM_ALIGN_CENTER     0x10
-#define IC_COMM_ALIGN_RIGHT      0x20
+#define IC_COMM_ALIGN_V_TOP         0x00
+#define IC_COMM_ALIGN_V_CENTER      0x05
+#define IC_COMM_ALIGN_V_BOTTOM      0x0A
+
+/**
+ * \def IC_COMM_ALIGN_H_TAB_WIDTH
+ * \brief horizontal tab width
+ *
+ * The tab or character width consists of 5 pixels of character width and
+ * one pixel for the gap between characters. This means "wide" characters.
+ * Some of them are written in only 3 pixels width.
+ */
+#define IC_COMM_ALIGN_H_TAB_WIDTH   6
 
 /**
  * \def IC_COMM_SOF
@@ -58,9 +74,9 @@
  * \def IC_COMM_W4NF
  * \brief wait for next frame
  */
-#define IC_COMM_SOF              0x20
-#define IC_COMM_EOF              0x10
-#define IC_COMM_W4NF             0x00
+#define IC_COMM_SOF                 0x20
+#define IC_COMM_EOF                 0x10
+#define IC_COMM_W4NF                0x00
 
 /**
  * \def IC_COMM_FRAME_MASK
@@ -85,16 +101,16 @@
  * \endcode
  *
  */
-#define IC_COMM_FRAME_MASK       0xF0
-#define IC_COMM_EOF_MASK         0xE0
-#define IC_COMM_FRAME_SEQ_MASK   0x0F
+#define IC_COMM_FRAME_MASK          0xF0
+#define IC_COMM_EOF_MASK            0xE0
+#define IC_COMM_FRAME_SEQ_MASK      0x0F
 
 /**
  * \def IC_COMM_EEP_START_LENGTH
  * \brief length of start pattern in EEPROM
  *
  * \def IC_COMM_EEP_FORMAT_LENGTH
- * \brief length of preamble pattern in EEPROM
+ * \brief length of format/position pattern in EEPROM
  *
  * \def IC_COMM_EEP_STOP_LENGTH
  * \brief length of stop pattern in EEPROM
@@ -102,6 +118,20 @@
 #define IC_COMM_EEP_START_LENGTH     2
 #define IC_COMM_EEP_FORMAT_LENGTH    7
 #define IC_COMM_EEP_STOP_LENGTH      1
+
+/**
+ * \def IC_COMM_OFFSET_LENGTH
+ * \brief offset for length indicator
+ *
+ * \def IC_COMM_OFFSET_X_AXIS
+ * \brief offset for position on x-axis
+ *
+ * \def IC_COMM_OFFSET_y_AXIS
+ * \brief offset for position on y-axis
+ */
+#define IC_COMM_OFFSET_LENGTH      1
+#define IC_COMM_OFFSET_X_AXIS      3
+#define IC_COMM_OFFSET_y_AXIS      5
 
 /**
  * \def IC_COMM_MAX_LENGTH_OF_FRAME
