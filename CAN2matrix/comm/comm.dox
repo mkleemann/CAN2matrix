@@ -453,6 +453,7 @@
  * Pattern offsets to overwrite string information (length, position):
  * \code
  * #define IC_COMM_OFFSET_LENGTH      1
+ * #define IC_COMM_OFFSET_REMOVE      2
  * #define IC_COMM_OFFSET_X_AXIS      3
  * #define IC_COMM_OFFSET_y_AXIS      5
  * \endcode

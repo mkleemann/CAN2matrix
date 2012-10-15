@@ -123,15 +123,25 @@
  * \def IC_COMM_OFFSET_LENGTH
  * \brief offset for length indicator
  *
+ * \def IC_COMM_OFFSET_REMOVE
+ * \brief offset for IC_COMM_SET_REMOVE_OLD_TEXT flag.
+ *
  * \def IC_COMM_OFFSET_X_AXIS
  * \brief offset for position on x-axis
  *
- * \def IC_COMM_OFFSET_y_AXIS
+ * \def IC_COMM_OFFSET_Y_AXIS
  * \brief offset for position on y-axis
  */
-#define IC_COMM_OFFSET_LENGTH      1
-#define IC_COMM_OFFSET_X_AXIS      3
-#define IC_COMM_OFFSET_y_AXIS      5
+#define IC_COMM_OFFSET_LENGTH       1
+#define IC_COMM_OFFSET_REMOVE       2
+#define IC_COMM_OFFSET_X_AXIS       3
+#define IC_COMM_OFFSET_Y_AXIS       5
+
+/**
+ * \def IC_COMM_SET_REMOVE_OLD_TEXT
+ * \brief remove old text information prior writing new one
+ */
+#define IC_COMM_SET_REMOVE_OLD_TEXT 0x20
 
 /**
  * \def IC_COMM_MAX_LENGTH_OF_FRAME
@@ -140,7 +150,7 @@
  * A communication frame for the instrument cluster consists of 4 CAN
  * messages maximum. The buffer fits for 2 frames.
  */
-#define IC_COMM_MAX_LENGTH_OF_FRAME  64
+#define IC_COMM_MAX_LENGTH_OF_FRAME 64
 
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */
