@@ -195,6 +195,8 @@
  * For Traffic Programme indication itself, the lines are sent in the "right"
  * order. Here the information is centered in both lines.
  *
+ * \anchor c2m_comm_ic_seq_radio_example
+ *
  * Example of two lines with 4 text information parts:
  * \code
  *             CAN    Instrument     Example
@@ -214,8 +216,6 @@
  * \endcode
  *
  * \image html station_info.png "how the station info looks like"
- *
- * \image html station_info_with_labels.png "marker values from CAN message"
  *
  * \code
  * Traffic Programme:
@@ -263,6 +263,8 @@
  *
  *
  * \subsubsection c2m_comm_ic_seq_radio_format Formatting of Text Information
+ *
+ * <b>Length and Mode of Text Information</b>
  *
  * It is currently quite clear how the formatting/positioning of the text
  * information takes place. The sequences start with "57 XX 03". The XX byte
@@ -324,6 +326,13 @@
  *
  * (*) not verified
  *
+ * The third byte may control the "overwrite" mode. In radio text, the
+ * information is sent with "03" - maybe "no overwrite of existing text" -
+ * whereas the traffic programme comes with "23" and removes all text
+ * information prior.
+ *
+ * <b>Positioning of Text Information</b>
+ *
  * Another sequence jumps in sight, when looking to the messages below. After
  * the afore mentioned sequence, starting with "57 XX 03" the next sequences
  * are:
@@ -341,6 +350,13 @@
  * The first byte controls the positioning in the x-axis. The value is set
  * as dots in the dot matrix display. The third byte is the y-axis to set
  * the information in that direction.
+ *
+ * \image html station_info_with_labels.png "marker values from CAN message"
+ *
+ * For the full sequence see the \ref c2m_comm_ic_seq_radio_example "example"
+ * for two line radio information above. Marked in blue are the dots
+ * presenting the width of a character - first line - and the spaces sent
+ * in the second line.
  *
  * It is possible that the position information make use of bytes 1/2 and 3/4
  * as 16-bit value. The full dot matrix display is x = 64 and y = 96(?).
