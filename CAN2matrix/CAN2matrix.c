@@ -520,9 +520,6 @@ void handleCan2Transmission(can_t* msg)
       // signal activity
       led_toggle(txCan2LED);
 
-//      char asc[7];
-//      uart_puts(utoa(dimValue, asc, 16));
-//      uart_puts("\r");
    }
 
    if (send500ms)   // approx. 500ms 4MHz@1024 prescale factor
