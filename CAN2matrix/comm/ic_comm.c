@@ -21,32 +21,10 @@
 #include "matrix.h"
 #include "ic_comm.h"
 
-#include <stdbool.h>
 #include <avr/eeprom.h>
 
 
 /**** EEPROM VARIABLES ******************************************************/
-
-/**
- * \brief offset to start pattern in EEPROM
- */
-uint8_t EEMEM ic_comm_eep_start[IC_COMM_EEP_START_LENGTH] = {
-   0x09, 0x02
-};
-
-/**
- * \brief offset to format pattern in EEPROM
- */
-uint8_t EEMEM ic_comm_eep_format[IC_COMM_EEP_FORMAT_LENGTH] = {
-   0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00
-};
-
-/**
- * \brief offset to stop pattern in EEPROM
- */
-uint8_t EEMEM ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH] = {
-   0x08
-};
 
 /**
  * \brief sequence for startup
@@ -54,7 +32,7 @@ uint8_t EEMEM ic_comm_eep_stop[IC_COMM_EEP_STOP_LENGTH] = {
  * \note The 3rd byte (0x39) may be of interest, since it is also sent by
  *       the next sequence with AUDIO indicator.
  */
-uint8_t EEMEM ic_comm_startup_seq[] = {
+uint8_t EEMEM ic_comm_startup_seq[IC_COMM_START_SEQ_LENGTH] = {
    0x10, 0x15, 0x39, 0x00, 0x01, 0x01
 };
 
@@ -63,105 +41,77 @@ uint8_t EEMEM ic_comm_startup_seq[] = {
  *
  * \note There is no end of sequence marker here.
  */
-uint8_t EEMEM ic_comm_startup_audio_seq[] = {
+uint8_t EEMEM ic_comm_startup_audio_seq[IC_COMM_AUDIO_SEQ_LENGTH] = {
    0x20, 0x02, 0x80, 0x39, 0x20, 0x41, 0x55, 0x44,   // byte 6..7 "AUD"
    0x11, 0x49, 0x4F                                  // byte 2..3 "IO"
 };
 
 /**
- * \brief sequence for normal media information
+ * \brief normal media info sequence
  *
- * Placeholder for media information. First 8 bytes for station name or any
- * free text in the second line. Next 1 byte (first line, middle) for
- * memory number and at last the media information (3 bytes, left, 1st line),
- * e.g. FM, AM, HDD, DVD or CD.
+ * 2nd row is populated with 8 character free text, e.g. station info. The
+ * top row is populated with 5 byte media info (which media) and 5 byte
+ * other information, e.g. track number or traffic programme indicator.
+ *
+ * The default text is setup to "." (0x2E) as placeholder. This will be
+ * overwritten in the frame setup.
+ *
+ * It looks like that:
+ * \code
+ * +----------------------------------------------------------------+
+ * |  ***** ***     *     **  *   *   ***   ***   ***   ***   ***   |
+ * |    *   *  *   * *   *  * *  *   *   * *   * *   * *   * *   *  |
+ * |    *   *   * *   * *     * *    *   * *   * *   * *   * *   *  |
+ * |    *   *  *  *   * *     **      ****  ****  ****  ****  ****  |
+ * |    *   ***   ***** *     * *        *     *     *     *     *  |
+ * |    *   *  *  *   *  *  * *  *   *   * *   * *   * *   * *   *  |
+ * |    *   *   * *   *   **  *   *   ***   ***   ***   ***   ***   |
+ * |                                                                |
+ * |                                                                |
+ * |       ***** ***   ***** ***** ***** ***** *   * *****          |
+ * |       *     *  *  *     *       *   *      * *    *            |
+ * |       *     *   * *     *       *   *       *     *            |
+ * |       ***   *  *  ***   ***     *   ***     *     *            |
+ * |       *     ***   *     *       *   *       *     *            |
+ * |       *     *  *  *     *       *   *      * *    *            |
+ * |       *     *   * ***** *****   *   ***** *   *   *            |
+ * |                                                                |
+ * |                                                                |
+ * |                                                                |
+ * |                                                                |
+ * +----------------------------------------------------------------+
+ * \endcode
  */
-uint8_t EEMEM ic_comm_media_info_seq[] = {
-   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,
-   0x21, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 4..8 text
-   0x22, 0x00, 0x00, 0x00, 0x57, 0x06, 0x03, 0x1E,    // byte 2..4 text
-   0x03, 0x00, 0x00, 0x00, 0x00, 0x57, 0x08, 0x03,    // byte 5    text
-   0x24, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 6..8 text
-   0x15, 0x08
+uint8_t EEMEM ic_comm_text_seq[IC_COMM_TEXT_SEQ_LENGTH] = {
+   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,   // startpos 6:10; 8 bytes
+   0x21, 0x0A, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E,
+   0x22, 0x2E, 0x2E, 0x2E, 0x57, 0x0A, 0x03, 0x02,   // startpos 2:0 ; 5 bytes
+   0x03, 0x00, 0x00, 0x00, 0x2E, 0x2E, 0x2E, 0x2E,
+   0x24, 0x2E, 0x57, 0x0A, 0x03, 0x20, 0x00, 0x00,   // startpos 32:0; 5 bytes
+   0x15, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x08
+
 };
 
-/**
- * \brief sequence for normal media information with traffic indicator
- *
- * Placeholder for media information. First 8 bytes for station name or any
- * free text in the second line. Next 1 byte (first line, middle) for
- * memory number and at last the media information (3 bytes, left, 1st line),
- * e.g. FM, AM, HDD, DVD or CD.
- *
- * Additionally to ic_comm_media_info_seq, the TP information (2 bytes,
- * right, 1st line) comes in too.
- */
-uint8_t EEMEM ic_comm_media_info_tp_seq[] = {
-   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,
-   0x21, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 4..8 text
-   0x22, 0x00, 0x00, 0x00, 0x57, 0x06, 0x03, 0x1E,    // byte 2..4 text
-   0x03, 0x00, 0x00, 0x00, 0x00, 0x57, 0x08, 0x03,    // byte 5    text
-   0x24, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 6..8 text
-   0x25, 0x57, 0x07, 0x03, 0x2A, 0x00, 0x00, 0x00,
-   0x16, 0x00, 0x00, 0x08                             // byte 2..3 text
-};
-
-/**
- * \brief sequence for traffic information frame
- *
- * The normal entry consists of 4 bytes (1st line, center) "INFO" and the
- * station name (8 bytes) as second line information.
- */
-uint8_t EEMEM ic_comm_traffic_info_seq[] = {
-   0x20, 0x09, 0x0E, 0x57, 0x09, 0x23, 0x20, 0x00,
-   0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x57,    // byte 4..7 text
-   0x22, 0x0D, 0x23, 0x20, 0x00, 0x0A, 0x00, 0x00,    // byte 8    text
-   0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 2..8 text
-   0x14, 0x08
-};
-
-/**
- * \brief sequence for 1st line only
- *
- * 8 bytes, left aligned
- */
-uint8_t EEMEM ic_comm_first_line_info_seq[] = {
-   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,
-   0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 4..8 text
-   0x12, 0x00, 0x00, 0x00, 0x08                       // byte 2..4 text
-};
-
-/**
- * \brief sequence for 2nd line only
- *
- * 8 bytes, left aligned
- */
-uint8_t EEMEM ic_comm_second_line_info_seq[] = {
-   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,
-   0x21, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 4..8 text
-   0x12, 0x00, 0x00, 0x00, 0x08                       // byte 2..4 text
-};
-
-/**
- * \brief sequence for 2nd line and TP info
- *
- *- 1st line: 2 bytes, right aligned
- *- 2nd line: 8 bytes, left aligned
- */
-uint8_t EEMEM ic_comm_second_line_tp_seq[] = {
-   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,
-   0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // byte 4..8 text
-   0x22, 0x00, 0x00, 0x00, 0x57, 0x07, 0x03, 0x2A,    // byte 2..4 text
-   0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08           // byte 5..6 text
-};
 
 /**** VARIABLES *************************************************************/
+
+/**
+ * \brief stage of communication setup with instrument cluster
+ */
+typedef enum {
+   //! start frame to be sent
+   IC_COMM_START_FRAME = 0,
+   //! audio setup frame to be sent
+   IC_COMM_AUDIO_SETUP_FRAME = 1,
+   //! normal operation
+   IC_COMM_NORMAL_OP = 2
+} ic_comm_stage_t;
 
 //! states of the FSM to send information to the instrument cluster
 ic_comm_fsm_t ic_comm_states = IC_COMM_IDLE;
 
 //! special startup sequence for instrument cluster (state AUDIO)
-bool firstStart = true;
+ic_comm_stage_t stage = IC_COMM_START_FRAME;
 
 //! sequence number for sending
 uint8_t seqTx = 0;
@@ -176,23 +126,6 @@ uint8_t nextMsg = 0;
  * \brief buffer to setup a communication frame
  */
 uint8_t frame[IC_COMM_MAX_LENGTH_OF_FRAME];
-
-/**
- * \brief array of pointers to eeprom variables
- *
- * \attention The sequences need to meet the definition in ic_comm_seq_t.
- */
-uint8_t* sequence[IC_COMM_SEQ_MAX] = {
-   ic_comm_startup_seq,
-   ic_comm_startup_audio_seq,
-   ic_comm_media_info_seq,
-   ic_comm_media_info_tp_seq,
-   ic_comm_traffic_info_seq,
-   ic_comm_first_line_info_seq,
-   ic_comm_second_line_info_seq,
-   ic_comm_second_line_tp_seq
-};
-
 
 
 /**** FUNCTIONS *************************************************************/
@@ -361,7 +294,7 @@ void ic_comm_fsm(can_t* msg)
 void ic_comm_reset4start()
 {
    // reset for clean startup in communication
-   firstStart = true;
+   stage = IC_COMM_START_FRAME;
    bytesInFrame = 0;
    nextMsg = 0;
    seqTx = 0;
@@ -375,62 +308,53 @@ void ic_comm_reset4start()
  */
 void ic_comm_framesetup(void)
 {
-   uint8_t* text = getInfoText();
+/*
+   uint8_t* info = getInfoText();
+   uint8_t* text = getFreeText();
    uint8_t i;
-
-   // start with frame: signal and sequence
-   frame[bytesInFrame] = IC_COMM_SOF;                                    // 0
-   ++bytesInFrame;
-
-   // information start sequence (once in frame)
-   eeprom_read_block(&frame[bytesInFrame],                               // 1..2
-                     ic_comm_eep_start,
-                     IC_COMM_EEP_START_LENGTH);
-   bytesInFrame += IC_COMM_EEP_START_LENGTH;
-
-   eeprom_read_block(&frame[bytesInFrame],                               // 3..9
-                     ic_comm_eep_format,
-                     IC_COMM_EEP_FORMAT_LENGTH);
-   bytesInFrame += IC_COMM_EEP_FORMAT_LENGTH;
-
-   // byte 4: setup length of first string (len + 5)
-   frame[4] = 8 + 5; // test 8 byte sequence                             // 4
-   // byte 6: format
-   frame[6] = 0x06;  // test left                                        // 6
-
-   // next CAN message
-   frame[8]  = IC_COMM_SOF | 1;                                          // 8
-
-   // move information                                                   // 10
-   frame[10] = frame[9];
-   // byte 9: line indicator
-   frame[9] = 0x0A;  // test second line                                 // 9
-   // one byte more
-   ++bytesInFrame;
-
-   // first string: 1..5 bytesInFrame
-   // testing here!
-   for(i = 0; i < 5; ++i, ++bytesInFrame)                                // 11..15
+*/
+   switch(stage)
    {
-      frame[bytesInFrame] = text[i];
+      case IC_COMM_START_FRAME:
+      {
+         eeprom_read_block(frame,
+                           &ic_comm_startup_seq,
+                           IC_COMM_START_SEQ_LENGTH);
+         bytesInFrame = IC_COMM_START_SEQ_LENGTH;
+         // next stage
+         stage = IC_COMM_AUDIO_SETUP_FRAME;
+         break;
+      }
+
+      case IC_COMM_AUDIO_SETUP_FRAME:
+      {
+         eeprom_read_block(frame,
+                           &ic_comm_startup_seq,
+                           IC_COMM_AUDIO_SEQ_LENGTH);
+         bytesInFrame = IC_COMM_AUDIO_SEQ_LENGTH;
+         // next stage
+         stage = IC_COMM_NORMAL_OP;
+         break;
+      }
+
+      case IC_COMM_NORMAL_OP:
+      {
+         // read sequence from eeprom
+         eeprom_read_block(frame,
+                           &ic_comm_startup_seq,
+                           IC_COMM_TEXT_SEQ_LENGTH);
+         bytesInFrame = IC_COMM_TEXT_SEQ_LENGTH;
+         // now setup text fragments
+
+         break;
+      }
+
+      default:
+      {
+         // do nothing!
+         break;
+      }
    }
-
-   // next CAN message
-   frame[bytesInFrame]  = IC_COMM_EOF | 2;                               // 16
-   // one byte more
-   ++bytesInFrame;
-
-   // first string: 1..5 bytesInFrame
-   // testing here!
-   for(i = 5; i < 8; ++i, ++bytesInFrame)                                // 17..19
-   {
-      frame[bytesInFrame] = text[i];
-   }
-
-   eeprom_read_block(&frame[bytesInFrame],                               // 20
-                     ic_comm_eep_stop,
-                     IC_COMM_EEP_STOP_LENGTH);
-   bytesInFrame += IC_COMM_EEP_STOP_LENGTH;
 }
 
 /**

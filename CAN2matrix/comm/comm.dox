@@ -431,32 +431,5 @@
  * \endcode
  *
  *
- * \section c2m_comm_ic_pattern_storage Pattern Storage
- *
- * Pattern, which happen to repeat themselves, will be stored in EEPROM for
- * saving memory and change them w/o recoding. Any placeholder (00) may be
- * overwritten while communication runs.
- *
- * \code
- * IC_COMM_START_PATTERN              09 02
- * IC_COMM_FORMAT_PATTERN             57 00 03 00 00 00 00
- * IC_COMM_END_PATTERN                08
- * \endcode
- *
- * Lengths of EEPROM patterns for easy access:
- * \code
- * #define IC_COMM_EEP_START_LENGTH   2
- * #define IC_COMM_EEP_FORMAT_LENGTH  7
- * #define IC_COMM_EEP_STOP_OFFSET    1
- * \endcode
- *
- * Pattern offsets to overwrite string information (length, position):
- * \code
- * #define IC_COMM_OFFSET_LENGTH      1
- * #define IC_COMM_OFFSET_REMOVE      2
- * #define IC_COMM_OFFSET_X_AXIS      3
- * #define IC_COMM_OFFSET_y_AXIS      5
- * \endcode
- *
  */
 

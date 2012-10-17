@@ -380,10 +380,18 @@
  * \def IC_COMM_INFO_LENGTH
  * \brief length of max info lines
  *
- * Currently the maximum length of 8 characters per line is known. Each
- * string ends with 0x00.
+ * Currently the maximum length of 10 characters per line is known.
  */
-#define IC_COMM_INFO_LENGTH            18
+#define IC_COMM_INFO_LENGTH            10
+
+/**
+ * \def IC_COMM_TEXT_LENGTH
+ * \brief length of max text lines
+ *
+ * Currently the maximum length of 64 characters is set as limit. Usually
+ * mp3 files are not named that long and radio/media text is shorter.
+ */
+#define IC_COMM_TEXT_LENGTH            64
 
 /*! @} */
 
@@ -515,10 +523,16 @@ void sendCan2Message(can_t* msg);
 void setDimValue(uint16_t value);
 
 /**
- * \brief get text for showing in instrument cluster
- * \return pointer to string (0 terminated)
+ * \brief get media info for showing in instrument cluster
+ * \return pointer to media info
  */
 uint8_t* getInfoText(void);
+
+/**
+ * \brief get freetext for showing in instrument cluster
+ * \return pointer to free text
+ */
+uint8_t* getFreeText(void);
 
 #endif /* MATRIX_H_ */
 

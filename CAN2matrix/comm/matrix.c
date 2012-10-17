@@ -19,6 +19,7 @@
 
 
 #include <avr/io.h>
+#include <avr/eeprom.h>
 #include <stdbool.h>
 #include "matrix.h"
 
@@ -28,7 +29,7 @@
 /***************************************************************************/
 
 /**
- * @brief storage struct to keep values to send to CAN2
+ * \brief storage struct to keep values to send to CAN2
  */
 typedef struct
 {
@@ -58,20 +59,45 @@ volatile storeVals_t storage;
 volatile uint16_t    dimAverage  = 0x7F00;
 //! night mode detection flag (together with dimming)
 volatile bool        nightMode   = false;
-//! text information to be shown in cluster (fixed for now)
+//! text information to be shown in cluster as unit information
 uint8_t info[IC_COMM_INFO_LENGTH] = {
-   '0', '1', '2', '3', '4', '5', '6', '7', 0x00,
-   'T', 'e', 's', 't', ' ', 'M', 'e', '!', 0x00
-   };
+   'C', 'A', 'N', '2', 'm', 'a', 't', 'r', 'i', 'x'
+};
+//! freetext shown as media information
+uint8_t text[IC_COMM_TEXT_LENGTH] = {
+   ' ' , 'V' , 'e' , 'r' , '.' , ' ' , '1' , '.' ,
+   '0' , ' ' , 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
 
+/**** EEPROM VARIABLES ******************************************************/
+
+/**
+ * \brief media info text components
+ */
+uint8_t EEMEM mediaInfo[] = {
+   'F', 'M', ' ', ' ', ' ',
+   'A', 'M', ' ', ' ', ' ',
+   'C', 'D', ' ', ' ', ' ',
+   'D', 'V', 'D', ' ', ' ',
+   'H', 'D', 'D', ' ', ' ',
+   'I', 'N', 'F', 'O', ' ',
+   'S', 'E', 'T', 'U', 'P',
+   'T', 'R', 'A', 'C', 'K'
+};
 
 /***************************************************************************/
 /* fetch/fill functions for CAN (check IDs)                                */
 /***************************************************************************/
 
 /**
- * @brief fetch information from CAN1 and put to storage
- * @param msg - CAN message to extract
+ * \brief fetch information from CAN1 and put to storage
+ * \param msg - CAN message to extract
  */
 void fetchInfoFromCAN1(can_t* msg)
 {
@@ -123,24 +149,40 @@ void fetchInfoFromCAN1(can_t* msg)
 }
 
 /**
- * @brief fetch information from CAN2 and put to storage
- * @param msg - CAN message to extract
+ * \brief fetch information from CAN2 and put to storage
+ * \param msg - CAN message to extract
+ *
+ * \todo get text information from CAN2
  */
 void fetchInfoFromCAN2(can_t* msg)
 {
+   switch(msg->msgId)
+   {
+      case CANID_2_RADIO_STATION_NAME:
+      {
+         // setup strings
+         break;
+      }
+
+      default:
+      {
+         // do nothing!
+         break;
+      }
+   }
 }
 
 /**
- * @brief put information from storage to CAN1
- * @param msg - CAN message to fill
+ * \brief put information from storage to CAN1
+ * \param msg - CAN message to fill
  */
 void fillInfoToCAN1(can_t* msg)
 {
 }
 
 /**
- * @brief put information from storage to CAN2
- * @param msg - CAN message to fill
+ * \brief put information from storage to CAN2
+ * \param msg - CAN message to fill
  *
  * \todo add values of temperature
  */
@@ -237,11 +279,11 @@ void fillInfoToCAN2(can_t* msg)
 /***************************************************************************/
 
 /**
- * @brief match different IGN status messages
+ * \brief match different IGN status messages
  *
  * Direction from CAN1 to CAN2!
  *
- * @param msg - pointer to CAN message
+ * \param msg - pointer to CAN message
  */
 void transferIgnStatus(can_t* msg)
 {
@@ -280,11 +322,11 @@ void transferIgnStatus(can_t* msg)
 }
 
 /**
- * @brief transfer wheel/reverse/temperature status to storage
+ * \brief transfer wheel/reverse/temperature status to storage
  *
  * Direction from CAN1 to CAN2
  *
- * @param msg - pointer to CAN message
+ * \param msg - pointer to CAN message
  *
  * \todo add definitions for destination gear box (CAN2)
  * \todo make function interrupt save
@@ -310,35 +352,35 @@ void transferWheelGearTemp(can_t* msg)
 /***************************************************************************/
 
 /**
- * @brief send CAN1 message every 100ms
- * @param msg - pointer to message struct
+ * \brief send CAN1 message every 100ms
+ * \param msg - pointer to message struct
  */
 void sendCan1_100ms(can_t* msg)
 {
 }
 
 /**
- * @brief send CAN1 message every 500ms
- * @param msg - pointer to message struct
+ * \brief send CAN1 message every 500ms
+ * \param msg - pointer to message struct
  */
 void sendCan1_500ms(can_t* msg)
 {
 }
 
 /**
- * @brief send CAN1 message every 1000ms
- * @param msg - pointer to message struct
+ * \brief send CAN1 message every 1000ms
+ * \param msg - pointer to message struct
  */
 void sendCan1_1000ms(can_t* msg)
 {
 }
 
 /**
- * @brief sends message to CAN1 and filling up converted data
+ * \brief sends message to CAN1 and filling up converted data
  *
  * Note: Set message id before calling this function.
  *
- * @param msg - pointer to CAN message with set msg id
+ * \param msg - pointer to CAN message with set msg id
  */
 void sendCan1Message(can_t* msg)
 {
@@ -348,8 +390,8 @@ void sendCan1Message(can_t* msg)
 
 
 /**
- * @brief send CAN2 message every 100ms
- * @param msg - pointer to message struct
+ * \brief send CAN2 message every 100ms
+ * \param msg - pointer to message struct
  */
 void sendCan2_100ms(can_t* msg)
 {
@@ -364,8 +406,8 @@ void sendCan2_100ms(can_t* msg)
 }
 
 /**
- * @brief send CAN2 message every 500ms
- * @param msg - pointer to message struct
+ * \brief send CAN2 message every 500ms
+ * \param msg - pointer to message struct
  */
 void sendCan2_500ms(can_t* msg)
 {
@@ -377,19 +419,19 @@ void sendCan2_500ms(can_t* msg)
 }
 
 /**
- * @brief send CAN2 message every 1000ms
- * @param msg - pointer to message struct
+ * \brief send CAN2 message every 1000ms
+ * \param msg - pointer to message struct
  */
 void sendCan2_1000ms(can_t* msg)
 {
 }
 
 /**
- * @brief sends message to CAN2 and filling up converted data
+ * \brief sends message to CAN2 and filling up converted data
  *
  * Note: Set message id before calling this function.
  *
- * @param msg - pointer to CAN message with set msg id
+ * \param msg - pointer to CAN message with set msg id
  */
 void sendCan2Message(can_t* msg)
 {
@@ -399,8 +441,8 @@ void sendCan2Message(can_t* msg)
 }
 
 /**
- * @brief gets a dim value to be sent via CAN
- * @param value - dim value 0..65535 (left aligned from ADC)
+ * \brief gets a dim value to be sent via CAN
+ * \param value - dim value 0..65535 (left aligned from ADC)
  *
  * This function uses an integral to get an averaged value to set
  * the dimlevel of the target unit (CAN). Since nobody wants to have
@@ -427,11 +469,20 @@ void setDimValue(uint16_t value)
 }
 
 /**
- * \brief get text for showing in instrument cluster
- * \return pointer to string (0 terminated)
+ * \brief get media info for showing in instrument cluster
+ * \return pointer to media info
  */
 uint8_t* getInfoText(void)
 {
    return(info);
+}
+
+/**
+ * \brief get freetext for showing in instrument cluster
+ * \return pointer to free text
+ */
+uint8_t* getFreeText(void)
+{
+   return(text);
 }
 

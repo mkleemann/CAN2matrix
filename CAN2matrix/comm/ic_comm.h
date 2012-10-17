@@ -65,6 +65,16 @@
 #define IC_COMM_ALIGN_H_TAB_WIDTH   6
 
 /**
+ * \def IC_COMM_POS_OFFSET
+ * \brief most left position to start text (10 characters)
+ *
+ * Display area is 20x64px, so starting at position 2 leaves 60 pixels for the
+ * character to show in and leave a 2px border on the right side. Any
+ * character is assumed 6px in width, including the spacing.
+ */
+#define IC_COMM_POS_OFFSET          2
+
+/**
  * \def IC_COMM_SOF
  * \brief start of frame
  *
@@ -106,38 +116,6 @@
 #define IC_COMM_FRAME_SEQ_MASK      0x0F
 
 /**
- * \def IC_COMM_EEP_START_LENGTH
- * \brief length of start pattern in EEPROM
- *
- * \def IC_COMM_EEP_FORMAT_LENGTH
- * \brief length of format/position pattern in EEPROM
- *
- * \def IC_COMM_EEP_STOP_LENGTH
- * \brief length of stop pattern in EEPROM
- */
-#define IC_COMM_EEP_START_LENGTH     2
-#define IC_COMM_EEP_FORMAT_LENGTH    7
-#define IC_COMM_EEP_STOP_LENGTH      1
-
-/**
- * \def IC_COMM_OFFSET_LENGTH
- * \brief offset for length indicator
- *
- * \def IC_COMM_OFFSET_REMOVE
- * \brief offset for IC_COMM_SET_REMOVE_OLD_TEXT flag.
- *
- * \def IC_COMM_OFFSET_X_AXIS
- * \brief offset for position on x-axis
- *
- * \def IC_COMM_OFFSET_Y_AXIS
- * \brief offset for position on y-axis
- */
-#define IC_COMM_OFFSET_LENGTH       1
-#define IC_COMM_OFFSET_REMOVE       2
-#define IC_COMM_OFFSET_X_AXIS       3
-#define IC_COMM_OFFSET_Y_AXIS       5
-
-/**
  * \def IC_COMM_SET_REMOVE_OLD_TEXT
  * \brief remove old text information prior writing new one
  */
@@ -151,6 +129,20 @@
  * messages maximum. The buffer fits for 2 frames.
  */
 #define IC_COMM_MAX_LENGTH_OF_FRAME 64
+
+/**
+ * \def IC_COMM_START_SEQ_LENGTH
+ * \brief sequence length of start frame
+ *
+ * \def IC_COMM_AUDIO_SEQ_LENGTH
+ * \brief sequence length of audio setup frame
+ *
+ * \def IC_COMM_TEXT_SEQ_LENGTH
+ * \brief sequence length of normal information frame
+ */
+#define IC_COMM_START_SEQ_LENGTH    6
+#define IC_COMM_AUDIO_SEQ_LENGTH    11
+#define IC_COMM_TEXT_SEQ_LENGTH     48
 
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */
