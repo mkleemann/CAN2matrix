@@ -21,6 +21,8 @@
 #include <avr/io.h>
 #include <avr/eeprom.h>
 #include <stdbool.h>
+#include "comm_can_ids.h"
+#include "ic_comm.h"
 #include "matrix.h"
 
 
@@ -59,6 +61,8 @@ volatile storeVals_t storage;
 volatile uint16_t    dimAverage  = 0x7F00;
 //! night mode detection flag (together with dimming)
 volatile bool        nightMode   = false;
+//! updated information available
+volatile bool        infoUpdateAvailable = false;
 //! text information to be shown in cluster as unit information
 uint8_t info[IC_COMM_INFO_LENGTH] = {
    'C', 'A', 'N', '2', 'm', 'a', 't', 'r', 'i', 'x'
@@ -75,6 +79,7 @@ uint8_t text[IC_COMM_TEXT_LENGTH] = {
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+
 /**** EEPROM VARIABLES ******************************************************/
 
 /**
@@ -90,6 +95,30 @@ uint8_t EEMEM mediaInfo[] = {
    'S', 'E', 'T', 'U', 'P',
    'T', 'R', 'A', 'C', 'K'
 };
+
+/**** FSM VARIABLES ********************************************************/
+
+/**
+ * \brief states of the matrix fsm to control instrument cluster communication
+ */
+typedef enum {
+   //! startup sequence 1
+   MATRIX_FSM_START1 = 0,
+   //! startup sequence 2
+   MATRIX_FSM_START2 = 1,
+   //! idle state
+   MATRIX_FSM_IDLE = 2,
+   //! instrument cluster communication running
+   MATRIX_FSM_IC_COMM_RUNNING = 3,
+   //! no valid state
+   MATRIX_FSM_NONE = 4
+} matrix_fsm_t;
+
+//! state of matrix fsm
+matrix_fsm_t matrix_fsm_state = MATRIX_FSM_START1;
+
+//! previous state of matrix fsm
+matrix_fsm_t matrix_last_state = MATRIX_FSM_NONE;
 
 /***************************************************************************/
 /* fetch/fill functions for CAN (check IDs)                                */
@@ -469,20 +498,68 @@ void setDimValue(uint16_t value)
 }
 
 /**
- * \brief get media info for showing in instrument cluster
- * \return pointer to media info
+ * \brief trigger communication to instrument cluster
+ * \param msg - pointer to message (received)
  */
-uint8_t* getInfoText(void)
+void triggerIcComm(can_t* msg)
 {
-   return(info);
-}
+   ic_comm_fsm_t   curState = getCurFsmState();
+   ic_comm_stage_t curStage = getCurStage();
 
-/**
- * \brief get freetext for showing in instrument cluster
- * \return pointer to free text
- */
-uint8_t* getFreeText(void)
-{
-   return(text);
-}
+   if((IC_COMM_IDLE == curState) &&
+      (IC_COMM_START_FRAME == curStage))
+   {
+      // assume restart
+      matrix_fsm_state = MATRIX_FSM_START1;
+      matrix_last_state = MATRIX_FSM_NONE;
+      // set text pointer to begin
+      setFreeText(text);
+      setInfoText(info);
+      infoUpdateAvailable = true;
+   }
 
+   switch(matrix_fsm_state)
+   {
+      case MATRIX_FSM_START1:
+      case MATRIX_FSM_START2:
+      case MATRIX_FSM_IDLE:
+      {
+         if(true == infoUpdateAvailable)
+         {
+            ic_comm_framesetup();
+            // Where do I come from?
+            matrix_last_state = matrix_fsm_state;
+            infoUpdateAvailable = false;
+            // trigger ic communication FSM
+            ic_comm_fsm(msg);
+         }
+         break;
+      }
+
+      case MATRIX_FSM_IC_COMM_RUNNING:
+      {
+         // trigger ic communication FSM
+         ic_comm_fsm(msg);
+         // set next state, because ic comm fsm is idle again
+         if(IC_COMM_IDLE == curState)
+         {
+            if(MATRIX_FSM_START1 == matrix_last_state)
+            {
+               matrix_fsm_state = MATRIX_FSM_START2;
+               infoUpdateAvailable = true;
+            }
+            else
+            {
+               matrix_fsm_state = MATRIX_FSM_IDLE;
+            }
+         }
+         break;
+      }
+
+      default:
+      {
+         // do nothing
+         break;
+      }
+   }
+}

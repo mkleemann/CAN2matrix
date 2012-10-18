@@ -18,7 +18,7 @@
  * \author Matthias Kleemann
  */
 
-#include "matrix.h"
+#include "comm_can_ids.h"
 #include "ic_comm.h"
 
 #include <avr/eeprom.h>
@@ -95,18 +95,6 @@ uint8_t EEMEM ic_comm_text_seq[IC_COMM_TEXT_SEQ_LENGTH] = {
 
 /**** VARIABLES *************************************************************/
 
-/**
- * \brief stage of communication setup with instrument cluster
- */
-typedef enum {
-   //! start frame to be sent
-   IC_COMM_START_FRAME = 0,
-   //! audio setup frame to be sent
-   IC_COMM_AUDIO_SETUP_FRAME = 1,
-   //! normal operation
-   IC_COMM_NORMAL_OP = 2
-} ic_comm_stage_t;
-
 //! states of the FSM to send information to the instrument cluster
 ic_comm_fsm_t ic_comm_states = IC_COMM_IDLE;
 
@@ -122,10 +110,14 @@ uint8_t bytesInFrame = 0;
 //! pointer to next message in frame
 uint8_t nextMsg = 0;
 
-/**
- * \brief buffer to setup a communication frame
- */
+//! buffer to setup a communication frame
 uint8_t frame[IC_COMM_MAX_LENGTH_OF_FRAME];
+
+//! pointer to free text
+uint8_t* freeText = 0;
+
+//! pointer to info text
+uint8_t* infoText = 0;
 
 
 /**** FUNCTIONS *************************************************************/
@@ -309,8 +301,6 @@ void ic_comm_reset4start()
 void ic_comm_framesetup(void)
 {
 /*
-   uint8_t* info = getInfoText();
-   uint8_t* text = getFreeText();
    uint8_t i;
 */
    switch(stage)
@@ -387,6 +377,39 @@ uint8_t ic_comm_getNextMsg(uint8_t* data)
    return(length);
 }
 
+/**
+ * \brief get current state
+ * \return current fsm state
+ */
+ic_comm_fsm_t getCurFsmState(void)
+{
+   return(ic_comm_states);
+}
 
+/**
+ * \brief get current stage of operation
+ * \return current stage of operation
+ */
+ic_comm_stage_t getCurStage(void)
+{
+   return(stage);
+}
 
+/**
+ * \brief get media info for showing in instrument cluster
+ * \param data - pointer to media info
+ */
+void setInfoText(uint8_t* data)
+{
+   infoText = data;
+}
+
+/**
+ * \brief get freetext for showing in instrument cluster
+ * \param data - pointer to free text
+ */
+void setFreeText(uint8_t* data)
+{
+   freeText = data;
+}
 

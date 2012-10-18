@@ -22,6 +22,8 @@
 #ifndef IC_COMM_H_
 #define IC_COMM_H_
 
+#include "../can/can_mcp2515.h"
+
 
 /***************************************************************************/
 /* DEFINITIONS                                                             */
@@ -144,6 +146,23 @@
 #define IC_COMM_AUDIO_SEQ_LENGTH    11
 #define IC_COMM_TEXT_SEQ_LENGTH     48
 
+/**
+ * \def IC_COMM_INFO_LENGTH
+ * \brief length of max info lines
+ *
+ * Currently the maximum length of 10 characters per line is known.
+ */
+#define IC_COMM_INFO_LENGTH         10
+
+/**
+ * \def IC_COMM_TEXT_LENGTH
+ * \brief length of max text lines
+ *
+ * Currently the maximum length of 64 characters is set as limit. Usually
+ * mp3 files are not named that long and radio/media text is shorter.
+ */
+#define IC_COMM_TEXT_LENGTH         64
+
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */
 /***************************************************************************/
@@ -172,30 +191,16 @@ typedef enum
 } ic_comm_fsm_t;
 
 /**
- * \brief enumeration of sequence types for radio communication
- *
- * For easy access to the sequence in the eeprom.
+ * \brief stage of communication setup with instrument cluster
  */
 typedef enum {
-   //! radio startup sequence
-   IC_COMM_SEQ_START = 0,
-   //! audio startup sequence
-   IC_COMM_SEQ_AUDIO = 1,
-   //! media information sequence
-   IC_COMM_SEQ_MEDIA = 2,
-   //! media information with traffic programme sequence
-   IC_COMM_SEQ_MEDIA_TP = 3,
-   //! traffic programme information sequence
-   IC_COMM_SEQ_TRAFFIC = 4,
-   //! 1st line only, 8 bytes, left aligned
-   IC_COMM_SEQ_FIRST = 5,
-   //! 2nd line only, 8 bytes, left aligned
-   IC_COMM_SEQ_SECOND = 6,
-   //! 2nd line with traffic programme sequence
-   IC_COMM_SEQ_SECOND_TP = 7,
-   //! max number of sequences
-   IC_COMM_SEQ_MAX = 8
-} ic_comm_seq_t;
+   //! start frame to be sent
+   IC_COMM_START_FRAME = 0,
+   //! audio setup frame to be sent
+   IC_COMM_AUDIO_SETUP_FRAME = 1,
+   //! normal operation
+   IC_COMM_NORMAL_OP = 2
+} ic_comm_stage_t;
 
 
 /*! @} */
@@ -231,5 +236,31 @@ void ic_comm_framesetup(void);
  * \return length of buffer copied
  */
 uint8_t ic_comm_getNextMsg(uint8_t* data);
+
+/**
+ * \brief get current state
+ * \return current fsm state
+ */
+ic_comm_fsm_t getCurFsmState(void);
+
+/**
+ * \brief get current stage of operation
+ * \return current stage of operation
+ */
+ic_comm_stage_t getCurStage(void);
+
+/**
+ * \brief get media info for showing in instrument cluster
+ * \param data - pointer to media info
+ */
+void setInfoText(uint8_t* data);
+
+/**
+ * \brief get freetext for showing in instrument cluster
+ * \param data - pointer to free text
+ */
+void setFreeText(uint8_t* data);
+
+
 
 #endif /* IC_COMM_H_ */
