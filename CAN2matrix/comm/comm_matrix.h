@@ -11,7 +11,7 @@
  *
  * ----------------------------------------------------------------------------
  *
- * \file matrix.h
+ * \file comm_matrix.h
  *
  * \date Created: 28.11.2011 18:25:36
  * \author Matthias Kleemann

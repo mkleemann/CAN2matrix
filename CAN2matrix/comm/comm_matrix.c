@@ -11,7 +11,7 @@
  *
  * ----------------------------------------------------------------------------
  *
- * \file matrix.c
+ * \file comm_matrix.c
  *
  * \date Created: 03.01.2012 07:38:54
  * \author Matthias Kleemann
@@ -22,8 +22,8 @@
 #include <avr/eeprom.h>
 #include <stdbool.h>
 #include "comm_can_ids.h"
+#include "comm_matrix.h"
 #include "ic_comm.h"
-#include "matrix.h"
 
 
 /***************************************************************************/

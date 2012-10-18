@@ -16,7 +16,7 @@
  * The most basic signal is the status of the car ignition. In modern cars
  * this information is available via CAN. The translation of one status
  * message to the one the radio needs to work is done in general communication
- * module (\ref matrix.c).
+ * module (\ref comm_matrix.c).
  *
  * \sa CANID_1_IGNITION, CANID_2_IGNITION
  *

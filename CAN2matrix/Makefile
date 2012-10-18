@@ -66,7 +66,7 @@ C_SRCS +=  \
 ./can/can_receive_mcp2515.c \
 ./can/can_sleep_mcp2515.c \
 ./can/can_send_mcp2515.c \
-./comm/matrix.c \
+./comm/comm_matrix.c \
 ./comm/ic_comm.c \
 ./leds/leds.c \
 ./spi/spi.c \
@@ -74,10 +74,10 @@ C_SRCS +=  \
 ./uart/uart.c
 
 
-PREPROCESSING_SRCS += 
+PREPROCESSING_SRCS +=
 
 
-ASM_SRCS += 
+ASM_SRCS +=
 
 
 OBJS +=  \
@@ -90,7 +90,7 @@ can/can_init_mcp2515.o \
 can/can_receive_mcp2515.o \
 can/can_sleep_mcp2515.o \
 can/can_send_mcp2515.o \
-comm/matrix.o \
+comm/comm_matrix.o \
 comm/ic_comm.o \
 leds/leds.o \
 spi/spi.o \
@@ -108,7 +108,7 @@ can/can_init_mcp2515.o \
 can/can_receive_mcp2515.o \
 can/can_sleep_mcp2515.o \
 can/can_send_mcp2515.o \
-comm/matrix.o \
+comm/comm_matrix.o \
 comm/ic_comm.o \
 leds/leds.o \
 spi/spi.o \
@@ -126,7 +126,7 @@ can/can_init_mcp2515.d \
 can/can_receive_mcp2515.d \
 can/can_sleep_mcp2515.d \
 can/can_send_mcp2515.d \
-comm/matrix.d \
+comm/comm_matrix.d \
 comm/ic_comm.d \
 leds/leds.d \
 spi/spi.d \
@@ -144,7 +144,7 @@ can/can_init_mcp2515.d \
 can/can_receive_mcp2515.d \
 can/can_sleep_mcp2515.d \
 can/can_send_mcp2515.d \
-comm/matrix.d \
+comm/comm_matrix.d \
 comm/ic_comm.d \
 leds/leds.d \
 spi/spi.d \

@@ -20,7 +20,7 @@ can\can_sleep_mcp2515.c
 
 can\can_send_mcp2515.c
 
-comm\matrix.c
+comm\comm_matrix.c
 
 comm\ic_comm.c
 

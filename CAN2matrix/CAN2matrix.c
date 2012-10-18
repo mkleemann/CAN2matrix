@@ -29,7 +29,7 @@
 #include "adc/adc.h"
 #include "can/can_mcp2515.h"
 #include "comm/ic_comm.h"
-#include "comm/matrix.h"
+#include "comm/comm_matrix.h"
 #include "leds/leds.h"
 #include "spi/spi.h"
 #include "timer/timer.h"
