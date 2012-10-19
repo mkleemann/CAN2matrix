@@ -89,7 +89,6 @@ uint8_t EEMEM ic_comm_text_seq[IC_COMM_TEXT_SEQ_LENGTH] = {
    0x03, 0x00, 0x00, 0x00, 0x2E, 0x2E, 0x2E, 0x2E,
    0x24, 0x2E, 0x57, 0x0A, 0x03, 0x20, 0x00, 0x00,   // startpos 32:0; 5 bytes
    0x15, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x08
-
 };
 
 
@@ -300,9 +299,6 @@ void ic_comm_reset4start()
  */
 void ic_comm_framesetup(void)
 {
-/*
-   uint8_t i;
-*/
    switch(stage)
    {
       case IC_COMM_START_FRAME:
@@ -329,12 +325,44 @@ void ic_comm_framesetup(void)
 
       case IC_COMM_NORMAL_OP:
       {
+         uint8_t i;
+
          // read sequence from eeprom
          eeprom_read_block(frame,
                            &ic_comm_startup_seq,
                            IC_COMM_TEXT_SEQ_LENGTH);
          bytesInFrame = IC_COMM_TEXT_SEQ_LENGTH;
-         // now setup text fragments
+         // now setup free text fragments
+         /* 0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,   // startpos 6:10; 8 bytes */
+         /* 0x21, 0x0A, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E,                             */
+         /* 0x22, 0x2E, 0x2E, 0x2E, 0x57, 0x0A, 0x03, 0x02,   // startpos 2:0 ; 5 bytes */
+         /* 0x03, 0x00, 0x00, 0x00, 0x2E, 0x2E, 0x2E, 0x2E,                             */
+         /* 0x24, 0x2E, 0x57, 0x0A, 0x03, 0x20, 0x00, 0x00,   // startpos 32:0; 5 bytes */
+         /* 0x15, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x08                              */
+         for(i = 11; i < 15; ++i, ++freeText)
+         {
+            frame[i] = *freeText;   // +5
+         }
+         for(i = 17; i < 20; ++i, ++freeText)
+         {
+            frame[i] = *freeText;   // +3
+         }
+         // Do not reset freeText pointer here, it will be setup from outside
+         // for next information sample.
+
+         for(i = 28; i < 31; ++i, ++infoText)
+         {
+            frame[i] = *infoText;   // +4
+         }
+         frame[33] = *infoText;
+         ++infoText;                // +1
+
+         for(i = 42; i < 47; ++i, ++freeText)
+         {
+            frame[i] = *infoText;   // +5
+         }
+         // reset pointer, it's always 10
+         infoText -= IC_COMM_INFO_LENGTH;
 
          break;
       }
