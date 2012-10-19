@@ -38,13 +38,15 @@
 #include "CAN2matrix.h"
 
 //! counter to evaluate timing to send CAN messages
-static volatile uint8_t send_it      = 0;
+volatile uint8_t send_it      = 0;
 //! flag to send 100ms cycle CAN messages
-static volatile bool    send100ms    = false;
+volatile bool    send100ms    = false;
 //! flag to send 500ms cycle CAN messages
-static volatile bool    send500ms    = false;
+volatile bool    send500ms    = false;
+//! flag to send text/info update to cluster if no new text approaches
+volatile bool    update2000ms = false;
 //! current state of FSM
-static volatile state_t fsmState     = INIT;
+volatile state_t fsmState     = INIT;
 
 /**
  * @brief main loop
@@ -421,8 +423,9 @@ ISR(TIMER1_CAPT_vect)
 ISR(TIMER2_COMP_vect)
 {
    ++send_it;
-   send100ms = (0 == (send_it % 4));   // ~100ms
-   send500ms = (0 == (send_it % 20));  // ~500ms
+   send100ms    = (0 == (send_it % 4));   // ~100ms
+   send500ms    = (0 == (send_it % 20));  // ~500ms
+   update2000ms = (0 == (send_it % 80));  // ~2000ms
 }
 
 /**
