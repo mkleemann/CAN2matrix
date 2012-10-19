@@ -43,13 +43,13 @@
  * \code
  * byte 0: IGN Status
  *  bit 0: ACC/key in - on 1; off 0
- *  bit 1: clamp 15   - ignition on 1; off 0
- *  bit 2: clamp X    - consumers relevant for start are switched off
- *  bit 3: clamp 50   - starter on 1; off 0
+ *  bit 1: terminal 15   - ignition on 1; off 0
+ *  bit 2: terminal X    - consumers relevant for start are switched off
+ *  bit 3: terminal 50   - starter on 1; off 0
  *  bit 4: not used
  *  bit 5: not used
  *  bit 6: not used
- *  bit 7: clamp ER   - engine runs 1; turned off 0
+ *  bit 7: terminal ER   - engine runs 1; turned off 0
  *
  * byte 1: Diagnosis Error Status
  *  bit 0..6: not used
@@ -282,15 +282,15 @@
  */
 
 //! Ignition CAN1
-//! clamp "ACC" - key in/ACC
+//! terminal "ACC" - key in/ACC
 #define IGN_1_CL_ACC                   0
-//! clamp 15 - ignition on
+//! terminal 15 - ignition on
 #define IGN_1_CL_15                    1
-//! clamp X - consumers not relevant for engine start are switched off
+//! terminal X - consumers not relevant for engine start are switched off
 #define IGN_1_CL_X                     2
-//! clamp 50 - engine start
+//! terminal 50 - engine start
 #define IGN_1_CL_50                    3
-//! clamp "ER" - engine runs
+//! terminal "ER" - engine runs
 #define IGN_1_CL_ER                    7
 
 //! combinations for CAN1
