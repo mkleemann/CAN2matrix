@@ -63,6 +63,8 @@ volatile uint16_t    dimAverage  = 0x7F00;
 volatile bool        nightMode   = false;
 //! updated information available
 volatile bool        infoUpdateAvailable = false;
+//! length of updated freetext for instrument cluster
+volatile uint8_t     updatedTextLength = 8;
 //! text information to be shown in cluster as unit information
 uint8_t info[IC_COMM_INFO_LENGTH] = {
    'C', 'A', 'N', '2', 'm', 'a', 't', 'r', 'i', 'x'
@@ -500,14 +502,19 @@ void setDimValue(uint16_t value)
 /**
  * \brief trigger communication to instrument cluster
  * \param msg - pointer to message (received)
+ *
+ * /todo send startup sequence only after ignition is at least ACC
+ * /todo set text length to ic_comm FSM for pointer limitation
+ * /todo setup timer to trigger new block for 2sec
+ *
  */
 void triggerIcComm(can_t* msg)
 {
    ic_comm_fsm_t   curState = getCurFsmState();
    ic_comm_stage_t curStage = getCurStage();
 
-   if((IC_COMM_IDLE == curState) &&
-      (IC_COMM_START_FRAME == curStage))
+   if((IC_COMM_IDLE == curState) &&             // fsm does not still run
+      (IC_COMM_START_FRAME == curStage))        // no startup
    {
       // assume restart
       matrix_fsm_state = MATRIX_FSM_START1;
@@ -526,6 +533,9 @@ void triggerIcComm(can_t* msg)
       {
          if(true == infoUpdateAvailable)
          {
+            // set new text information
+            setFreeText(text);
+            // setup complete information frame
             ic_comm_framesetup();
             // Where do I come from?
             matrix_last_state = matrix_fsm_state;
@@ -563,3 +573,5 @@ void triggerIcComm(can_t* msg)
       }
    }
 }
+
+
