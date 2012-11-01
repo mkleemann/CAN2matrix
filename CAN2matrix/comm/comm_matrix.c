@@ -70,7 +70,7 @@ uint8_t info[IC_COMM_INFO_LENGTH] = {
    'C', 'A', 'N', '2', 'm', 'a', 't', 'r', 'i', 'x'
 };
 //! freetext shown as media information
-uint8_t text[IC_COMM_TEXT_LENGTH] = {
+uint8_t text[IC_COMM_FREE_TEXT_LENGTH] = {
    ' ' , 'V' , 'e' , 'r' , '.' , ' ' , '1' , '.' ,
    '0' , ' ' , 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

@@ -155,13 +155,19 @@
 #define IC_COMM_INFO_LENGTH         10
 
 /**
- * \def IC_COMM_TEXT_LENGTH
+ * \def IC_COMM_FREE_TEXT_LENGTH
  * \brief length of max text lines
  *
  * Currently the maximum length of 64 characters is set as limit. Usually
  * mp3 files are not named that long and radio/media text is shorter.
  */
-#define IC_COMM_TEXT_LENGTH         64
+#define IC_COMM_FREE_TEXT_LENGTH    IC_COMM_MAX_LENGTH_OF_FRAME
+
+/**
+ * \def IC_COMM_FREE_TEXT_SEGMENT
+ * \brief segment length per sequence
+ */
+#define IC_COMM_FREE_TEXT_SEGMENT   8
 
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */
@@ -261,6 +267,11 @@ void setInfoText(uint8_t* data);
  */
 void setFreeText(uint8_t* data);
 
+/**
+ * \brief set free text length
+ * \param length of free text
+ */
+void setFreeTextLength(uint8_t length);
 
 
 #endif /* IC_COMM_H_ */

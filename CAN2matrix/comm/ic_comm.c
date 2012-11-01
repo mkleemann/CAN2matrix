@@ -112,12 +112,17 @@ uint8_t nextMsg = 0;
 //! buffer to setup a communication frame
 uint8_t frame[IC_COMM_MAX_LENGTH_OF_FRAME];
 
-//! pointer to free text
-uint8_t* freeText = 0;
-
 //! pointer to info text
 uint8_t* infoText = 0;
 
+//! pointer to free text
+uint8_t* freeText = 0;
+
+//! length of free text set
+uint8_t freeTextLength = IC_COMM_FREE_TEXT_SEGMENT;
+
+//! points to the next segment
+uint8_t freeTextSegmentPointer = 0;
 
 /**** FUNCTIONS *************************************************************/
 
@@ -347,8 +352,14 @@ void ic_comm_framesetup(void)
          {
             frame[i] = *freeText;   // +3
          }
-         // Do not reset freeText pointer here, it will be setup from outside
-         // for next information sample.
+         // handle free text buffer
+         freeTextSegmentPointer += IC_COMM_FREE_TEXT_SEGMENT;
+         if(freeTextSegmentPointer > freeTextLength)
+         {
+            // reset if length of free text is reached
+            freeText -= freeTextSegmentPointer;
+         }
+
 
          for(i = 28; i < 31; ++i, ++infoText)
          {
@@ -439,5 +450,32 @@ void setInfoText(uint8_t* data)
 void setFreeText(uint8_t* data)
 {
    freeText = data;
+}
+
+/**
+ * \brief set free text length
+ * \param length of free text
+ */
+void setFreeTextLength(uint8_t length)
+{
+   // handle erroneous length setup
+   if(IC_COMM_FREE_TEXT_LENGTH > length)
+   {
+      freeTextLength = IC_COMM_FREE_TEXT_LENGTH;
+   }
+   else
+   {
+      // handle last segment, if not matching segment length
+      uint8_t lengthOfLast = length % IC_COMM_FREE_TEXT_SEGMENT;
+      uint8_t gap = IC_COMM_FREE_TEXT_SEGMENT - lengthOfLast;
+      uint8_t i = length;
+      for(; i < (length + gap); ++i)
+      {
+         frame[i] = 0x20;     // space
+      }
+      // set length
+      freeTextLength = length + gap;
+   }
+
 }
 
