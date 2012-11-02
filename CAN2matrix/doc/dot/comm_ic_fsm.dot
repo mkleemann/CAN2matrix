@@ -9,27 +9,31 @@ digraph comm_ic_fsm {
     INIT_2 -> comm_seq_start [label="startup sequence #2", style=dashed, color=orangered, fontcolor=orangered];
     INIT_2 -> IDLE [label="initialised"]
 
-    IDLE [peripheries=2, fillcolor=lightgrey];
+    IDLE [style=bold, peripheries=2];
     IDLE -> IDLE [label="tick 20ms"];
     IDLE -> comm_seq_start [label="update", style=dashed, color=orangered, fontcolor=orangered];
     IDLE -> INIT_1 [label="restart"];
 
-    comm_wait [color=blue];
-    comm_wait -> comm_wait [label="wait for response"];
-    comm_wait -> comm_seq_start [label="ack 2E8", style=dotted];
-    comm_wait -> comm_seq_preamble [label="ack 699", style=dotted];
-    comm_wait -> comm_seq_info [label="frame ack 699", style=dotted];
+    comm_seq_wait [style=filled, fillcolor=lightgrey, color=blue];
+    comm_seq_wait -> comm_seq_wait [label="wait for response"];
+    comm_seq_wait -> comm_seq_start [label="ack 2E8", style=dotted];
+    comm_seq_wait -> comm_seq_preamble [label="ack 699", style=dotted];
+    comm_seq_wait -> comm_seq_info [label="frame ack 699", style=dotted];
 
+    comm_seq_start [style=filled, fillcolor=lightgrey, color=grey];
     comm_seq_start -> comm_seq_preamble [label="done"];
-    comm_seq_start -> comm_wait [label="request 4D9", style=dotted];
+    comm_seq_start -> comm_seq_wait [label="request 4D9", style=dotted];
 
+    comm_seq_preamble [style=filled, fillcolor=lightgrey, color=grey];
     comm_seq_preamble -> comm_seq_info [label="done"];
-    comm_seq_preamble -> comm_wait [label="request 6B9", style=dotted];
+    comm_seq_preamble -> comm_seq_wait [label="request 6B9", style=dotted];
 
+    comm_seq_info [style=filled, fillcolor=lightgrey, color=grey];
     comm_seq_info -> comm_seq_info [label="send sequence 6B9"];
-    comm_seq_info -> comm_wait [label="frame finnished", style=dotted];
+    comm_seq_info -> comm_seq_wait [label="frame finnished", style=dotted];
     comm_seq_info -> comm_seq_end [label="done"];
 
+    comm_seq_end [style=filled, fillcolor=lightgrey, color=grey];
     comm_seq_end -> comm_seq_end [label="send frame end ack and closing packet"];
     comm_seq_end -> INIT_1 [label="sequence ended", style=dashed, color=seagreen, fontcolor=seagreen];
     comm_seq_end -> INIT_2 [label="sequence ended", style=dashed, color=seagreen, fontcolor=seagreen];
