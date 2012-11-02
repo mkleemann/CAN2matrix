@@ -22,7 +22,6 @@
 #ifndef CAN_MCP2515_H_
 #define CAN_MCP2515_H_
 
-#include <avr/io.h>
 #include <stdbool.h>
 #include <util/delay.h>
 

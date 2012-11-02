@@ -18,9 +18,8 @@
  **/
 
 
-#include <avr/io.h>
 #include <avr/eeprom.h>
-#include <stdbool.h>
+
 #include "comm_can_ids.h"
 #include "comm_matrix.h"
 #include "ic_comm.h"

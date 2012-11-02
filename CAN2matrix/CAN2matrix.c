@@ -18,23 +18,17 @@
  **/
 
 
-#include <stdbool.h>
-#include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/cpufunc.h>
-#include <util/delay.h>
 //#include <stdlib.h>
 
 #include "adc/adc.h"
-#include "can/can_mcp2515.h"
 #include "comm/ic_comm.h"
 #include "comm/comm_matrix.h"
 #include "leds/leds.h"
-#include "spi/spi.h"
 #include "timer/timer.h"
 //#include "uart/uart.h"
-#include "util/util.h"
 #include "CAN2matrix.h"
 
 //! counter to evaluate timing to send CAN messages

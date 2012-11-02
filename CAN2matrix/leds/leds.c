@@ -18,8 +18,6 @@
  **/
 
 
-#include <avr/io.h>
-
 #include "../util/util.h"
 #include "leds.h"
 
