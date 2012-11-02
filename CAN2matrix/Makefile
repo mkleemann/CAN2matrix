@@ -161,7 +161,7 @@ can_init_mcp2515.i \
 can_receive_mcp2515.i \
 can_sleep_mcp2515.i \
 can_send_mcp2515.i \
-matrix.i \
+comm_matrix.i \
 ic_comm.i \
 leds.i \
 spi.i \
@@ -178,7 +178,7 @@ can_init_mcp2515.s \
 can_receive_mcp2515.s \
 can_sleep_mcp2515.s \
 can_send_mcp2515.s \
-matrix.s \
+comm_matrix.s \
 ic_comm.s \
 leds.s \
 spi.s \
