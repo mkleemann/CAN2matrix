@@ -361,7 +361,12 @@ void sendCan1_1000ms(can_t* msg)
 void sendCan1Message(can_t* msg)
 {
    fillInfoToCAN1(msg);
-   can_send_message(CAN_CHIP1, msg);
+
+   while(0 == can_send_message(CAN_CHIP1, msg))
+   {
+      // wait for empty send buffer
+      _delay_us(10);
+   }
 }
 
 
@@ -405,7 +410,7 @@ void sendCan2_1000ms(can_t* msg)
 /**
  * \brief sends message to CAN2 and filling up converted data
  *
- * Note: Set message id before calling this function.
+ * \note Set message id before calling this function.
  *
  * \param msg - pointer to CAN message with set msg id
  */
@@ -413,7 +418,11 @@ void sendCan2Message(can_t* msg)
 {
    fillInfoToCAN2(msg);
 
-   can_send_message(CAN_CHIP2, msg);
+   while(0 == can_send_message(CAN_CHIP2, msg))
+   {
+      // wait for empty send buffer
+      _delay_us(10);
+   }
 }
 
 /**
