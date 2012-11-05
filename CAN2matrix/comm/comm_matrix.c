@@ -354,7 +354,7 @@ void sendCan1_1000ms(can_t* msg)
 /**
  * \brief sends message to CAN1 and filling up converted data
  *
- * Note: Set message id before calling this function.
+ * \note Set message id before calling this function.
  *
  * \param msg - pointer to CAN message with set msg id
  */
