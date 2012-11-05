@@ -433,5 +433,39 @@
  * \endcode
  *
  *
+ * \section c2m_comm_ic_communication Communication with the Instrument Cluster
+ *
+ * \subsection c2m_comm_ic_handling Handling the Communication
+ *
+ * Several modes for information presentation are known with the original
+ * unit, so some will be applied to show the information with the new radio.
+ * During the analysis, further possibilities have been found, e.g. to show
+ * textual information on any postion one wishes in the 64x20px text area for
+ * radio information.
+ *
+ * \subsubsection c2_ic_comm_media_view Media Information
+ *
+ * HDD, AUX, Radio, DVD
+ *
+ * \subsubsection c2_ic_comm_pdc_view PDC Information
+ *
+ * 4 Sensors, value in cm
+ *
+ * \subsubsection c2_ic_comm_tp_view Traffic Programme
+ *
+ * Traffic/Station Name
+ *
+ * \subsubsection c2_ic_comm_setup_view Setup Information
+ *
+ * Setup/Media Information
+ *
+ * \subsection c2m_comm_ic_state_machine Communication State Machine
+ *
+ * To handle the communication protocol with the instrument cluster a state
+ * machine will be used. This ensures the sequences needed.
+ *
+ * \dotfile comm_ic_fsm.dot
+ *
+ *
  */
 

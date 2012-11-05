@@ -17,12 +17,6 @@
  * \date Created: 03.10.2012 13:50:54
  * \author Matthias Kleemann
  *
- * \section c2m_comm_ic_fsm Instrument Cluster Communication
- *
- * To handle the communication protocol with the instrument cluster a state
- * machine will be used.
- *
- * \dotfile comm_ic_fsm.dot "State Machine of IC Communication"
  *
  */
 
