@@ -24,7 +24,6 @@
  *
  * \dotfile comm_ic_fsm.dot "State Machine of IC Communication"
  *
-
  */
 
 #include "comm_can_ids.h"

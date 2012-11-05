@@ -314,15 +314,16 @@
  *
  * The lower nibble of the second byte looks like it controls the character
  * length. It is found as follows:
- *- 0110: 1 character
- *- 0111: 2 characters
- *- 1000: 3 characters
- *- 1001: 4 characters
- *- 1010: 5 characters*
- *- 1011: 6 characters
- *- 1100: 7 characters*
- *- 1101: 8 characters
- *- 1110: 9 characters "AUX IN..."
+ *- 0110:  1 character
+ *- 0111:  2 characters
+ *- 1000:  3 characters
+ *- 1001:  4 characters
+ *- 1010:  5 characters*
+ *- 1011:  6 characters
+ *- 1100:  7 characters*
+ *- 1101:  8 characters
+ *- 1110:  9 characters "AUX IN..."
+ *- 1111: 10 characters*
  *
  * (*) not verified
  *
@@ -359,7 +360,8 @@
  * in the second line.
  *
  * It is possible that the position information make use of bytes 1/2 and 3/4
- * as 16-bit value. The full dot matrix display is x = 64 and y = 96(?).
+ * as 16-bit value. To address the full dot matrix display (x = 64 and y = 96)
+ * this is not necessary.
  *
  * Sequence in binary representation:
  * \code
