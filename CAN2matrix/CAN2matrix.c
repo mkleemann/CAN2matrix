@@ -24,7 +24,6 @@
 //#include <stdlib.h>
 
 #include "adc/adc.h"
-#include "comm/ic_comm.h"
 #include "comm/comm_matrix.h"
 #include "leds/leds.h"
 #include "timer/timer.h"
@@ -222,8 +221,6 @@ void wakeUp()
    _delay_ms(1);
 #endif
 
-   ic_comm_reset4start();
-
    restartTimer1();
    restartTimer2();
 
@@ -263,10 +260,6 @@ void run()
 
    handleCan1Transmission(&msg);
    _delay_ms(1);
-
-   /**** RADIO TEXT ***********************************************/
-
-   triggerIcComm(&msg);
 
    /**** CHECK CAN STATUS *****************************************/
    error = can_get_general_bus_errors(CAN_CHIP1);
@@ -484,11 +477,11 @@ void handleCan2Reception(can_t* msg)
  */
 void handleCan1Transmission(can_t* msg)
 {
-   if (send500ms)   // approx. 500ms 4MHz@1024 prescale factor
+   if(update2000ms)
    {
-      send500ms = false;
+      update2000ms = false;
+      // update radio text, if necessary
 
-      sendCan1_500ms(msg);
    }
 }
 

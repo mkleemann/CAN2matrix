@@ -177,11 +177,6 @@ void sendCan2Message(can_t* msg);
  */
 void setDimValue(uint16_t value);
 
-/**
- * \brief trigger communication to instrument cluster
- * \param msg - pointer to message (received)
- */
-void triggerIcComm(can_t* msg);
 
 #endif /* MATRIX_H_ */
 
