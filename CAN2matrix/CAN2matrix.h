@@ -49,11 +49,6 @@ typedef enum
 /* DEFINITIONS                                                             */
 /***************************************************************************/
 
-/*** DEBUGGING *************************************************************/
-
-// use this to cut off all CAN handling
-//#define ___SIMULATION___
-
 /**
  * @brief INT0 trigger definition
  *
@@ -188,7 +183,6 @@ bool initCAN(void);
 /* HELPER ROUTINES                                                         */
 /***************************************************************************/
 
-#ifndef ___SIMULATION___
 /**
  * @brief handles CAN1 reception
  * @param msg - pointer to message struct
@@ -221,6 +215,5 @@ void handleCan2Transmission(can_t* msg);
  * @param msg - pointer to CAN message
  */
 void sendCan2Message(can_t* msg);
-#endif
 
 #endif /* CAN2MATRIX_H_ */

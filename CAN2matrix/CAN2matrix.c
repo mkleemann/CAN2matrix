@@ -148,7 +148,6 @@ void sleepDetected()
    // (re)set global flags
    send_it  = 0;
 
-#ifndef ___SIMULATION___
    // put MCP25* to sleep for CAN2 and activate after activity on CAN1
    // This has to be done before master CAN goes to sleep, because
    // the clock of the slave chip may be taken from master CAN chip's
@@ -159,7 +158,6 @@ void sleepDetected()
 
    // put MCP2515 to sleep and wait for activity interrupt
    mcp2515_sleep(CAN_CHIP1, INT_SLEEP_WAKEUP_BY_CAN);
-#endif
 
    // low power consumption
    led_all_off();
@@ -211,7 +209,6 @@ void sleeping()
 void wakeUp()
 {
    cli();
-#ifndef ___SIMULATION___
    // wakeup all CAN busses
    mcp2515_wakeup(CAN_CHIP1, INT_SLEEP_WAKEUP_BY_CAN);
    // wait a little for the CAN controller to be ready (Tosc * 128)
@@ -219,7 +216,6 @@ void wakeUp()
    mcp2515_wakeup(CAN_CHIP2, INT_SLEEP_MANUAL_WAKEUP);
    // wait a little for the CAN controller to be ready (Tosc * 128)
    _delay_ms(1);
-#endif
 
    restartTimer1();
    restartTimer2();
@@ -237,7 +233,6 @@ void wakeUp()
  */
 void run()
 {
-#ifndef ___SIMULATION___
    can_t msg;
    can_error_t error;
 
@@ -281,14 +276,6 @@ void run()
    {
       led_on(errCan2LED);
    }
-
-#else
-   if (send500ms)   // approx. 500ms 4MHz@1024 prescale factor
-   {
-      send500ms = false;
-      led_toggle(errCan1LED);
-   }
-#endif
 }
 
 /**
@@ -365,7 +352,6 @@ bool initCAN()
 {
    bool retVal = true;
 
-#ifndef ___SIMULATION___
    // init can interface 1
    if (false == can_init_mcp2515(CAN_CHIP1, CAN_BITRATE_100_KBPS, NORMAL_MODE))
    {
@@ -382,7 +368,6 @@ bool initCAN()
       led_on(errCan2LED);
       retVal = false;
    }
-#endif
 
    return retVal;
 }
@@ -429,7 +414,6 @@ ISR(INT0_vect)
 /* HELPER ROUTINES                                                         */
 /***************************************************************************/
 
-#ifndef ___SIMULATION___
 /**
  * @brief handles CAN1 reception
  * @param msg - pointer to message struct
@@ -518,5 +502,4 @@ void handleCan2Transmission(can_t* msg)
 }
 
 
-#endif
 
