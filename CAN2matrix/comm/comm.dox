@@ -447,6 +447,46 @@
  *
  * HDD, AUX, Radio, DVD
  *
+ * Example of a full sequence:
+ *
+ * 2nd row is populated with 8 character free text, e.g. station info. The
+ * top row is populated with 5 byte media info (which media) and 5 byte
+ * other information, e.g. track number or traffic programme indicator.
+ *
+ * Sequence and IC looks like that:
+ * \code
+ * 0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,   // startpos 6:10; 8 bytes
+ * 0x21, 0x0A, 0x00, 'F' , 'R' , 'E' , 'E' , 'T' ,
+ * 0x22, 'E' , 'X' , 'T' , 0x57, 0x0A, 0x03, 0x02,   // startpos 2:0 ; 5 bytes
+ * 0x03, 0x00, 0x00, 0x00, 'T' , 'R' , 'A' , 'C' ,
+ * 0x24, 'K' , 0x57, 0x0A, 0x03, 0x20, 0x00, 0x00,   // startpos 32:0; 5 bytes
+ * 0x15, 0x00, '9' , '9' , '9' , '9' , '9' , 0x08
+ *
+ *
+ * +----------------------------------------------------------------+
+ * |  ***** ***     *     **  *   *   ***   ***   ***   ***   ***   |
+ * |    *   *  *   * *   *  * *  *   *   * *   * *   * *   * *   *  |
+ * |    *   *   * *   * *     * *    *   * *   * *   * *   * *   *  |
+ * |    *   *  *  *   * *     **      ****  ****  ****  ****  ****  |
+ * |    *   ***   ***** *     * *        *     *     *     *     *  |
+ * |    *   *  *  *   *  *  * *  *   *   * *   * *   * *   * *   *  |
+ * |    *   *   * *   *   **  *   *   ***   ***   ***   ***   ***   |
+ * |                                                                |
+ * |                                                                |
+ * |       ***** ***   ***** ***** ***** ***** *   * *****          |
+ * |       *     *  *  *     *       *   *      * *    *            |
+ * |       *     *   * *     *       *   *       *     *            |
+ * |       ***   *  *  ***   ***     *   ***     *     *            |
+ * |       *     ***   *     *       *   *       *     *            |
+ * |       *     *  *  *     *       *   *      * *    *            |
+ * |       *     *   * ***** *****   *   ***** *   *   *            |
+ * |                                                                |
+ * |                                                                |
+ * |                                                                |
+ * |                                                                |
+ * +----------------------------------------------------------------+
+ * \endcode
+ *
  * \subsubsection c2_ic_comm_pdc_view PDC Information
  *
  * 4 Sensors, value in cm
@@ -464,7 +504,7 @@
  * To handle the communication protocol with the instrument cluster a state
  * machine will be used. This ensures the sequences needed.
  *
- * \dotfile comm_ic_fsm.dot
+ * \dotfile comm_ic_statemachine.dot
  *
  *
  */

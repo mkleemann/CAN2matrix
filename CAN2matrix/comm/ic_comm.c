@@ -17,7 +17,6 @@
  * \date Created: 03.10.2012 13:50:54
  * \author Matthias Kleemann
  *
- *
  */
 
 #include "comm_can_ids.h"
@@ -44,53 +43,33 @@ uint8_t EEMEM ic_comm_startup_seq[IC_COMM_START_SEQ_LENGTH] = {
  * \note There is no end of sequence marker here.
  */
 uint8_t EEMEM ic_comm_startup_audio_seq[IC_COMM_AUDIO_SEQ_LENGTH] = {
-   0x20, 0x02, 0x80, 0x39, 0x20, 0x41, 0x55, 0x44,   // byte 6..7 "AUD"
+   0x20, 0x02, 0x80, 0x39, 0x20, 0x41, 0x55, 0x44,   // byte 4..7 "9 AUD"
    0x11, 0x49, 0x4F                                  // byte 2..3 "IO"
 };
 
 /**
- * \brief normal media info sequence
+ * \brief start sequence for each text information
  *
- * 2nd row is populated with 8 character free text, e.g. station info. The
- * top row is populated with 5 byte media info (which media) and 5 byte
- * other information, e.g. track number or traffic programme indicator.
+ * For further information see section \ref c2m_comm_ic_seq_radio_format
+ *
+ *- byte 0: start of text sequence
+ *- byte 1: length marker
+ *- byte 2: mode(?), e.g. overwrite existing text
+ *- byte 3: start position x-axis
+ *- byte 4: unused
+ *- byte 5: start position y-axis
+ *- byte 6: unused
+ *- byte 7..16: text (max. 10 characters)
  *
  * The default text is setup to "." (0x2E) as placeholder. This will be
- * overwritten in the frame setup.
+ * overwritten in the text setup.
  *
- * It looks like that:
- * \code
- * +----------------------------------------------------------------+
- * |  ***** ***     *     **  *   *   ***   ***   ***   ***   ***   |
- * |    *   *  *   * *   *  * *  *   *   * *   * *   * *   * *   *  |
- * |    *   *   * *   * *     * *    *   * *   * *   * *   * *   *  |
- * |    *   *  *  *   * *     **      ****  ****  ****  ****  ****  |
- * |    *   ***   ***** *     * *        *     *     *     *     *  |
- * |    *   *  *  *   *  *  * *  *   *   * *   * *   * *   * *   *  |
- * |    *   *   * *   *   **  *   *   ***   ***   ***   ***   ***   |
- * |                                                                |
- * |                                                                |
- * |       ***** ***   ***** ***** ***** ***** *   * *****          |
- * |       *     *  *  *     *       *   *      * *    *            |
- * |       *     *   * *     *       *   *       *     *            |
- * |       ***   *  *  ***   ***     *   ***     *     *            |
- * |       *     ***   *     *       *   *       *     *            |
- * |       *     *  *  *     *       *   *      * *    *            |
- * |       *     *   * ***** *****   *   ***** *   *   *            |
- * |                                                                |
- * |                                                                |
- * |                                                                |
- * |                                                                |
- * +----------------------------------------------------------------+
- * \endcode
+ * For full example see \ref c2_ic_comm_media_view
  */
-uint8_t EEMEM ic_comm_text_seq[IC_COMM_TEXT_SEQ_LENGTH] = {
-   0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,   // startpos 6:10; 8 bytes
-   0x21, 0x0A, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E,
-   0x22, 0x2E, 0x2E, 0x2E, 0x57, 0x0A, 0x03, 0x02,   // startpos 2:0 ; 5 bytes
-   0x03, 0x00, 0x00, 0x00, 0x2E, 0x2E, 0x2E, 0x2E,
-   0x24, 0x2E, 0x57, 0x0A, 0x03, 0x20, 0x00, 0x00,   // startpos 32:0; 5 bytes
-   0x15, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x08
+uint8_t EEMEM ic_comm_text_segment[IC_COMM_TEXT_SEQ_LENGTH] = {
+   0x57, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x2E,
+   0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E,
+   0x2E
 };
 
 

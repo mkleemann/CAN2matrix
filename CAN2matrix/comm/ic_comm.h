@@ -144,7 +144,7 @@
  */
 #define IC_COMM_START_SEQ_LENGTH    6
 #define IC_COMM_AUDIO_SEQ_LENGTH    11
-#define IC_COMM_TEXT_SEQ_LENGTH     48
+#define IC_COMM_TEXT_SEQ_LENGTH     17
 
 /**
  * \def IC_COMM_INFO_LENGTH
