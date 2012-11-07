@@ -443,9 +443,49 @@
  * textual information on any postion one wishes in the 64x20px text area for
  * radio information.
  *
+ * Below you find some scenarios to show information. Currently 4 different
+ * ones are set and can be handled accordingly. Fixed and dynamic information
+ * elements are mixed here.
+ *
+ *
  * \subsubsection c2_ic_comm_media_view Media Information
  *
- * HDD, AUX, Radio, DVD
+ * The radio provides several modes of media, which provides different types
+ * of information.
+ *
+ *- HDD: track and title
+ *- AUX: show mode only
+ *- Radio: frequency or station name, used band, traffic programme marker
+ *- DVD: track and title
+ *- AUX: fixed information
+ *
+ * Possible scenarios:
+ * \code
+ *    01 02 03 04 05 06 07 08 09 10
+ * t  H  D  D     T  9  9  9  9  9
+ * c
+ * b  T  I  T  L  E  I  N  F  O
+ *
+ *    01 02 03 04 05 06 07 08 09 10
+ * t  C  D        T  9  9  9  9  9
+ * c
+ * b  T  I  T  L  E  I  N  F  O
+ *
+ *    01 02 03 04 05 06 07 08 09 10
+ * t  D  V  D     T  9  9  9  9  9
+ * c
+ * b  T  I  T  L  E  I  N  F  O
+ *
+ *    01 02 03 04 05 06 07 08 09 10
+ * t  F  M  1     F  1  0  8  .  0
+ * c
+ * b     R  D  S     I  N  F  O
+ *
+ *    01 02 03 04 05 06 07 08 09 10
+ * t
+ * c        A  U  X     I  N
+ * b
+ * \endcode
  *
  * Example of a full sequence:
  *
@@ -489,15 +529,45 @@
  *
  * \subsubsection c2_ic_comm_pdc_view PDC Information
  *
- * 4 Sensors, value in cm
+ * There are 4 sensors available (rear for now). The values range from
+ * 0..254cm, so all sensor information can be shown. Note, that the "PDC"
+ * text can be positioned by pixel within the information field.
+ *
+ * Scenario:
+ * \code
+ *    01 02 03 04 05 06 07 08 09 10
+ * t  2  5  0              2  5  0       // outer left/right
+ * c           P  D  C                   // fixed text
+ * b     2  5  0        2  5  0          // inner left/right
+ * \endcode
+ *
  *
  * \subsubsection c2_ic_comm_tp_view Traffic Programme
  *
- * Traffic/Station Name
+ * If traffic programme starts, the information is quite fix. It states the
+ * mode "Traffic Programme" and shows the RDS information provided by the
+ * radio, e.g. the station name.
+ *
+ * Scenario:
+ * \code
+ *    01 02 03 04 05 06 07 08 09 10
+ * t     T  R  A  F  F  I  C
+ * c
+ * b     R  D  S     I  N  F  O
+ * \endcode
  *
  * \subsubsection c2_ic_comm_setup_view Setup Information
  *
- * Setup/Media Information
+ * Just a marker for setup. See also "AUX IN" in \ref c2_ic_comm_media_view.
+ *
+ * Scenario:
+ * \code
+ *    01 02 03 04 05 06 07 08 09 10
+ * t
+ * c        S  E  T  U  P
+ * b
+ * \endcode
+ *
  *
  * \subsection c2m_comm_ic_state_machine Communication State Machine
  *
