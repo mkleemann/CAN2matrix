@@ -76,34 +76,14 @@ uint8_t EEMEM ic_comm_text_segment[IC_COMM_TEXT_SEQ_LENGTH] = {
 /**** VARIABLES *************************************************************/
 
 //! states of the FSM to send information to the instrument cluster
-ic_comm_fsm_t ic_comm_states = IC_COMM_IDLE;
+ic_comm_fsm_t ic_comm_cur_state = IC_COMM_INIT_1;
 
-//! special startup sequence for instrument cluster (state AUDIO)
-ic_comm_stage_t stage = IC_COMM_START_FRAME;
+//! state for end of sequence return
+ic_comm_fsm_t ic_comm_end_state = IC_COMM_INIT_2;
 
-//! sequence number for sending
-uint8_t seqTx = 0;
+//! sequence counter for transmission
+uint8_t seqCntTx = 0;
 
-//! number of bytes in frame
-uint8_t bytesInFrame = 0;
-
-//! pointer to next message in frame
-uint8_t nextMsg = 0;
-
-//! buffer to setup a communication frame
-uint8_t frame[IC_COMM_MAX_LENGTH_OF_FRAME];
-
-//! pointer to info text
-uint8_t* infoText = 0;
-
-//! pointer to free text
-uint8_t* freeText = 0;
-
-//! length of free text set
-uint8_t freeTextLength = IC_COMM_FREE_TEXT_SEGMENT;
-
-//! points to the next segment
-uint8_t freeTextSegmentPointer = 0;
 
 /**** FUNCTIONS *************************************************************/
 
@@ -116,8 +96,22 @@ uint8_t freeTextSegmentPointer = 0;
  */
 void ic_comm_fsm(can_t* msg)
 {
-   switch(ic_comm_states)
+   switch(ic_comm_cur_state)
    {
+      case IC_COMM_INIT_1:
+      {
+         ic_comm_cur_state = IC_COMM_SEQ_START;
+         break;
+      }
+
+      case IC_COMM_INIT_2:
+      {
+
+         ic_comm_cur_state = IC_COMM_SEQ_START;
+         ic_comm_end_state = IC_COMM_IDLE;
+         break;
+      }
+
       case IC_COMM_IDLE:
       {
          // communication request to instrument cluster
@@ -130,13 +124,14 @@ void ic_comm_fsm(can_t* msg)
          msg->data[0] = 0x08;
          msg->data[1] = 0xC0;
          msg->data[2] = 0xB9;
-         can_send_message(CAN_CHIP1, msg);
+         send2Cluster(msg);
 
-         ic_comm_states = IC_COMM_START;
+         ic_comm_cur_state = IC_COMM_SEQ_START;
+         ic_comm_end_state = IC_COMM_IDLE;
          break;
       }
 
-      case IC_COMM_START:
+      case IC_COMM_SEQ_START:
       {
          // ack for communication request by instrument cluster
          //              CAN    Instrument     Example
@@ -159,14 +154,14 @@ void ic_comm_fsm(can_t* msg)
             msg->data[3] = 0x54;
             msg->data[4] = 0x4A;
             msg->data[5] = 0xB2;
-            can_send_message(CAN_CHIP1, msg);
+            send2Cluster(msg);
 
-            ic_comm_states = IC_COMM_PREAMBLE;
+            ic_comm_cur_state = IC_COMM_SEQ_PREAMBLE;
          }
          break;
       }
 
-      case IC_COMM_PREAMBLE:
+      case IC_COMM_SEQ_PREAMBLE:
       {
          // get acknowledge to preamble
          //              CAN    Instrument     Example
@@ -176,12 +171,12 @@ void ic_comm_fsm(can_t* msg)
          if((CANID_1_COM_CLUSTER_2_RADIO == msg->msgId) &&
             (0xA1 == msg->data[0]))
          {
-            ic_comm_states = IC_COMM_INFO;
+            ic_comm_cur_state = IC_COMM_SEQ_INFO;
          }
          break;
       }
 
-      case IC_COMM_WAIT_4_CLUSTER:
+      case IC_COMM_SEQ_WAIT:
       {
          // get acknowledge packet from instrument cluster
          //              CAN    Instrument     Example
@@ -189,16 +184,16 @@ void ic_comm_fsm(can_t* msg)
          //   _                     _
          //   |     <-- 699 ---     |         Bx
          if((CANID_1_COM_CLUSTER_2_RADIO == msg->msgId) &&
-            ((0xB0 | seqTx) == msg->data[0]))
+            ((0xB0 | seqCntTx) == msg->data[0]))
          {
             // next info frame
-            ic_comm_states = IC_COMM_INFO;
+            ic_comm_cur_state = IC_COMM_SEQ_INFO;
          }
 
          break;
       }
 
-      case IC_COMM_INFO:
+      case IC_COMM_SEQ_INFO:
       {
          // last frame/data packet from instrument cluster, e.g.
          // "close of communication" sequence
@@ -213,37 +208,37 @@ void ic_comm_fsm(can_t* msg)
             msg->header.len = 1;
             // add sequence number (+1) to acknowledge Bx
             msg->data[0] = 0xB0 | ((0x0F & msg->data[0]) + 1);
-            can_send_message(CAN_CHIP1, msg);
+            send2Cluster(msg);
 
-            ic_comm_states = IC_COMM_STOP;
+            ic_comm_cur_state = IC_COMM_SEQ_END;
          }
          else
          {
             msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
 
-            // byte 0: IC_COMM_SOF  | seqTx  -> next info message
-            // byte 0: IC_COMM_EOF  | seqTx  -> wait for ack, stop
-            // byte 0: IC_COMM_W4NF | seqTx  -> wait for ack, next
+            // byte 0: IC_COMM_SOF  | seqCntTx  -> next info message
+            // byte 0: IC_COMM_EOF  | seqCntTx  -> wait for ack, stop
+            // byte 0: IC_COMM_W4NF | seqCntTx  -> wait for ack, next
             msg->header.len = ic_comm_getNextMsg(msg->data);
-            can_send_message(CAN_CHIP1, msg);
+            send2Cluster(msg);
 
             // next sequence, also for ack!
-            ++seqTx;
+            ++seqCntTx;
 
             // frame over? data[0] == 0x/1x
             if(0x20 != (IC_COMM_FRAME_MASK & msg->data[0]))
             {
                // wait for instrument cluster response
-               ic_comm_states = IC_COMM_WAIT_4_CLUSTER;
+               ic_comm_cur_state = IC_COMM_SEQ_WAIT;
             }
          }
          break;
       }
 
-      case IC_COMM_STOP:
+      case IC_COMM_SEQ_END:
       {
          // reset sequence numbers
-         seqTx = 0;
+         seqCntTx = 0;
          //              CAN    Instrument     Example
          // Radio        ID      Cluster
          //   _                     _
@@ -251,9 +246,9 @@ void ic_comm_fsm(can_t* msg)
          msg->msgId = CANID_1_COM_RADIO_2_CLUSTER;
          msg->header.len = 1;
          msg->data[0] = 0xA8;
-         can_send_message(CAN_CHIP1, msg);
+         send2Cluster(msg);
 
-         ic_comm_states = IC_COMM_IDLE;
+         ic_comm_cur_state = ic_comm_end_state;
          break;
       }
 
@@ -265,198 +260,26 @@ void ic_comm_fsm(can_t* msg)
    }
 }
 
-/**
- * \brief reset flags for next startup
- */
-void ic_comm_reset4start()
-{
-   // reset for clean startup in communication
-   stage = IC_COMM_START_FRAME;
-   bytesInFrame = 0;
-   nextMsg = 0;
-   seqTx = 0;
-   ic_comm_states = IC_COMM_IDLE;
-}
 
 /**
- * \brief setup for frame to send to cluster
- *
- * Fill frame buffer with control and information sequences.
+ * \brief send CAN message to instrument cluster
+ * \param msg - pointer to CAN message
  */
-void ic_comm_framesetup(void)
+void send2Cluster(can_t* msg)
 {
-   switch(stage)
+   while(0 == can_send_message(CAN_CHIP1, msg))
    {
-      case IC_COMM_START_FRAME:
-      {
-         eeprom_read_block(frame,
-                           &ic_comm_startup_seq,
-                           IC_COMM_START_SEQ_LENGTH);
-         bytesInFrame = IC_COMM_START_SEQ_LENGTH;
-         // next stage
-         stage = IC_COMM_AUDIO_SETUP_FRAME;
-         break;
-      }
-
-      case IC_COMM_AUDIO_SETUP_FRAME:
-      {
-         eeprom_read_block(frame,
-                           &ic_comm_startup_seq,
-                           IC_COMM_AUDIO_SEQ_LENGTH);
-         bytesInFrame = IC_COMM_AUDIO_SEQ_LENGTH;
-         // next stage
-         stage = IC_COMM_NORMAL_OP;
-         break;
-      }
-
-      case IC_COMM_NORMAL_OP:
-      {
-         uint8_t i;
-
-         // read sequence from eeprom
-         eeprom_read_block(frame,
-                           &ic_comm_startup_seq,
-                           IC_COMM_TEXT_SEQ_LENGTH);
-         bytesInFrame = IC_COMM_TEXT_SEQ_LENGTH;
-         // now setup free text fragments
-         /* 0x20, 0x09, 0x02, 0x57, 0x0D, 0x03, 0x06, 0x00,   // startpos 6:10; 8 bytes */
-         /* 0x21, 0x0A, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E,                             */
-         /* 0x22, 0x2E, 0x2E, 0x2E, 0x57, 0x0A, 0x03, 0x02,   // startpos 2:0 ; 5 bytes */
-         /* 0x03, 0x00, 0x00, 0x00, 0x2E, 0x2E, 0x2E, 0x2E,                             */
-         /* 0x24, 0x2E, 0x57, 0x0A, 0x03, 0x20, 0x00, 0x00,   // startpos 32:0; 5 bytes */
-         /* 0x15, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x08                              */
-         for(i = 11; i < 15; ++i, ++freeText)
-         {
-            frame[i] = *freeText;   // +5
-         }
-         for(i = 17; i < 20; ++i, ++freeText)
-         {
-            frame[i] = *freeText;   // +3
-         }
-         // handle free text buffer
-         freeTextSegmentPointer += IC_COMM_FREE_TEXT_SEGMENT;
-         if(freeTextSegmentPointer > freeTextLength)
-         {
-            // reset if length of free text is reached
-            freeText -= freeTextSegmentPointer;
-         }
-
-
-         for(i = 28; i < 31; ++i, ++infoText)
-         {
-            frame[i] = *infoText;   // +4
-         }
-         frame[33] = *infoText;
-         ++infoText;                // +1
-
-         for(i = 42; i < 47; ++i, ++freeText)
-         {
-            frame[i] = *infoText;   // +5
-         }
-         // reset pointer, it's always 10
-         infoText -= IC_COMM_INFO_LENGTH;
-
-         break;
-      }
-
-      default:
-      {
-         // do nothing!
-         break;
-      }
+      _delay_us(10);
    }
 }
 
 /**
- * \brief get next message from frame buffer
- * \param data - pointer to destination buffer
+ * \brief prepare next info message
+ * \param data - pointer to data in CAN message
  * \return length of buffer copied
  */
 uint8_t ic_comm_getNextMsg(uint8_t* data)
 {
-   uint8_t length = 8;
-   uint8_t i;
-
-   // copy data
-   for(i = nextMsg; i < nextMsg + 8; ++i)
-   {
-      data[i - nextMsg] = frame[i];
-   }
-
-   // set pointer to next message
-   nextMsg += 8;
-
-   if(0 == (IC_COMM_EOF_MASK & data[0]))  // 1x/0x
-   {
-      // last number of bytes in CAN message
-      length = bytesInFrame % 8;
-      // restart frame
-      nextMsg = 0;
-   }
-
-   return(length);
+   data[0] = seqCntTx;
+   return(1);
 }
-
-/**
- * \brief get current state
- * \return current fsm state
- */
-ic_comm_fsm_t getCurFsmState(void)
-{
-   return(ic_comm_states);
-}
-
-/**
- * \brief get current stage of operation
- * \return current stage of operation
- */
-ic_comm_stage_t getCurStage(void)
-{
-   return(stage);
-}
-
-/**
- * \brief get media info for showing in instrument cluster
- * \param data - pointer to media info
- */
-void setInfoText(uint8_t* data)
-{
-   infoText = data;
-}
-
-/**
- * \brief get freetext for showing in instrument cluster
- * \param data - pointer to free text
- */
-void setFreeText(uint8_t* data)
-{
-   freeText = data;
-}
-
-/**
- * \brief set free text length
- * \param length of free text
- */
-void setFreeTextLength(uint8_t length)
-{
-   // handle erroneous length setup
-   if(IC_COMM_FREE_TEXT_LENGTH > length)
-   {
-      freeTextLength = IC_COMM_FREE_TEXT_LENGTH;
-   }
-   else
-   {
-      // handle last segment, if not matching segment length
-      uint8_t lengthOfLast = length % IC_COMM_FREE_TEXT_SEGMENT;
-      uint8_t gap = IC_COMM_FREE_TEXT_SEGMENT - lengthOfLast;
-      uint8_t i = length;
-      for(; i < (length + gap); ++i)
-      {
-         frame[i] = 0x20;     // space
-      }
-      // set length
-      freeTextLength = length + gap;
-   }
-
-}
-

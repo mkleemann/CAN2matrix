@@ -37,24 +37,24 @@
 
 
 /**
- * \def IC_COMM_ALIGN_V_TOP
+ * \def IC_COMM_VALIGN_TOP
  * \brief vertical alignment top
  *
  * Offset of 0 pixels from top.
  *
- * \def IC_COMM_ALIGN_V_CENTER
+ * \def IC_COMM_VALIGN_CENTER
  * \brief vertical center alignment
  *
  * Offset of 5 pixels from top
  *
- * \def IC_COMM_ALIGN_V_BOTTOM
+ * \def IC_COMM_VALIGN_BOTTOM
  * \brief vertical alignment bottom
  *
  * Offset of 10 pixels from top.
  */
-#define IC_COMM_ALIGN_V_TOP         0x00
-#define IC_COMM_ALIGN_V_CENTER      0x05
-#define IC_COMM_ALIGN_V_BOTTOM      0x0A
+#define IC_COMM_VALIGN_TOP         0x00
+#define IC_COMM_VALIGN_CENTER      0x05
+#define IC_COMM_VALIGN_BOTTOM      0x0A
 
 /**
  * \def IC_COMM_ALIGN_H_TAB_WIDTH
@@ -65,16 +65,6 @@
  * Some of them are written in only 3 pixels width.
  */
 #define IC_COMM_ALIGN_H_TAB_WIDTH   6
-
-/**
- * \def IC_COMM_POS_OFFSET
- * \brief most left position to start text (10 characters)
- *
- * Display area is 20x64px, so starting at position 2 leaves 60 pixels for the
- * character to show in and leave a 2px border on the right side. Any
- * character is assumed 6px in width, including the spacing.
- */
-#define IC_COMM_POS_OFFSET          2
 
 /**
  * \def IC_COMM_SOF
@@ -124,15 +114,6 @@
 #define IC_COMM_SET_REMOVE_OLD_TEXT 0x20
 
 /**
- * \def IC_COMM_MAX_LENGTH_OF_FRAME
- * \brief length of messages for 2 communication frames
- *
- * A communication frame for the instrument cluster consists of 4 CAN
- * messages maximum. The buffer fits for 2 frames.
- */
-#define IC_COMM_MAX_LENGTH_OF_FRAME 64
-
-/**
  * \def IC_COMM_START_SEQ_LENGTH
  * \brief sequence length of start frame
  *
@@ -146,28 +127,6 @@
 #define IC_COMM_AUDIO_SEQ_LENGTH    11
 #define IC_COMM_TEXT_SEQ_LENGTH     17
 
-/**
- * \def IC_COMM_INFO_LENGTH
- * \brief length of max info lines
- *
- * Currently the maximum length of 10 characters per line is known.
- */
-#define IC_COMM_INFO_LENGTH         10
-
-/**
- * \def IC_COMM_FREE_TEXT_LENGTH
- * \brief length of max text lines
- *
- * Currently the maximum length of 64 characters is set as limit. Usually
- * mp3 files are not named that long and radio/media text is shorter.
- */
-#define IC_COMM_FREE_TEXT_LENGTH    IC_COMM_MAX_LENGTH_OF_FRAME
-
-/**
- * \def IC_COMM_FREE_TEXT_SEGMENT
- * \brief segment length per sequence
- */
-#define IC_COMM_FREE_TEXT_SEGMENT   8
 
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */
@@ -175,38 +134,32 @@
 
 /**
  * \brief States of FSM
+ *
+ * See \ref c2m_comm_ic_state_machine for details.
  */
 typedef enum
 {
+   //! startup stage #1
+   IC_COMM_INIT_1 = 0,
+   //! startup stage #2
+   IC_COMM_INIT_2 = 1,
    //! idle state (default)
-   IC_COMM_IDLE = 0,
+   IC_COMM_IDLE = 2,
    //! start communication: \ref c2m_comm_ic_seq_radio
    //! starting with 4D9/2E8
-   IC_COMM_START = 1,
+   IC_COMM_SEQ_START = 3,
    //! preamble: \ref c2m_comm_ic_seq_radio
    //! starting with 6B9/699 and A0/A1 data
-   IC_COMM_PREAMBLE = 2,
+   IC_COMM_SEQ_PREAMBLE = 4,
    //! wait for cluster info, e.g. acknowledges: \ref c2m_comm_ic_seq_radio_normal
    //! Bx messages and 699: 10 23 02 01
-   IC_COMM_WAIT_4_CLUSTER = 3,
+   IC_COMM_SEQ_WAIT = 5,
    //! send information frames: \ref c2m_comm_ic_seq_radio_normal
-   IC_COMM_INFO = 4,
+   IC_COMM_SEQ_INFO = 6,
    //! stop communication: \ref c2m_comm_ic_seq_radio_normal
    //! A8 message to stop
-   IC_COMM_STOP = 5
+   IC_COMM_SEQ_END = 7
 } ic_comm_fsm_t;
-
-/**
- * \brief stage of communication setup with instrument cluster
- */
-typedef enum {
-   //! start frame to be sent
-   IC_COMM_START_FRAME = 0,
-   //! audio setup frame to be sent
-   IC_COMM_AUDIO_SETUP_FRAME = 1,
-   //! normal operation
-   IC_COMM_NORMAL_OP = 2
-} ic_comm_stage_t;
 
 
 /*! @} */
@@ -225,53 +178,17 @@ typedef enum {
 void ic_comm_fsm(can_t* msg);
 
 /**
- * \brief reset flags for next startup
+ * \brief send CAN message to instrument cluster
+ * \param msg - pointer to CAN message
  */
-void ic_comm_reset4start();
+void send2Cluster(can_t* msg);
 
 /**
- * \brief setup for frame to send to cluster
- *
- * Fill frame buffer with control and information sequences.
- */
-void ic_comm_framesetup(void);
-
-/**
- * \brief get next message from frame buffer
- * \param data - pointer to destination buffer
+ * \brief prepare next info message
+ * \param data - pointer to data in CAN message
  * \return length of buffer copied
  */
 uint8_t ic_comm_getNextMsg(uint8_t* data);
-
-/**
- * \brief get current state
- * \return current fsm state
- */
-ic_comm_fsm_t getCurFsmState(void);
-
-/**
- * \brief get current stage of operation
- * \return current stage of operation
- */
-ic_comm_stage_t getCurStage(void);
-
-/**
- * \brief get media info for showing in instrument cluster
- * \param data - pointer to media info
- */
-void setInfoText(uint8_t* data);
-
-/**
- * \brief get freetext for showing in instrument cluster
- * \param data - pointer to free text
- */
-void setFreeText(uint8_t* data);
-
-/**
- * \brief set free text length
- * \param length of free text
- */
-void setFreeTextLength(uint8_t length);
 
 
 #endif /* IC_COMM_H_ */
