@@ -81,6 +81,12 @@
 #define IC_COMM_W4NF                0x00
 
 /**
+ * \def IC_COMM_FRAME_SIZE
+ * \brief number of CAN messages for one frame
+ */
+#define IC_COMM_FRAME_SIZE          4
+
+/**
  * \def IC_COMM_FRAME_MASK
  * \brief mask for frame message signature
  *
@@ -160,6 +166,34 @@ typedef enum
    //! A8 message to stop
    IC_COMM_SEQ_END = 7
 } ic_comm_fsm_t;
+
+
+/**
+ * \brief information type for sequence handling
+ */
+typedef enum
+{
+   //! media information: HDD
+   INFO_TYPE_MEDIA_HDD = 0,
+   //! media information: Radio FM
+   INFO_TYPE_MEDIA_RADIO_FM = 1,
+   //! media information: Radio AM
+   INFO_TYPE_MEDIA_RADIO_AM = 2,
+   //! media information: CD
+   INFO_TYPE_MEDIA_CD = 3,
+   //! media information: DVD
+   INFO_TYPE_MEDIA_DVD = 4,
+   //! media information: AUX
+   INFO_TYPE_MEDIA_AUX = 5,
+   //! information: Traffic Programme
+   INFO_TYPE_TRAFFIC = 6,
+   //! information: PDC
+   INFO_TYPE_PDC = 7,
+   //! information: Setup
+   INFO_TYPE_SETUP = 8,
+   //! information: two rows freetext (max. 2x10 characters)
+   INFO_TYPE_FREETEXT = 9
+} ic_comm_infotype_t;
 
 
 /*! @} */

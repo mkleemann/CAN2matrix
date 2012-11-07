@@ -72,6 +72,94 @@ uint8_t EEMEM ic_comm_text_segment[IC_COMM_TEXT_SEQ_LENGTH] = {
    0x2E
 };
 
+/**
+ * \var ic_comm_std_pattern_media
+ * \brief Media Information Pattern
+ *
+ *- first row: 3 characters left (media type)
+ *- first row: 6 characters right (track or frequency information)
+ *- second row: 8 characters centered (free text)
+ *
+ * For formatting and sequences see \ref c2m_comm_ic_seq_radio_format.
+ *
+ * Text information to be filled is pre-defined as "." (0x2E). Position
+ * information can be overwritten too.
+ *
+ * \var ic_comm_std_pattern_system
+ * \brief System Information Pattern
+ *
+ *- vertically and horizontally centered: 6 characters (free text)
+ *
+ * The freetext contains something like "SETUP!" or "AUX IN"
+ *
+ * For formatting and sequences see \ref c2m_comm_ic_seq_radio_format.
+ *
+ * Text information to be filled is pre-defined as "." (0x2E). Position
+ * information can be overwritten too.
+ *
+ * \var ic_comm_std_pattern_pdc
+ * \brief PDC Pattern
+ *
+ *- first row: 3 characters left and right
+ *- second row: 3 characters left and right (more towards center)
+ *- vertically and horizontally centered: "PDC"
+ *
+ * For formatting and sequences see \ref c2m_comm_ic_seq_radio_format.
+ *
+ * Text information to be filled is pre-defined as "." (0x2E). Position
+ * information can be overwritten too.
+ *
+ * \var ic_comm_std_pattern_traffic
+ * \brief Traffic Programme Pattern
+ *
+ *- first row: 7 characters centered: "TRAFFIC"
+ *- second row: 8 characters centered (free text)
+ *
+ * For formatting and sequences see \ref c2m_comm_ic_seq_radio_format.
+ *
+ * Text information to be filled is pre-defined as "." (0x2E). Position
+ * information can be overwritten too.
+ *
+ */
+uint8_t EEMEM ic_comm_std_pattern_media[] =
+   //! Pattern #1 - 47 bytes
+   { 0x20, 0x09, 0x02, 0x57, 0x0B, 0x03, 0x21, 0x00,  // right 6 chars
+     0x21, 0x00, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E,
+     0x22, 0x2E, 0x57, 0x08, 0x03, 0x02, 0x00, 0x00,  // left 3 chars
+     0x03, 0x00, 0x2E, 0x2E, 0x2E, 0x57, 0x0D, 0x03,
+     0x24, 0x0C, 0x00, 0x0A, 0x00, 0x2E, 0x2E, 0x2E,  // center 8 chars
+     0x15, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E, 0x08
+   };
+
+uint8_t EEMEM ic_comm_std_pattern_system[] =
+   //! Pattern #2 - 19 bytes
+   { 0x20, 0x09, 0x02, 0x57, 0x0B, 0x03, 0x11, 0x00,  // center 6 chars
+     0x21, 0x05, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E,  // vertically centered
+     0x12, 0x2E, 0x08
+   };
+
+uint8_t EEMEM ic_comm_std_pattern_pdc[] =
+   //! Pattern #3 - 61 bytes
+   { 0x20, 0x09, 0x02, 0x57, 0x08, 0x03, 0x02, 0x00,  // left 3 chars
+     0x21, 0x00, 0x00, 0x2E, 0x2E, 0x2E, 0x57, 0x08,  // first row
+     0x22, 0x03, 0x31, 0x00, 0x00, 0x00, 0x2E, 0x2E,  // right 3 chars
+     0x03, 0x2E, 0x57, 0x08, 0x03, 0x18, 0x00, 0x05,  // centered "PDC"
+     0x24, 0x00, 'P' , 'D' , 'C' , 0x57, 0x08, 0x03,  // second row
+     0x25, 0x06, 0x00, 0x0A, 0x00, 0x2E, 0x2E, 0x2E,  // left 3 chars
+     0x26, 0x57, 0x08, 0x03, 0x2D, 0x00, 0x0A, 0x00,  // right 3 chars
+     0x17, 0x2E, 0x2E, 0x2E, 0x08
+   };
+
+uint8_t EEMEM ic_comm_std_pattern_traffic[] =
+   //! Pattern #4 - 37 bytes
+   {
+      0x20, 0x09, 0x02, 0x57, 0x0C, 0x03, 0x0E, 0x00,  // center 7 chars
+      0x21, 0x00, 0x00, 'T' , 'R' , 'A' , 'F' , 'F' ,
+      0x22, 'I' , 'C' , 0x57, 0x0D, 0x03, 0x0C, 0x00,  // center 8 chars
+      0x03, 0x0A, 0x00, 0x2E, 0x2E, 0x2E, 0x2E, 0x2E,
+      0x14, 0x2E, 0x2E, 0x2E, 0x08
+   };
+
 
 /**** VARIABLES *************************************************************/
 
@@ -280,6 +368,8 @@ void send2Cluster(can_t* msg)
  */
 uint8_t ic_comm_getNextMsg(uint8_t* data)
 {
+   // sequence number
    data[0] = seqCntTx;
+
    return(1);
 }

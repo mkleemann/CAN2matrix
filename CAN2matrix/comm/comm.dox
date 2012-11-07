@@ -380,6 +380,47 @@
  * 0010 0000  0000 0000  0000 1010  0000 0000  - x = 32, y = 10
  * \endcode
  *
+ * \anchor c2m_comm_ic_align_text
+ *
+ * <B>Alignment of Text</B>
+ *
+ * <i>Left</i> aligned text is quite easy. It starts at 2px and can hold up to 10
+ * characters in a row, assuming all characters have 5px width (some only got
+ * a 3px width, e.g. space or dot).
+ *
+ * <i>Centered text</i> can be formulated as follows:
+ * \code
+ * #define DISPLAY_WIDTH   64
+ * #define CHARACTER_WIDTH 5
+ *
+ * uint8_t length_of_text = 5;      // number of characters
+ *
+ * x_pos = (DISPLAY_WIDTH - (CHARACTER_WIDTH * length_of_text))/2;
+ *
+ * x_pos = (64 - (5*5))/2 = 19
+ * \endcode
+ *
+ * A possible variant is to add a pixel, if it fits better.
+ * \code
+ * x_pos = (DISPLAY_WIDTH - (CHARACTER_WIDTH * length_of_text) + 1)/2;
+ * \endcode
+ *
+ * <i>Right</i> alignment can be achieved by using the same pattern above, but
+ * without dividing the result. Usually the character consists of one pixel
+ * gap, so this is the gap you get at the right side. To add one pixel more
+ * you just need to subtract it from the result.
+ *
+ * \code
+ * x_pos = (DISPLAY_WIDTH - (CHARACTER_WIDTH * length_of_text));
+ *
+ * x_pos = (64 - (5*5)) = 39
+ *
+ * Variant:
+ *
+ * x_pos = (DISPLAY_WIDTH - (CHARACTER_WIDTH * length_of_text)) - 1;
+ * \endcode
+ *
+ *
  * \subsubsection c2m_comm_ic_seq_radio_test Test Pattern for IC Communication
  *
  * First normal (known) formatting with different text:
@@ -410,25 +451,28 @@
  * 12 TX TX TX 08            "ine"
  * \endcode
  *
- * Only one line (centered between line 1 and 2):
+ * Only one line (centered and between line 1 and 2):
+ * (\ref c2m_comm_ic_align_text "Formatting Options")
  *
  * \code
- * 20 09 02 57 0D 03 06 00
- * 21 05 00 TX TX TX TX TX   " inli"
- * 12 TX TX TX 08            "ne "
+ * 20 09 02 57 0D 03 0C 00
+ * 21 05 00 TX TX TX TX TX   "-inli"
+ * 12 TX TX TX 08            "ne-"
  * \endcode
  *
- * Formatting: center 3 characters in second line
+ * Center 3 characters in second line
+ * (\ref c2m_comm_ic_align_text "Formatting Options")
  *
  * \code
- * 20 09 02 57 08 03 1E 00
+ * 20 09 02 57 08 03 19 00
  * 11 0A 00 TX TX TX 08      "2nd"
  * \endcode
  *
- * Formatting: right 3 characters in second line
+ * Right aligned 3 characters in second line
+ * (\ref c2m_comm_ic_align_text "Formatting Options")
  *
  * \code
- * 20 09 02 57 08 03 2A 00
+ * 20 09 02 57 08 03 30 00
  * 11 0A 00 TX TX TX 08      "2nd"
  * \endcode
  *
@@ -446,6 +490,9 @@
  * Below you find some scenarios to show information. Currently 4 different
  * ones are set and can be handled accordingly. Fixed and dynamic information
  * elements are mixed here.
+ *
+ * For \ref c2m_comm_ic_align_text "text alignment" see the description
+ * above.
  *
  *
  * \subsubsection c2_ic_comm_media_view Media Information
