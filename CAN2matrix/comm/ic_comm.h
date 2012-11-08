@@ -22,7 +22,6 @@
 #ifndef IC_COMM_H_
 #define IC_COMM_H_
 
-#include "../can/can_mcp2515.h"
 
 
 /***************************************************************************/
@@ -120,19 +119,50 @@
 #define IC_COMM_SET_REMOVE_OLD_TEXT 0x20
 
 /**
- * \def IC_COMM_START_SEQ_LENGTH
+ * \def IC_COMM_STD_PATTERN_START_LENGTH
  * \brief sequence length of start frame
  *
- * \def IC_COMM_AUDIO_SEQ_LENGTH
+ * \def IC_COMM_STD_PATTERN_START_AUDIO_LENGTH
  * \brief sequence length of audio setup frame
  *
  * \def IC_COMM_TEXT_SEQ_LENGTH
  * \brief sequence length of normal information frame
  */
-#define IC_COMM_START_SEQ_LENGTH    6
-#define IC_COMM_AUDIO_SEQ_LENGTH    11
-#define IC_COMM_TEXT_SEQ_LENGTH     17
+#define IC_COMM_STD_PATTERN_START_LENGTH          6
+#define IC_COMM_STD_PATTERN_START_AUDIO_LENGTH    11
+#define IC_COMM_TEXT_SEQ_LENGTH                   17
 
+/**
+ * \def IC_COMM_STD_PATTERN_MEDIA_LENGTH
+ * \brief length of standard sequence pattern "Media"
+ *
+ * \def IC_COMM_STD_PATTERN_SYSTEM_LENGTH
+ * \brief length of standard sequence pattern "System"
+ *
+ * \def IC_COMM_STD_PATTERN_PDC_LENGTH
+ * \brief length of standard sequence pattern "PDC"
+ *
+ * \def IC_COMM_STD_PATTERN_TRAFFIC_LENGTH
+ * \brief length of standard sequence pattern "Traffic"
+ *
+ */
+#define IC_COMM_STD_PATTERN_MEDIA_LENGTH     47
+#define IC_COMM_STD_PATTERN_SYSTEM_LENGTH    19
+#define IC_COMM_STD_PATTERN_PDC_LENGTH       61
+#define IC_COMM_STD_PATTERN_TRAFFIC_LENGTH   37
+
+/**
+ * \def IC_COMM_PDC_DATA_LENGTH
+ * \brief array size of PDC values
+ * \sa CANID_1_PDC_STATUS
+ */
+#define IC_COMM_PDC_DATA_LENGTH     8
+
+/**
+ * \def IC_COMM_MAX_LENGTH_OF_ROW
+ * \brief information storage buffer
+ */
+#define IC_COMM_MAX_LENGTH_OF_ROW   10
 
 /***************************************************************************/
 /* TYPE DEFINITIONS                                                        */
@@ -215,7 +245,7 @@ void ic_comm_fsm(can_t* msg);
  * \brief send CAN message to instrument cluster
  * \param msg - pointer to CAN message
  */
-void send2Cluster(can_t* msg);
+void ic_comm_send2Cluster(can_t* msg);
 
 /**
  * \brief prepare next info message
@@ -224,5 +254,31 @@ void send2Cluster(can_t* msg);
  */
 uint8_t ic_comm_getNextMsg(uint8_t* data);
 
+/**
+ * \brief set PDC values
+ * \param data - pointer to 8 byte array of values
+ * \sa IC_COMM_PDC_DATA_LENGTH
+ * \note All 8 possible values are set here, despite their availability.
+ */
+void ic_comm_setPDCValues(uint8_t* data);
+
+
+/**
+ * \brief set state machine to new start
+ */
+void ic_comm_restart(void);
+
+/**
+ * \brief send start of communication sequence to instrument cluster
+ * \param msg - pointer to CAN message struct
+ */
+void ic_comm_startCommSeq(can_t* msg);
+
+/**
+ * \brief set type of information, so the pattern is set accordingly
+ * \param type of information
+ * \note The startup pattern are set automatically at startup or restart.
+ */
+void ic_comm_setType(ic_comm_infotype_t type);
 
 #endif /* IC_COMM_H_ */

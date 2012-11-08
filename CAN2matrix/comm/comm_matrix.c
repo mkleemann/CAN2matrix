@@ -20,9 +20,11 @@
 
 #include <avr/eeprom.h>
 
+#include "../can/can_mcp2515.h"
+
 #include "comm_can_ids.h"
 #include "comm_matrix.h"
-
+#include "ic_comm.h"
 
 /***************************************************************************/
 /* Definition of global variables to store CAN values.                     */
@@ -113,6 +115,14 @@ void fetchInfoFromCAN1(can_t* msg)
       case CANID_1_COM_CLUSTER_2_RADIO:
       {
          // call state machine for IC communication
+         break;
+      }
+
+      case CANID_1_PDC_STATUS:
+      {
+         ic_comm_setPDCValues(msg->data);
+         // call state machine for IC communication for PDC instead of
+         // media or other information
          break;
       }
 
