@@ -463,4 +463,9 @@ void setDimValue(uint16_t value)
    storage.dimLevel = dimAverage >> 8;
 }
 
-
+/**
+ * \brief trigger for any IC communication, timed update
+ */
+void tick4ICComm(void)
+{
+}

@@ -23,6 +23,7 @@
 #include <avr/cpufunc.h>
 //#include <stdlib.h>
 
+#include "can/can_mcp2515.h"
 #include "adc/adc.h"
 #include "comm/comm_matrix.h"
 #include "leds/leds.h"
@@ -256,6 +257,13 @@ void run()
    handleCan1Transmission(&msg);
    _delay_ms(1);
 
+   /**** TIMER TICK FOR INSTRUMENT CLUSTER COMMUNICATION **********/
+   if(true == update2000ms)
+   {
+      update2000ms = false;
+      tick4ICComm();
+   }
+
    /**** CHECK CAN STATUS *****************************************/
    error = can_get_general_bus_errors(CAN_CHIP1);
    if(CAN_ERR_NO_ERROR == error)
@@ -461,12 +469,6 @@ void handleCan2Reception(can_t* msg)
  */
 void handleCan1Transmission(can_t* msg)
 {
-   if(update2000ms)
-   {
-      update2000ms = false;
-      // update radio text, if necessary
-
-   }
 }
 
 /**

@@ -176,6 +176,10 @@ void sendCan2Message(can_t* msg);
  */
 void setDimValue(uint16_t value);
 
+/**
+ * \brief trigger for any IC communication, timed update
+ */
+void tick4ICComm(void);
 
 #endif /* MATRIX_H_ */
 
