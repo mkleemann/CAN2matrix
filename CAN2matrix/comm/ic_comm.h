@@ -277,8 +277,22 @@ void ic_comm_startCommSeq(can_t* msg);
 /**
  * \brief set type of information, so the pattern is set accordingly
  * \param type of information
+ * \return true, if type was setup correctly
  * \note The startup pattern are set automatically at startup or restart.
  */
-void ic_comm_setType(ic_comm_infotype_t type);
+bool ic_comm_setType(ic_comm_infotype_t type);
+
+/**
+ * \brief setup for information in pattern requested
+ */
+void ic_comm_patternSetup(void);
+
+/**
+ * \brief setup text of system pattern
+ * \param data - 6 character text w/o ending 0
+ */
+void ic_comm_setupSystemPattern(char* data);
+
+
 
 #endif /* IC_COMM_H_ */

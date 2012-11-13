@@ -25,6 +25,7 @@
 #include "ic_comm.h"
 
 #include <avr/eeprom.h>
+#include <stdlib.h>
 
 
 
@@ -303,6 +304,8 @@ void ic_comm_fsm(can_t* msg)
          if((CANID_1_COM_CLUSTER_2_RADIO == msg->msgId) &&
             (0xA1 == msg->data[0]))
          {
+            // now setup information for pattern
+            ic_comm_patternSetup();
             ic_comm_cur_state = IC_COMM_SEQ_INFO;
          }
          break;
@@ -491,11 +494,13 @@ void ic_comm_startCommSeq(can_t* msg)
 /**
  * \brief set type of information, so the pattern is set accordingly
  * \param type of information
+ * \return true, if type was setup correctly
  * \note The startup pattern are set automatically at startup or restart.
  */
-void ic_comm_setType(ic_comm_infotype_t type)
+bool ic_comm_setType(ic_comm_infotype_t type)
 {
-   // afeguard: only allowed if idle
+   bool retVal = false;
+   // safeguard: only allowed if idle
    if(IC_COMM_IDLE == ic_comm_cur_state)
    {
       // set new mode
@@ -539,6 +544,144 @@ void ic_comm_setType(ic_comm_infotype_t type)
             break;
          }
       }
+      retVal = true;
    }
+   return(retVal);
+}
+
+/**
+ * \brief setup for information in pattern requested
+ * \todo insert freetext pattern setup
+ */
+void ic_comm_patternSetup(void)
+{
+   uint8_t i;
+   switch(mode)
+   {
+      // media pattern
+      case INFO_TYPE_MEDIA_CD:
+      case INFO_TYPE_MEDIA_DVD:
+      case INFO_TYPE_MEDIA_HDD:
+      case INFO_TYPE_MEDIA_RADIO_FM:
+      case INFO_TYPE_MEDIA_RADIO_AM:
+      {
+         // right aligned 6 characters from textRow1 storage 3..9
+         for(i = 0; i < 5; ++i)
+         {
+            ic_comm_std_pattern_media[i + 11] = textRow1[i + 3];
+         }
+         ic_comm_std_pattern_media[17] = textRow1[9];
+
+         // left aligned 3 characters from textRow1 storage 0..2
+         for(i = 0; i < 3; ++i)
+         {
+            ic_comm_std_pattern_media[i + 26] = textRow1[i];
+         }
+
+         // centered 8 characters from textRow2 0..7
+         for(i = 0; i < 3; ++i)
+         {
+            ic_comm_std_pattern_media[i + 37] = textRow2[i];
+         }
+         for(i = 0; i < 5; ++i)
+         {
+            ic_comm_std_pattern_media[i + 41] = textRow2[i+3];
+         }
+         break;
+      }
+
+      // PDC pattern
+      case INFO_TYPE_PDC:
+      {
+         char temp[4];
+
+         // left aligned 3 characters from pdcValues[2]
+         utoa(pdcValues[2], temp, 10);
+         for(i = 0; i < 3; ++i)
+         {
+            ic_comm_std_pattern_pdc[i + 11] = temp[i];
+         }
+
+         // right aligned 3 characters from pdcValues[3]
+         utoa(pdcValues[3], temp, 10);
+         for(i = 0; i < 2; ++i)
+         {
+            ic_comm_std_pattern_pdc[i + 22] = temp[i];
+         }
+         ic_comm_std_pattern_pdc[25] = temp[2];
+
+         // left aligned 3 characters from pdcValues[6]
+         utoa(pdcValues[6], temp, 10);
+         for(i = 0; i < 3; ++i)
+         {
+            ic_comm_std_pattern_pdc[i + 45] = temp[i];
+         }
+
+         // right aligned 3 characters from pdcValues[7]
+         utoa(pdcValues[7], temp, 10);
+         for(i = 0; i < 3; ++i)
+         {
+            ic_comm_std_pattern_pdc[i + 57] = temp[i];
+         }
+         break;
+      }
+
+      // traffic pattern
+      case INFO_TYPE_TRAFFIC:
+      {
+         // centered 8 characters from textRow2 0..7
+         for(i = 0; i < 5; ++i)
+         {
+            ic_comm_std_pattern_traffic[i + 27] = textRow2[i];
+         }
+         for(i = 0; i < 3; ++i)
+         {
+            ic_comm_std_pattern_traffic[i + 33] = textRow2[i + 5];
+         }
+         break;
+      }
+
+      // freetext pattern
+      case INFO_TYPE_FREETEXT:
+      {
+         break;
+      }
+
+      // system pattern
+      case INFO_TYPE_MEDIA_AUX:
+      {
+         ic_comm_setupSystemPattern("AUX IN");
+         break;
+      }
+
+      // system pattern
+      case INFO_TYPE_SETUP:
+      {
+         ic_comm_setupSystemPattern("SETUP ");
+         break;
+      }
+
+      // system pattern
+      default:
+      {
+         ic_comm_setupSystemPattern("UPS...");
+         break;
+      }
+   }
+}
+
+/**
+ * \brief setup text of system pattern
+ * \param data - 6 character text w/o ending 0
+ */
+void ic_comm_setupSystemPattern(char* data)
+{
+   uint8_t i;
+   // centered 6 characters
+   for(i = 0; i < 5; ++i)
+   {
+      ic_comm_std_pattern_system[i + 11] = (uint8_t)data[i];
+   }
+   ic_comm_std_pattern_system[17] = (uint8_t)data[5];
 }
 
