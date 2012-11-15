@@ -32,15 +32,15 @@
 #include "CAN2matrix.h"
 
 //! counter to evaluate timing to send CAN messages
-volatile uint8_t send_it      = 0;
+volatile uint8_t send_it         = 0;
 //! flag to send 100ms cycle CAN messages
-volatile bool    send100ms    = false;
+volatile bool    send100ms       = false;
 //! flag to send 500ms cycle CAN messages
-volatile bool    send500ms    = false;
-//! flag to send text/info update to cluster if no new text approaches
-volatile bool    update2000ms = false;
+volatile bool    send500ms       = false;
+//! flag to send tick to instrument cluster
+volatile bool    sendICCommTick  = false;
 //! current state of FSM
-volatile state_t fsmState     = INIT;
+volatile state_t fsmState        = INIT;
 
 /**
  * @brief main loop
@@ -131,6 +131,9 @@ int __attribute__((OS_main)) main(void)
  */
 void sleepDetected()
 {
+   // stop instrument cluster communications
+   stopICComm();
+
    // stop timer for now
    stopTimer1();
    stopTimer2();
@@ -223,6 +226,8 @@ void wakeUp()
 
    adc_enable();
 
+   restartICComm();
+
    sei();
 
    // debugging ;-)
@@ -258,9 +263,9 @@ void run()
    _delay_ms(1);
 
    /**** TIMER TICK FOR INSTRUMENT CLUSTER COMMUNICATION **********/
-   if(true == update2000ms)
+   if(true == sendICCommTick)
    {
-      update2000ms = false;
+      sendICCommTick = false;
       tick4ICComm();
    }
 
@@ -403,9 +408,9 @@ ISR(TIMER1_CAPT_vect)
 ISR(TIMER2_COMP_vect)
 {
    ++send_it;
-   send100ms    = (0 == (send_it % 4));   // ~100ms
-   send500ms    = (0 == (send_it % 20));  // ~500ms
-   update2000ms = (0 == (send_it % 80));  // ~2000ms
+   sendICCommTick = (0 == (send_it % 2));   // ~50ms;
+   send100ms      = (0 == (send_it % 4));   // ~100ms
+   send500ms      = (0 == (send_it % 20));  // ~500ms
 }
 
 /**
@@ -469,6 +474,7 @@ void handleCan2Reception(can_t* msg)
  */
 void handleCan1Transmission(can_t* msg)
 {
+   // check for reset of 100/500ms flags!
 }
 
 /**

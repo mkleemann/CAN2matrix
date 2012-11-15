@@ -470,6 +470,7 @@ void ic_comm_restart(void)
    ic_comm_cur_state = IC_COMM_INIT_1;
    ic_comm_end_state = IC_COMM_INIT_2;
    seqPointerActive = 0;
+   seqCntTx = 0;
 }
 
 /**
@@ -683,5 +684,14 @@ void ic_comm_setupSystemPattern(char* data)
       ic_comm_std_pattern_system[i + 11] = (uint8_t)data[i];
    }
    ic_comm_std_pattern_system[17] = (uint8_t)data[5];
+}
+
+/**
+ * \brief get current state of state machine
+ * \return current state
+ */
+ic_comm_fsm_t ic_comm_getState(void)
+{
+   return(ic_comm_cur_state);
 }
 

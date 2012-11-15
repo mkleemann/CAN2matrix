@@ -293,6 +293,10 @@ void ic_comm_patternSetup(void);
  */
 void ic_comm_setupSystemPattern(char* data);
 
-
+/**
+ * \brief get current state of state machine
+ * \return current state
+ */
+ic_comm_fsm_t ic_comm_getState(void);
 
 #endif /* IC_COMM_H_ */

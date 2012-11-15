@@ -56,11 +56,31 @@ typedef struct
 } storeVals_t;
 
 //! temporary storage for any values comming via CAN
-volatile storeVals_t storage;
+storeVals_t storage;
+
 //! average of dimming values for CAN transmission
-volatile uint16_t    dimAverage  = 0x7F00;
+uint16_t dimAverage  = 0x7F00;
+
 //! night mode detection flag (together with dimming)
-volatile bool        nightMode   = false;
+bool nightMode   = false;
+
+//! PDC timeout for changing back to instrument cluster last mode
+uint8_t pdcTimeoutCnt = 0;
+
+//! instrument cluster communication active
+bool isICCommActive = false;
+
+//! instrument cluster communication stops for sleep
+bool isICCommStopped = true;
+
+//! PDC active flag
+bool isPdcActive = false;
+
+//! current mode for instrument cluster communication
+ic_comm_infotype_t curMode = INFO_TYPE_SETUP;
+
+//! last mode for instrument cluster communication
+ic_comm_infotype_t lastMode = INFO_TYPE_SETUP;
 
 /***************************************************************************/
 /* fetch/fill functions for CAN (check IDs)                                */
@@ -115,14 +135,24 @@ void fetchInfoFromCAN1(can_t* msg)
       case CANID_1_COM_CLUSTER_2_RADIO:
       {
          // call state machine for IC communication
+         ic_comm_fsm(msg);
          break;
       }
 
       case CANID_1_PDC_STATUS:
       {
+         // reset timeout value
+         pdcTimeoutCnt = 0;
+         // set values for instrument cluster
          ic_comm_setPDCValues(msg->data);
          // call state machine for IC communication for PDC instead of
          // media or other information
+         if(false == isPdcActive)
+         {
+            lastMode = curMode;
+            curMode = INFO_TYPE_PDC;
+            isPdcActive = true;
+         }
          break;
       }
 
@@ -274,13 +304,13 @@ void fillInfoToCAN2(can_t* msg)
 void transferIgnStatus(can_t* msg)
 {
    uint8_t status = 0;
-   uint8_t byte1  = msg->data[0];
+   uint8_t byte0  = msg->data[0];
 
    // Note: Byte2 (start status) is set to SNA (7) or normal start (1) when
    //       sending destination message.
 
    // check Key In/ACC status
-   if(byte1 & IGN_1_ACC_Status)
+   if(byte0 & IGN_1_ACC_Status)
    {
       // bit  0   - Key In Ignition
       // bits 5-7 - IGN off and ACC on
@@ -288,7 +318,7 @@ void transferIgnStatus(can_t* msg)
    }
 
    // check IGN start status
-   if(byte1 & IGN_1_START_Status)
+   if(byte0 & IGN_1_START_Status)
    {
       // bit  0   - Key In Ignition
       // bits 5-7 - IGN start
@@ -296,7 +326,7 @@ void transferIgnStatus(can_t* msg)
    }
 
    // check IGN on status
-   if(byte1 & IGN_1_ON)
+   if(byte0 & IGN_1_ON)
    {
       // bit  0   - Key In Ignition
       // bit 5-7 - IGN on
@@ -468,4 +498,49 @@ void setDimValue(uint16_t value)
  */
 void tick4ICComm(void)
 {
+   can_t msg;
+
+   // check for timeout, if in PDC mode
+   if(INFO_TYPE_PDC == curMode)
+   {
+      ++pdcTimeoutCnt;
+   }
+   // reset mode
+   if(PDC_TIMEOUT_COUNT >= pdcTimeoutCnt)
+   {
+      curMode = lastMode;
+      isPdcActive = false;
+   }
+
+   // tick off state machine
+   if(true == isICCommActive)
+   {
+      ic_comm_fsm(&msg);
+
+      if((IC_COMM_IDLE == ic_comm_getState()) &&
+         (false == isICCommStopped))
+      {
+         isICCommActive = false;
+      }
+   }
 }
+
+/**
+ * \brief set instrument cluster communication to an end
+ */
+void stopICComm(void)
+{
+   isICCommStopped = true;
+}
+
+
+/**
+ * \brief set instrument cluster to start sequence
+ */
+void restartICComm(void)
+{
+   ic_comm_restart();
+   isICCommStopped = false;
+}
+
+

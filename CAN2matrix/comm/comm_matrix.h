@@ -30,7 +30,7 @@
 
 /**
  * \addtogroup matrix_common_definitions Definitions for The Matrix
- * \brief Definitions for The Matrix to use for calculating CAN values
+ * \brief Definitions for The Matrix to use
  * @{
  */
 
@@ -44,6 +44,9 @@
 
 //! averaging interval (steps) for dim value
 #define DIM_STEPS_2_AVERAGE            16
+
+//! timeout counter for PDC mode (value * 50msec)
+#define PDC_TIMEOUT_COUNT              200
 
 /*! @} */
 
@@ -180,6 +183,17 @@ void setDimValue(uint16_t value);
  * \brief trigger for any IC communication, timed update
  */
 void tick4ICComm(void);
+
+/**
+ * \brief set instrument cluster communication to an end
+ */
+void stopICComm(void);
+
+/**
+ * \brief set instrument cluster to start sequence
+ */
+void restartICComm(void);
+
 
 #endif /* MATRIX_H_ */
 
