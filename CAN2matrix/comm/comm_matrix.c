@@ -271,7 +271,7 @@ void fillInfoToCAN2(can_t* msg)
          msg->data[2] = storage.dimLevel; // interior
          break;
       }
-
+#if 0
       case CANID_2_ODO_AND_TEMP:
       {
          uint8_t i;
@@ -286,7 +286,7 @@ void fillInfoToCAN2(can_t* msg)
          //msg->data[5] = storage.temp;
          break;
       }
-
+#endif
       case CANID_2_LANGUAGE_AND_UNIT:
       {  // 1000ms cycle
          msg->header.len = 4;
@@ -369,8 +369,8 @@ void transferWheelGearTemp(can_t* msg)
    storage.speed[0] = msg->data[1] << 1;
    storage.speed[1] = msg->data[2] << 1 | ((msg->data[0] & 0x80) >> 7);
    // only 10 bits per wheel for count value
-   storage.wheel[0] = msg->data[3];
-   storage.wheel[1] = msg->data[4] & 0x3;
+   storage.wheel[1] = msg->data[3];        // lower part
+   storage.wheel[0] = msg->data[4] & 0x3;  // higher part
    // store temperature too
    storage.temp = msg->data[5];
 }
