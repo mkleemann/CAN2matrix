@@ -64,6 +64,12 @@ uint16_t dimAverage  = 0x7F00;
 //! night mode detection flag (together with dimming)
 bool nightMode   = false;
 
+//! metric/imperial switch
+bool isMetric    = true;
+
+//! language setup
+uint8_t language = LANG_GERMAN_CAN2;
+
 //! PDC timeout for changing back to instrument cluster last mode
 uint8_t pdcTimeoutCnt = 0;
 
@@ -281,6 +287,14 @@ void fillInfoToCAN2(can_t* msg)
          break;
       }
 
+      case CANID_2_LANGUAGE_AND_UNIT:
+      {  // 1000ms cycle
+         msg->header.len = 4;
+         msg->data[0]  = (true == isMetric) ? 0x01 : 0x00;
+         msg->data[0] |= (language << 4);
+         break;
+      }
+
       default:
       {
          // do nothing!
@@ -345,7 +359,6 @@ void transferIgnStatus(can_t* msg)
  * \param msg - pointer to CAN message
  *
  * \todo add definitions for destination gear box (CAN2)
- * \todo make function interrupt save
  */
 void transferWheelGearTemp(can_t* msg)
 {
@@ -445,6 +458,8 @@ void sendCan2_500ms(can_t* msg)
  */
 void sendCan2_1000ms(can_t* msg)
 {
+   msg->msgId = CANID_2_LANGUAGE_AND_UNIT;
+   sendCan2Message(msg);
 }
 
 /**
@@ -532,7 +547,6 @@ void stopICComm(void)
 {
    isICCommStopped = true;
 }
-
 
 /**
  * \brief set instrument cluster to start sequence

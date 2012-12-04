@@ -310,7 +310,7 @@
  * @{
  */
 
-//! Ignition CAN2
+// Ignition CAN2
 //! key status (in/out)
 #define IGN_2_KeyIn                    0
 //! ignition status 1
@@ -320,7 +320,7 @@
 //! ignition status 3
 #define IGN_2_Stat3                    7
 
-//! combinations for CAN2
+// combinations for CAN2
 //! ACC on and ignition off
 #define IGN_2_ACC_On_IGN_Off  ((1 << IGN_2_Stat2) | (1 << IGN_2_Stat1))
 //! ignition set to: start engine
@@ -335,6 +335,26 @@
 #define DIM_2_DAY_MODE                 0
 //! night mode setup
 #define DIM_2_NIGHT_MODE       (1 << DIM_2_DAY_NIGHT)
+
+//! GERMAN for destination CAN (#2)
+#define LANG_GERMAN_CAN2               0
+//! US_ENGLISH for destination CAN (#2)
+#define LANG_ENGLISH_US_CAN2           1
+//! FRENCH for destination CAN (#2)
+#define LANG_FRENCH_CAN2               2
+//! ITALIAN for destination CAN (#2)
+#define LANG_ITALIAN_CAN2              3
+//! SPANISH for destination CAN (#2)
+#define LANG_SPANISH_CAN2              4
+//! PORTUGESE for destination CAN (#2)
+#define LANG_PORTUGESE_CAN2            6
+//! DUTCH for destination CAN (#2)
+#define LANG_DUTCH_CAN2                7
+//! UK_ENGLISH for destination CAN (#2)
+#define LANG_ENGLISH_UK_CAN2           8
+//! NO_CHANGE for destination CAN (#2)
+#define LANG_NO_CHANGE_CAN2           15
+
 
 /*! @} */
 

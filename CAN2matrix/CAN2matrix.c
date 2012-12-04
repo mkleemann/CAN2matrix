@@ -37,6 +37,8 @@ volatile uint8_t send_it         = 0;
 volatile bool    send100ms       = false;
 //! flag to send 500ms cycle CAN messages
 volatile bool    send500ms       = false;
+//! flag to send 1000ms cycle CAN messages
+volatile bool    send1000ms      = false;
 //! flag to send tick to instrument cluster
 volatile bool    sendICCommTick  = false;
 //! current state of FSM
@@ -411,6 +413,7 @@ ISR(TIMER2_COMP_vect)
    sendICCommTick = (0 == (send_it % 2));   // ~50ms;
    send100ms      = (0 == (send_it % 4));   // ~100ms
    send500ms      = (0 == (send_it % 20));  // ~500ms
+   send1000ms     = (0 == (send_it % 40));  // ~1000ms
 }
 
 /**
@@ -483,27 +486,29 @@ void handleCan1Transmission(can_t* msg)
  */
 void handleCan2Transmission(can_t* msg)
 {
-   if (send100ms)    // approx. 100ms 4MHz@1024 prescale factor
+   if (true == send100ms)    // approx. 100ms 4MHz@1024 prescale factor
    {
       send100ms = false;
-
       sendCan2_100ms(msg);
-
       // sample and set dim value
       uint16_t dimValue = adc_get();
       setDimValue(dimValue);
-
       // signal activity
       led_toggle(txCan2LED);
+}
 
-   }
-
-   if (send500ms)   // approx. 500ms 4MHz@1024 prescale factor
+   if (true == send500ms)   // approx. 500ms 4MHz@1024 prescale factor
    {
       send500ms = false;
-
       sendCan2_500ms(msg);
+      // signal activity
+      led_toggle(txCan2LED);
+   }
 
+   if (true == send1000ms) // approx. 1000ms 4MHz@1024 prescale factor
+   {
+      send1000ms = false;
+      sendCan2_1000ms(msg);
       // signal activity
       led_toggle(txCan2LED);
    }
