@@ -250,8 +250,22 @@
 #define CANID_2_NAVI_TURN_BY_TURN      0x2D4
 
 /**
+ * \def CANID_2_MEDIA_INFO_DATA
+ * \brief media info text
+ *
+ *- byte0: bit 0..2 type of message
+ *- byte0: bit 3    start of sequence
+ *- byte0: bit 4..7 sequence counter
+ *
+ *- byte1: group number
+ *
+ *- byte 2..7: text information (zero ended)
+ */
+#define CANID_2_MEDIA_INFO_DATA        0x294
+
+/**
  * \def CANID_2_RADIO_STATION_NAME
- * \brief radio station name
+ * \brief short radio station name
  */
 #define CANID_2_RADIO_STATION_NAME     0x295
 
@@ -310,54 +324,106 @@
  * @{
  */
 
-// Ignition CAN2
-//! key status (in/out)
+/**
+ * \def IGN_2_KeyIn
+ * \brief key status (in/out)
+ *
+ * \def IGN_2_Stat1
+ * \brief ignition status 1
+ *
+ * \def IGN_2_Stat2
+ * \brief ignition status 2
+ *
+ * \def IGN_2_Stat3
+ * \brief ignition status 3
+ */
 #define IGN_2_KeyIn                    0
-//! ignition status 1
 #define IGN_2_Stat1                    5
-//! ignition status 2
 #define IGN_2_Stat2                    6
-//! ignition status 3
 #define IGN_2_Stat3                    7
 
-// combinations for CAN2
-//! ACC on and ignition off
+/**
+ * \def IGN_2_ACC_On_IGN_Off
+ * \brief ACC on and ignition off
+ *
+ * \def IGN_2_IGN_Start
+ * \brief ignition set to: start engine
+ *
+ * \def IGN_2_ON
+ * \brief ignition on
+ */
 #define IGN_2_ACC_On_IGN_Off  ((1 << IGN_2_Stat2) | (1 << IGN_2_Stat1))
-//! ignition set to: start engine
 #define IGN_2_IGN_Start       ((1 << IGN_2_Stat3) | (1 << IGN_2_Stat2))
-//! ignition on
 #define IGN_2_ON               (1 << IGN_2_Stat3)
 
-//! dimming for CAN2
+/**
+ * \def DIM_2_DAY_NIGHT
+ * \brief bit definition for day/night mod ein CAN message
+ *
+ * \def DIM_2_DAY_MODE
+ * \brief value for day mode
+ *
+ * \def DIM_2_NIGHT_MODE
+ * \brief value for night mode
+ *
+ */
 #define DIM_2_DAY_NIGHT                0
-//! use bit definitions for setup in message
-//! day mode setup
 #define DIM_2_DAY_MODE                 0
-//! night mode setup
-#define DIM_2_NIGHT_MODE       (1 << DIM_2_DAY_NIGHT)
+#define DIM_2_NIGHT_MODE               (1 << DIM_2_DAY_NIGHT)
 
-//! GERMAN for destination CAN (#2)
+/**
+ * \def LANG_GERMAN_CAN2
+ * \brief Language set German (CAN #2)
+ *
+ * \def LANG_ENGLISH_US_CAN2
+ * \brief Language set US-English (CAN #2)
+ *
+ * \def LANG_FRENCH_CAN2
+ * \brief Language set French (CAN #2)
+ *
+ * \def LANG_ITALIAN_CAN2
+ * \brief Language set Italian (CAN #2)
+ *
+ * \def LANG_SPANISH_CAN2
+ * \brief Language set Spanish (CAN #2)
+ *
+ * \def LANG_PORTUGESE_CAN2
+ * \brief Language set Portugese (CAN #2)
+ *
+ * \def LANG_DUTCH_CAN2
+ * \brief Language set Dutch (CAN #2)
+ *
+ * \def LANG_ENGLISH_UK_CAN2
+ * \brief Language set UK-English (CAN #2)
+ *
+ * \def LANG_NO_CHANGE_CAN2
+ * \brief Language did not change (CAN #2)
+ */
 #define LANG_GERMAN_CAN2               0
-//! US_ENGLISH for destination CAN (#2)
 #define LANG_ENGLISH_US_CAN2           1
-//! FRENCH for destination CAN (#2)
 #define LANG_FRENCH_CAN2               2
-//! ITALIAN for destination CAN (#2)
 #define LANG_ITALIAN_CAN2              3
-//! SPANISH for destination CAN (#2)
 #define LANG_SPANISH_CAN2              4
-//! PORTUGESE for destination CAN (#2)
 #define LANG_PORTUGESE_CAN2            6
-//! DUTCH for destination CAN (#2)
 #define LANG_DUTCH_CAN2                7
-//! UK_ENGLISH for destination CAN (#2)
 #define LANG_ENGLISH_UK_CAN2           8
-//! NO_CHANGE for destination CAN (#2)
 #define LANG_NO_CHANGE_CAN2           15
 
+/**
+ * \def MEDIA_TEXT_SEQUENCE_COUNT_MASK
+ * \brief media info message sequence counter mask
+ *
+ * \def MEDIA_TEXT_SEQUENCE_START_FLAG
+ * \brief start of media info group
+ *
+ * \def MEDIA_TEXT_MESSAGE_TYPE_MASK
+ * \brief media message type mask
+ */
+#define MEDIA_TEXT_SEQUENCE_COUNT_MASK 0xF0
+#define MEDIA_TEXT_SEQUENCE_START_FLAG 0x04
+#define MEDIA_TEXT_MESSAGE_TYPE_MASK   0x07
 
 /*! @} */
-
 
 
 #endif /* COMM_CAN_IDS_H_ */

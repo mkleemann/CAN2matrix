@@ -34,19 +34,44 @@
  * @{
  */
 
-//! when to switch from day to night mode and vice versa (hysteresis)
-//! upper limit
+/**
+ * \def DAY_NIGHT_UPPER_LIMIT
+ * \brief upper limit
+ *
+ * upper limit when to switch from day to night mode and vice versa
+ * (hysteresis)
+ */
 #define DAY_NIGHT_UPPER_LIMIT          0x60
 
-//! when to switch from day to night mode and vice versa (hysteresis)
-//! lower limit
+/**
+ * \def DAY_NIGHT_LOWER_LIMIT
+ * \brief lower limit
+ *
+ * lower limit when to switch from day to night mode and vice versa
+ * (hysteresis)
+ */
 #define DAY_NIGHT_LOWER_LIMIT          0x40
 
-//! averaging interval (steps) for dim value
+/**
+ * \def DIM_STEPS_2_AVERAGE
+ * \brief averaging interval (steps) for dim value
+ * \sa setDimValue
+ */
 #define DIM_STEPS_2_AVERAGE            16
 
-//! timeout counter for PDC mode (value * 50msec)
+/**
+ * \def PDC_TIMEOUT_COUNT
+ * \brief timeout counter for PDC mode (value * 50msec)
+ * \sa sendICCommTick
+ */
 #define PDC_TIMEOUT_COUNT              200
+
+/**
+ * \def TEXT_BUFFER_SIZE
+ * \brief max size of media text buffer (8*6 bytes)
+ * \sa CANID_2_MEDIA_INFO_DATA
+ */
+#define TEXT_BUFFER_SIZE               48
 
 /*! @} */
 

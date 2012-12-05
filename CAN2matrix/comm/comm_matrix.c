@@ -88,6 +88,19 @@ ic_comm_infotype_t curMode = INFO_TYPE_SETUP;
 //! last mode for instrument cluster communication
 ic_comm_infotype_t lastMode = INFO_TYPE_SETUP;
 
+//! text buffer for media information
+uint8_t textBuffer[TEXT_BUFFER_SIZE] =
+{
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
 /***************************************************************************/
 /* fetch/fill functions for CAN (check IDs)                                */
 /***************************************************************************/
@@ -181,6 +194,12 @@ void fetchInfoFromCAN2(can_t* msg)
    switch(msg->msgId)
    {
       case CANID_2_RADIO_STATION_NAME:
+      {
+         // setup strings
+         break;
+      }
+
+      case CANID_2_MEDIA_INFO_DATA:
       {
          // setup strings
          break;
