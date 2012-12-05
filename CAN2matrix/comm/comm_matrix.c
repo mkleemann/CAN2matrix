@@ -271,7 +271,7 @@ void fillInfoToCAN2(can_t* msg)
          msg->data[2] = storage.dimLevel; // interior
          break;
       }
-#if 0
+
       case CANID_2_ODO_AND_TEMP:
       {
          uint8_t i;
@@ -286,7 +286,7 @@ void fillInfoToCAN2(can_t* msg)
          //msg->data[5] = storage.temp;
          break;
       }
-#endif
+
       case CANID_2_LANGUAGE_AND_UNIT:
       {  // 1000ms cycle
          msg->header.len = 4;
