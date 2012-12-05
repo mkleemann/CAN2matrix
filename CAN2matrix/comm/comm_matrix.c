@@ -132,8 +132,8 @@ void fetchInfoFromCAN1(can_t* msg)
       case CANID_1_RPM_STATUS:
       {
          // 0.25 rpm to 1.0 rpm
-         storage.rpm[0] = (msg->data[1] >> 2) | (msg->data[2] << 6);
-         storage.rpm[1] = msg->data[2] >> 2;
+         storage.rpm[1] = (msg->data[1] >> 2) | (msg->data[2] << 6);
+         storage.rpm[0] = msg->data[2] >> 2;
          break;
       }
 
@@ -357,8 +357,8 @@ void transferWheelGearTemp(can_t* msg)
    storage.gearBox = (msg->data[0] & 0x02) ? 0x01 : 0x04;
    // store speed information: CAN1 uses approx. half of the resolution of
    // CAN2 speed signal.
-   storage.speed[0] = msg->data[1] << 1;
-   storage.speed[1] = msg->data[2] << 1 | ((msg->data[0] & 0x80) >> 7);
+   storage.speed[1] = msg->data[1] << 1;
+   storage.speed[0] = msg->data[2] << 1 | ((msg->data[0] & 0x80) >> 7);
    // only 10 bits per wheel for count value
    storage.wheel[1] = msg->data[3];        // lower part
    storage.wheel[0] = msg->data[4] & 0x3;  // higher part
