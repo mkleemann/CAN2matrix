@@ -101,6 +101,21 @@ uint8_t textBuffer[TEXT_BUFFER_SIZE] =
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+//! pointer to next text buffer entry
+uint8_t nextInfoBufferEntry = 0;
+
+//! pointer to next information of textbuffer
+uint8_t nextInfoBufferText = 0;
+
+//! pointer to end of information in buffer
+uint8_t endOfInfoBufferText = 0;
+
+//! group of media text info
+uint8_t mediaInfoGroup = 0;
+
+//! sequence of media info group
+uint8_t mediaInfoSeqCnt = 0;
+
 /***************************************************************************/
 /* fetch/fill functions for CAN (check IDs)                                */
 /***************************************************************************/
@@ -201,7 +216,34 @@ void fetchInfoFromCAN2(can_t* msg)
 
       case CANID_2_MEDIA_INFO_DATA:
       {
-         // setup strings
+         uint8_t i;
+
+         if(msg->data[0] & MEDIA_TEXT_SEQUENCE_START_FLAG)
+         {
+            mediaInfoGroup  = msg->data[1];
+            nextInfoBufferEntry = 0;
+            nextInfoBufferText  = 0;
+            endOfInfoBufferText = 0;
+         }
+         // correct group?
+         if(msg->data[1] == mediaInfoGroup)
+         {
+            mediaInfoSeqCnt = msg->data[0] >> 4;
+            // get text information
+            for(i = 2; i < MEDIA_INFO_MESSAGE_LENGTH; ++i)
+            {
+               // guard
+               if(TEXT_BUFFER_SIZE <= nextInfoBufferEntry)
+               {
+                  ++nextInfoBufferEntry;
+                  textBuffer[nextInfoBufferEntry] = msg->data[i];
+                  if(0x00 != msg->data[i])
+                  {
+                     ++endOfInfoBufferText;
+                  }
+               }
+            }
+         }
          break;
       }
 
@@ -537,13 +579,20 @@ void tick4ICComm(void)
       isPdcActive = false;
    }
 
+   // no new message packet arrived yet
+   if((0 == mediaInfoSeqCnt) && (false == isICCommActive))
+   {
+      // TODO: time information (every 2-5sec only)
+      uint8_t length = endOfInfoBufferText - nextInfoBufferText;
+      ic_comm_setRow2(&textBuffer[nextInfoBufferText], length);
+   }
+
    // tick off state machine
    if(true == isICCommActive)
    {
       ic_comm_fsm(&msg);
 
-      if((IC_COMM_IDLE == ic_comm_getState()) &&
-         (false == isICCommStopped))
+      if((IC_COMM_IDLE == ic_comm_getState()) && (false == isICCommStopped))
       {
          isICCommActive = false;
       }

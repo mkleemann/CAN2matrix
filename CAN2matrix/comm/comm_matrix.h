@@ -73,6 +73,13 @@
  */
 #define TEXT_BUFFER_SIZE               48
 
+/**
+ * \def MEDIA_INFO_MESSAGE_LENGTH
+ * \brief length of media info message on CAN
+ * \sa CANID_2_MEDIA_INFO_DATA
+ */
+#define MEDIA_INFO_MESSAGE_LENGTH      8
+
 /*! @} */
 
 

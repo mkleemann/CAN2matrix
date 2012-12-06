@@ -299,4 +299,20 @@ void ic_comm_setupSystemPattern(char* data);
  */
 ic_comm_fsm_t ic_comm_getState(void);
 
+/**
+ * \brief sets text in Row #1
+ * \param data   - pointer to text information
+ * \param length - length of information provided
+ */
+void ic_comm_setRow1(uint8_t* data, uint8_t length);
+
+/**
+ * \brief sets text in Row #2
+ * \param data   - pointer to text information
+ * \param length - length of information provided
+ */
+void ic_comm_setRow2(uint8_t* data, uint8_t length);
+
+
 #endif /* IC_COMM_H_ */
+

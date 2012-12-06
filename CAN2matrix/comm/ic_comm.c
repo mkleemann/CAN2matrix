@@ -695,3 +695,41 @@ ic_comm_fsm_t ic_comm_getState(void)
    return(ic_comm_cur_state);
 }
 
+/**
+ * \brief sets text in Row #1
+ * \param data   - pointer to text information
+ * \param length - length of information provided
+ */
+void ic_comm_setRow1(uint8_t* data, uint8_t length)
+{
+   uint8_t i;
+
+   if(IC_COMM_MAX_LENGTH_OF_ROW >= length)
+   {
+      for(i = 0; i < length; ++i)
+      {
+         textRow1[i] = data[i];
+         ++lengthRow1;
+      }
+   }
+}
+
+/**
+ * \brief sets text in Row #2
+ * \param data   - pointer to text information
+ * \param length - length of information provided
+ */
+void ic_comm_setRow2(uint8_t* data, uint8_t length)
+{
+   uint8_t i;
+
+   if(IC_COMM_MAX_LENGTH_OF_ROW >= length)
+   {
+      for(i = 0; i < length; ++i)
+      {
+         textRow2[i] = data[i];
+         ++lengthRow2;
+      }
+   }
+}
+
