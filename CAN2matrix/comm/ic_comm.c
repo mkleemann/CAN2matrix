@@ -509,8 +509,7 @@ bool ic_comm_setType(ic_comm_infotype_t type)
       // set right pattern
       switch(type)
       {
-         case INFO_TYPE_MEDIA_CD:
-         case INFO_TYPE_MEDIA_DVD:
+         case INFO_TYPE_MEDIA_DISC:
          case INFO_TYPE_MEDIA_HDD:
          case INFO_TYPE_MEDIA_RADIO_FM:
          case INFO_TYPE_MEDIA_RADIO_AM:
@@ -560,8 +559,7 @@ void ic_comm_patternSetup(void)
    switch(mode)
    {
       // media pattern
-      case INFO_TYPE_MEDIA_CD:
-      case INFO_TYPE_MEDIA_DVD:
+      case INFO_TYPE_MEDIA_DISC:
       case INFO_TYPE_MEDIA_HDD:
       case INFO_TYPE_MEDIA_RADIO_FM:
       case INFO_TYPE_MEDIA_RADIO_AM:

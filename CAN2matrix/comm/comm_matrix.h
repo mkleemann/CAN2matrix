@@ -22,7 +22,7 @@
 #ifndef MATRIX_H_
 #define MATRIX_H_
 
-
+#include "ic_comm.h"
 
 /***************************************************************************/
 /* DEFINITIONS                                                             */
@@ -225,6 +225,13 @@ void stopICComm(void);
  * \brief set instrument cluster to start sequence
  */
 void restartICComm(void);
+
+/**
+ * \brief get information type from CAN message
+ * \param sourceType from CAN message received
+ * \return info type for further evaluation
+ */
+ic_comm_infotype_t getInfoType(uint8_t sourceType);
 
 
 #endif /* MATRIX_H_ */

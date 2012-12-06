@@ -209,20 +209,18 @@ typedef enum
    INFO_TYPE_MEDIA_RADIO_FM = 1,
    //! media information: Radio AM
    INFO_TYPE_MEDIA_RADIO_AM = 2,
-   //! media information: CD
-   INFO_TYPE_MEDIA_CD = 3,
-   //! media information: DVD
-   INFO_TYPE_MEDIA_DVD = 4,
+   //! media information: Disc
+   INFO_TYPE_MEDIA_DISC = 3,
    //! media information: AUX
-   INFO_TYPE_MEDIA_AUX = 5,
+   INFO_TYPE_MEDIA_AUX = 4,
    //! information: Traffic Programme
-   INFO_TYPE_TRAFFIC = 6,
+   INFO_TYPE_TRAFFIC = 5,
    //! information: PDC
-   INFO_TYPE_PDC = 7,
+   INFO_TYPE_PDC = 6,
    //! information: Setup
-   INFO_TYPE_SETUP = 8,
+   INFO_TYPE_SETUP = 7,
    //! information: two rows freetext (max. 2x10 characters)
-   INFO_TYPE_FREETEXT = 9
+   INFO_TYPE_FREETEXT = 8
 } ic_comm_infotype_t;
 
 

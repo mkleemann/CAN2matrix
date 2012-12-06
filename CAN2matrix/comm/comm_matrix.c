@@ -24,7 +24,6 @@
 
 #include "comm_can_ids.h"
 #include "comm_matrix.h"
-#include "ic_comm.h"
 
 /***************************************************************************/
 /* Definition of global variables to store CAN values.                     */
@@ -210,7 +209,57 @@ void fetchInfoFromCAN2(can_t* msg)
    {
       case CANID_2_MEDIA_STATUS:
       {
-         // setup strings
+         ic_comm_infotype_t infotype = getInfoType(msg->data[0] & 0x1F);
+
+         // get media type (CD, DVD)
+         switch(msg->data[1] & 0x1F)
+         {
+            case MEDIA_CD_AUDIO:
+            case MEDIA_CD_VIDEO:
+            case MEDIA_CD_DATA_AUDIO:
+            case MEDIA_CD_DATA_VIDEO:
+            case MEDIA_CD_DATA_PICTURE:
+            {
+               break;
+            }
+
+            case MEDIA_DVD_AUDIO:
+            case MEDIA_DVD_VIDEO:
+            case MEDIA_DVD_DATA_AUDIO:
+            case MEDIA_DVD_DATA_VIDEO:
+            case MEDIA_DVD_DATA_PICTURE:
+            {
+               break;
+            }
+
+            case MEDIA_HOT_ERROR:
+            case MEDIA_READ_ERROR:
+            case MEDIA_DVD_REGION_MISMATCH:
+            case MEDIA_DVD_REGION_NOT_PROGRAMMED:
+            case MEDIA_ERROR:
+            {
+               break;
+            }
+
+            case MEDIA_DISC_NOT_PRESENT:
+            {
+               break;
+            }
+
+            default:
+            {
+               break;
+            }
+         }
+
+         // get status information
+
+         // set new mode, if changed and PDC not active
+         if((false == isPdcActive) && (curMode != infotype))
+         {
+            lastMode = curMode;
+            curMode  = infotype;
+         }
          break;
       }
 
@@ -218,6 +267,7 @@ void fetchInfoFromCAN2(can_t* msg)
       {
          uint8_t i;
 
+         // new sequence
          if(msg->data[0] & MEDIA_TEXT_SEQUENCE_START_FLAG)
          {
             mediaInfoGroup  = msg->data[1];
@@ -225,7 +275,7 @@ void fetchInfoFromCAN2(can_t* msg)
             nextInfoBufferText  = 0;
             endOfInfoBufferText = 0;
          }
-         // correct group?
+         // same group?
          if(msg->data[1] == mediaInfoGroup)
          {
             mediaInfoSeqCnt = msg->data[0] >> 4;
@@ -235,6 +285,7 @@ void fetchInfoFromCAN2(can_t* msg)
                // guard
                if(TEXT_BUFFER_SIZE <= nextInfoBufferEntry)
                {
+                  // set text information
                   ++nextInfoBufferEntry;
                   textBuffer[nextInfoBufferEntry] = msg->data[i];
                   if(0x00 != msg->data[i])
@@ -624,4 +675,56 @@ void restartICComm(void)
    isICCommStopped = false;
 }
 
+/**
+ * \brief get information type from CAN message
+ * \param sourceType from CAN message received
+ * \return info type for further evaluation
+ */
+ic_comm_infotype_t getInfoType(uint8_t sourceType)
+{
+   ic_comm_infotype_t retVal;
 
+   // get source type and set information type for display
+   switch(sourceType)
+   {
+      case MEDIA_SOURCE_RADIO_AM:
+      case MEDIA_SOURCE_RADIO_MW:
+      case MEDIA_SOURCE_RADIO_LW:
+      {
+         retVal = INFO_TYPE_MEDIA_RADIO_AM;
+         break;
+      }
+
+      case MEDIA_SOURCE_RADIO_FM:
+      {
+         retVal = INFO_TYPE_MEDIA_RADIO_FM;
+         break;
+      }
+
+      case MEDIA_SOURCE_CD_DVD:
+      {
+         retVal = INFO_TYPE_MEDIA_DISC;
+         break;
+      }
+
+      case MEDIA_SOURCE_HDD:
+      {
+         retVal = INFO_TYPE_MEDIA_HDD;
+         break;
+      }
+
+      case MEDIA_SOURCE_AUX:
+      {
+         retVal = INFO_TYPE_MEDIA_AUX;
+         break;
+      }
+
+      default:
+      {
+         retVal = INFO_TYPE_FREETEXT;
+         break;
+      }
+   }
+
+   return(retVal);
+}
