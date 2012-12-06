@@ -202,13 +202,13 @@ void fetchInfoFromCAN1(can_t* msg)
  * \brief fetch information from CAN2 and put to storage
  * \param msg - CAN message to extract
  *
- * \todo get text information from CAN2
+ * \todo get text and media information from CAN2
  */
 void fetchInfoFromCAN2(can_t* msg)
 {
    switch(msg->msgId)
    {
-      case CANID_2_RADIO_STATION_NAME:
+      case CANID_2_MEDIA_STATUS:
       {
          // setup strings
          break;
@@ -244,6 +244,12 @@ void fetchInfoFromCAN2(can_t* msg)
                }
             }
          }
+         break;
+      }
+
+      case CANID_2_RADIO_STATION_NAME:
+      {
+         // setup strings
          break;
       }
 
@@ -566,6 +572,8 @@ void setDimValue(uint16_t value)
 void tick4ICComm(void)
 {
    can_t msg;
+
+   ic_comm_setType(curMode);
 
    // check for timeout, if in PDC mode
    if(INFO_TYPE_PDC == curMode)

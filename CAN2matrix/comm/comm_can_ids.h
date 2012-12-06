@@ -250,6 +250,12 @@
 #define CANID_2_NAVI_TURN_BY_TURN      0x2D4
 
 /**
+ * \def CANID_2_MEDIA_STATUS
+ * \brief current status of media present
+ */
+#define CANID_2_MEDIA_STATUS           0x291
+
+/**
  * \def CANID_2_MEDIA_INFO_DATA
  * \brief media info text
  *
@@ -295,24 +301,40 @@
  * @{
  */
 
-//! Ignition CAN1
-//! terminal "ACC" - key in/ACC
+/**
+ * \def IGN_1_CL_ACC
+ * \brief terminal "ACC" - key in/ACC
+ *
+ * \def IGN_1_CL_15
+ * \brief terminal 15 - ignition on
+ *
+ * \def IGN_1_CL_X
+ * \brief terminal X - consumers not relevant for engine start are switched off
+ *
+ * \def IGN_1_CL_50
+ * \brief terminal 50 - engine start
+ *
+ * \def IGN_1_CL_ER
+ * \brief terminal "ER" - engine runs
+ */
 #define IGN_1_CL_ACC                   0
-//! terminal 15 - ignition on
 #define IGN_1_CL_15                    1
-//! terminal X - consumers not relevant for engine start are switched off
 #define IGN_1_CL_X                     2
-//! terminal 50 - engine start
 #define IGN_1_CL_50                    3
-//! terminal "ER" - engine runs
 #define IGN_1_CL_ER                    7
 
-//! combinations for CAN1
-//! switched ACC and key in
+/**
+ * \def IGN_1_ACC_Status
+ * \brief switched ACC and key in
+ *
+ * \def IGN_1_START_Status
+ * \brief switch to start engine
+ *
+ * \def IGN_1_ON
+ * \brief ignition on status
+ */
 #define IGN_1_ACC_Status       (1 << IGN_1_CL_ACC)
-//! switch to start engine
 #define IGN_1_START_Status    ((1 << IGN_1_CL_50) | (1 << IGN_1_CL_X))
-//! ignition on status
 #define IGN_1_ON               (1 << IGN_1_CL_15)
 
 /*! @} */
@@ -422,6 +444,207 @@
 #define MEDIA_TEXT_SEQUENCE_COUNT_MASK 0xF0
 #define MEDIA_TEXT_SEQUENCE_START_FLAG 0x04
 #define MEDIA_TEXT_MESSAGE_TYPE_MASK   0x07
+
+/**
+ * \def MEDIA_SOURCE_RADIO_AM
+ * \brief source: AM radio
+ *
+ * \def MEDIA_SOURCE_RADIO_FM
+ * \brief source: FM radio
+ *
+ * \def MEDIA_SOURCE_RADIO_MW
+ * \brief source: MW radio
+ *
+ * \def MEDIA_SOURCE_RADIO_LW
+ * \brief source: LW radio
+ *
+ * \def MEDIA_SOURCE_CD_DVD
+ * \brief source: internal disc (CD/DVD)
+ *
+ * \def MEDIA_SOURCE_HDD
+ * \brief source: internal HDD
+ *
+ * \def MEDIA_SOURCE_AUX
+ * \brief source: auxiliary port
+ *
+ * \def MEDIA_SOURCE_BLUETOOTH_AUDIO
+ * \brief source: bluetooth audio
+ *
+ * \def MEDIA_SOURCE_RADIO_OFF
+ * \brief radio switched off
+ *
+ * \def MEDIA_SOURCE_RADIO_LOCKED
+ * \brief radio locked (antitheft)
+ *
+ * \def MEDIA_SOURCE_SNA
+ * \brief signal not available (no information)
+ */
+#define MEDIA_SOURCE_RADIO_AM          0x00
+#define MEDIA_SOURCE_RADIO_FM          0x01
+#define MEDIA_SOURCE_RADIO_MW          0x02
+#define MEDIA_SOURCE_RADIO_LW          0x03
+#define MEDIA_SOURCE_CD_DVD            0x04
+#define MEDIA_SOURCE_HDD               0x05
+#define MEDIA_SOURCE_AUX               0x06
+#define MEDIA_SOURCE_BLUETOOTH_AUDIO   0x08
+#define MEDIA_SOURCE_RADIO_OFF         0x1D
+#define MEDIA_SOURCE_RADIO_LOCKED      0x1E
+#define MEDIA_SOURCE_SNA               0x1F
+
+/**
+ * \def MEDIA_DISC_NOT_PRESENT
+ * \brief no disc present
+ *
+ * \def MEDIA_DISC_PRESENT_NOT_ACCESSED
+ * \brief disc present, but not accessed yet
+ *
+ * \def MEDIA_DISC_PRESENT_UNKNOWN
+ * \brief unknown disc present
+ *
+ * \def MEDIA_CD_AUDIO
+ * \brief audio CD present
+ *
+ * \def MEDIA_CD_VIDEO
+ * \brief video CD present
+ *
+ * \def MEDIA_CD_DATA_AUDIO
+ * \brief audio data CD present
+ *
+ * \def MEDIA_CD_DATA_VIDEO
+ * \brief video data CD present
+ *
+ * \def MEDIA_CD_DATA_PICTURE
+ * \brief picture data CD present
+ *
+ * \def MEDIA_DVD_AUDIO
+ * \brief audio DVD present
+ *
+ * \def MEDIA_DVD_VIDEO
+ * \brief video DVD present
+ *
+ * \def MEDIA_DVD_DATA_AUDIO
+ * \brief audio data DVD present
+ *
+ * \def MEDIA_DVD_DATA_VIDEO
+ * \brief video data DVD present
+ *
+ * \def MEDIA_DVD_DATA_PICTURE
+ * \brief picture data DVD present
+ *
+ * \def MEDIA_TRANSFER
+ * \brief media transfer to HDD active
+ *
+ * \def MEDIA_HOT_ERROR
+ * \brief disc high temperature error
+ *
+ * \def MEDIA_READ_ERROR
+ * \brief disc read error
+ *
+ * \def MEDIA_DVD_REGION_MISMATCH
+ * \brief DVD region code mismatch
+ *
+ * \def MEDIA_DVD_REGION_NOT_PROGRAMMED
+ * \brief DVD region cod enot programmed
+ *
+ * \def MEDIA_ERROR
+ * \brief general media error
+ */
+#define MEDIA_DISC_NOT_PRESENT            0x00
+#define MEDIA_DISC_PRESENT_NOT_ACCESSED   0x01
+#define MEDIA_DISC_PRESENT_UNKNOWN        0x02
+#define MEDIA_CD_AUDIO                    0x03
+#define MEDIA_CD_VIDEO                    0x04
+#define MEDIA_CD_DATA_AUDIO               0x05
+#define MEDIA_CD_DATA_VIDEO               0x06
+#define MEDIA_CD_DATA_PICTURE             0x07
+#define MEDIA_DVD_AUDIO                   0x08
+#define MEDIA_DVD_VIDEO                   0x09
+#define MEDIA_DVD_DATA_AUDIO              0x0A
+#define MEDIA_DVD_DATA_VIDEO              0x0B
+#define MEDIA_DVD_DATA_PICTURE            0x0C
+#define MEDIA_TRANSFER                    0x0E
+#define MEDIA_HOT_ERROR                   0x0F
+#define MEDIA_READ_ERROR                  0x10
+#define MEDIA_DVD_REGION_MISMATCH         0x11
+#define MEDIA_DVD_REGION_NOT_PROGRAMMED   0x12
+#define MEDIA_ERROR                       0x1F
+
+
+/**
+ * \def MEDIA_STATUS_NONE
+ * \brief no status known for current media
+ *
+ * \def MEDIA_STATUS_PLAY
+ * \brief media is playing
+ *
+ * \def MEDIA_STATUS_LOAD
+ * \brief media is loading (e.g. CD, DVD)
+ *
+ * \def MEDIA_STATUS_READ
+ * \brief media is being read (e.g. data)
+ *
+ * \def MEDIA_STATUS_EJECT
+ * \brief media is ejecting (e.g. CD, DVD)
+ *
+ * \def MEDIA_STATUS_PAUSE
+ * \brief media is paused
+ *
+ * \def MEDIA_STATUS_STOP
+ * \brief media is stopped
+ *
+ * \def MEDIA_STATUS_SCAN
+ * \brief media scan running (e.g. radio, CD)
+ *
+ * \def MEDIA_STATUS_TUNE
+ * \brief radio is tuning
+ *
+ * \def MEDIA_STATUS_ERROR
+ * \brief media general error status
+ *
+ * \def MEDIA_STATUS_TRANSFER
+ * \brief media is transferring (e.g. CD to HDD)
+ *
+ * \def MEDIA_STATUS_SNA
+ * \brief media status not available
+ */
+#define MEDIA_STATUS_NONE                 0x00
+#define MEDIA_STATUS_PLAY                 0x01
+#define MEDIA_STATUS_LOAD                 0x02
+#define MEDIA_STATUS_READ                 0x03
+#define MEDIA_STATUS_EJECT                0x04
+#define MEDIA_STATUS_PAUSE                0x05
+#define MEDIA_STATUS_STOP                 0x06
+#define MEDIA_STATUS_SCAN                 0x07
+#define MEDIA_STATUS_TUNE                 0x08
+#define MEDIA_STATUS_ERROR                0x09
+#define MEDIA_STATUS_TRANSFER             0x0A
+#define MEDIA_STATUS_SNA                  0x0F
+
+/**
+ * \def MEDIA_BT_NOT_PRESENT
+ * \brief bluetooth media not present
+ *
+ * \def MEDIA_BT_PRESENT_NOT_ACCESSED
+ * \brief bluetooth media present, but not accessed
+ *
+ * \def MEDIA_BT_PRESENT_UNKNOWN
+ * \brief unknown bluetooth media present
+ *
+ * \def MEDIA_BT_AUDIO
+ * \brief bluetooth audio
+ *
+ * \def MEDIA_BT_PRESENT_NOT_CONNECTED
+ * \brief bluetooth media present, but not connected
+ *
+ * \def MEDIA_BT_ERROR
+ * \brief general bluetooth media error
+ */
+#define MEDIA_BT_NOT_PRESENT              0x00
+#define MEDIA_BT_PRESENT_NOT_ACCESSED     0x01
+#define MEDIA_BT_PRESENT_UNKNOWN          0x02
+#define MEDIA_BT_AUDIO                    0x03
+#define MEDIA_BT_PRESENT_NOT_CONNECTED    0x05
+#define MEDIA_BT_ERROR                    0x0F
 
 /*! @} */
 
