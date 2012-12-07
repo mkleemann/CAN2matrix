@@ -24,6 +24,7 @@
 
 #include "comm_can_ids.h"
 #include "comm_matrix.h"
+#include "ic_comm.h"
 
 /***************************************************************************/
 /* Definition of global variables to store CAN values.                     */
@@ -209,56 +210,9 @@ void fetchInfoFromCAN2(can_t* msg)
    {
       case CANID_2_MEDIA_STATUS:
       {
-         ic_comm_infotype_t infotype = getInfoType(msg->data[0] & 0x1F);
-
-         // get media type (CD, DVD)
-         switch(msg->data[1] & 0x1F)
+         if(false == isPdcActive)
          {
-            case MEDIA_CD_AUDIO:
-            case MEDIA_CD_VIDEO:
-            case MEDIA_CD_DATA_AUDIO:
-            case MEDIA_CD_DATA_VIDEO:
-            case MEDIA_CD_DATA_PICTURE:
-            {
-               break;
-            }
-
-            case MEDIA_DVD_AUDIO:
-            case MEDIA_DVD_VIDEO:
-            case MEDIA_DVD_DATA_AUDIO:
-            case MEDIA_DVD_DATA_VIDEO:
-            case MEDIA_DVD_DATA_PICTURE:
-            {
-               break;
-            }
-
-            case MEDIA_HOT_ERROR:
-            case MEDIA_READ_ERROR:
-            case MEDIA_DVD_REGION_MISMATCH:
-            case MEDIA_DVD_REGION_NOT_PROGRAMMED:
-            case MEDIA_ERROR:
-            {
-               break;
-            }
-
-            case MEDIA_DISC_NOT_PRESENT:
-            {
-               break;
-            }
-
-            default:
-            {
-               break;
-            }
-         }
-
-         // get status information
-
-         // set new mode, if changed and PDC not active
-         if((false == isPdcActive) && (curMode != infotype))
-         {
-            lastMode = curMode;
-            curMode  = infotype;
+            prepareMediaStatus(msg);
          }
          break;
       }
@@ -676,55 +630,127 @@ void restartICComm(void)
 }
 
 /**
- * \brief get information type from CAN message
- * \param sourceType from CAN message received
- * \return info type for further evaluation
+ * \brief prepare media status for instrument cluster
+ * \param msg - media status event
+ * \sa CANID_2_MEDIA_STATUS
  */
-ic_comm_infotype_t getInfoType(uint8_t sourceType)
+void prepareMediaStatus(can_t* msg)
 {
-   ic_comm_infotype_t retVal;
+   uint8_t source    = (msg->data[0] & 0x1F);
+   uint8_t discStat  = (msg->data[1] & 0x1F);
+//   uint8_t auxStat   = (msg->data[2] & 0x0F);
+//   uint8_t hddStat   = (msg->data[2] & 0xF0) >> 4;
+//   uint8_t slotStat  = (msg->data[3] & 0x0F);
+//   uint8_t btStat    = (msg->data[4] & 0x0F);
+//   uint8_t srcStat   = (msg->data[4] & 0xF0) >> 4;
+
+   ic_comm_infotype_t   infotype;
+   char                 row1[IC_COMM_MAX_LENGTH_OF_ROW];
+//   char                 row2[IC_COMM_MAX_LENGTH_OF_ROW];
+   uint8_t              lenRow1 = 0;
+//   uint8_t              lenRow2 = 0;
 
    // get source type and set information type for display
-   switch(sourceType)
+   switch(source)
    {
       case MEDIA_SOURCE_RADIO_AM:
       case MEDIA_SOURCE_RADIO_MW:
       case MEDIA_SOURCE_RADIO_LW:
       {
-         retVal = INFO_TYPE_MEDIA_RADIO_AM;
+         infotype = INFO_TYPE_MEDIA_RADIO_AM;
          break;
       }
 
       case MEDIA_SOURCE_RADIO_FM:
       {
-         retVal = INFO_TYPE_MEDIA_RADIO_FM;
+         infotype = INFO_TYPE_MEDIA_RADIO_FM;
          break;
       }
 
       case MEDIA_SOURCE_CD_DVD:
       {
-         retVal = INFO_TYPE_MEDIA_DISC;
+         infotype = INFO_TYPE_MEDIA_DISC;
          break;
       }
 
       case MEDIA_SOURCE_HDD:
       {
-         retVal = INFO_TYPE_MEDIA_HDD;
+         infotype = INFO_TYPE_MEDIA_HDD;
          break;
       }
 
       case MEDIA_SOURCE_AUX:
       {
-         retVal = INFO_TYPE_MEDIA_AUX;
+         infotype = INFO_TYPE_MEDIA_AUX;
          break;
       }
 
       default:
       {
-         retVal = INFO_TYPE_FREETEXT;
+         infotype = INFO_TYPE_FREETEXT;
          break;
       }
    }
 
-   return(retVal);
+   // get disc status (CD, DVD)
+   if(INFO_TYPE_MEDIA_DISC == infotype)
+   {
+      switch(discStat)
+      {
+         case MEDIA_CD_AUDIO:
+         case MEDIA_CD_VIDEO:
+         case MEDIA_CD_DATA_AUDIO:
+         case MEDIA_CD_DATA_VIDEO:
+         case MEDIA_CD_DATA_PICTURE:
+         {
+            row1    = "CD";
+            lenRow1 = 2;
+            break;
+         }
+
+         case MEDIA_DVD_AUDIO:
+         case MEDIA_DVD_VIDEO:
+         case MEDIA_DVD_DATA_AUDIO:
+         case MEDIA_DVD_DATA_VIDEO:
+         case MEDIA_DVD_DATA_PICTURE:
+         {
+            row1    = "DVD";
+            lenRow1 = 3;
+            break;
+         }
+
+         case MEDIA_HOT_ERROR:
+         case MEDIA_READ_ERROR:
+         case MEDIA_DVD_REGION_MISMATCH:
+         case MEDIA_DVD_REGION_NOT_PROGRAMMED:
+         case MEDIA_ERROR:
+         {
+            row1    = "ERROR";
+            lenRow1 = 5;
+            break;
+         }
+
+         case MEDIA_DISC_NOT_PRESENT:
+         {
+            row1    = "NO DISC";
+            lenRow1 = 6;
+            break;
+         }
+
+         default:
+         {
+            break;
+         }
+      }
+   }
+
+   // get status information
+
+   // set new mode, if changed and PDC not active
+   if(curMode != infotype)
+   {
+      lastMode = curMode;
+      curMode  = infotype;
+   }
+
 }

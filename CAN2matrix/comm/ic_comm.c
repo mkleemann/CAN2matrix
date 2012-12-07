@@ -706,7 +706,7 @@ void ic_comm_setRow1(uint8_t* data, uint8_t length)
    {
       for(i = 0; i < length; ++i)
       {
-         textRow1[i] = data[i];
+         textRow1[i] = (uint8_t)data[i];
          ++lengthRow1;
       }
    }
@@ -725,7 +725,7 @@ void ic_comm_setRow2(uint8_t* data, uint8_t length)
    {
       for(i = 0; i < length; ++i)
       {
-         textRow2[i] = data[i];
+         textRow2[i] = (uint8_t)data[i];
          ++lengthRow2;
       }
    }

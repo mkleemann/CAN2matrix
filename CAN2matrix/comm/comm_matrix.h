@@ -22,7 +22,6 @@
 #ifndef MATRIX_H_
 #define MATRIX_H_
 
-#include "ic_comm.h"
 
 /***************************************************************************/
 /* DEFINITIONS                                                             */
@@ -227,11 +226,11 @@ void stopICComm(void);
 void restartICComm(void);
 
 /**
- * \brief get information type from CAN message
- * \param sourceType from CAN message received
- * \return info type for further evaluation
+ * \brief prepare media status for instrument cluster
+ * \param msg - media status event
+ * \sa CANID_2_MEDIA_STATUS
  */
-ic_comm_infotype_t getInfoType(uint8_t sourceType);
+void prepareMediaStatus(can_t* msg);
 
 
 #endif /* MATRIX_H_ */
