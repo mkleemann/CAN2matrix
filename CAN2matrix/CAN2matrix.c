@@ -133,8 +133,10 @@ int __attribute__((OS_main)) main(void)
  */
 void sleepDetected()
 {
+#ifdef ___USE_CAN2_INFORMATION___
    // stop instrument cluster communications
    stopICComm();
+#endif
 
    // stop timer for now
    stopTimer1();
@@ -228,7 +230,9 @@ void wakeUp()
 
    adc_enable();
 
+#ifdef ___USE_CAN2_INFORMATION___
    restartICComm();
+#endif
 
    sei();
 
@@ -268,7 +272,9 @@ void run()
    if(true == sendICCommTick)
    {
       sendICCommTick = false;
+#ifdef ___USE_CAN2_INFORMATION___
       tick4ICComm();
+#endif
    }
 
    /**** CHECK CAN STATUS *****************************************/

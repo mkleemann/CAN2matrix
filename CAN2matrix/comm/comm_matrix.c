@@ -70,6 +70,7 @@ bool isMetric    = true;
 //! language setup
 uint8_t language = LANG_GERMAN_CAN2;
 
+#ifdef ___USE_CAN2_INFORMATION___
 //! PDC timeout for changing back to instrument cluster last mode
 uint8_t pdcTimeoutCnt = 0;
 
@@ -155,6 +156,7 @@ uint8_t mediaInfoGroup = 0;
 
 //! sequence of media info group
 uint8_t mediaInfoSeqCnt = 0;
+#endif
 
 /***************************************************************************/
 /* fetch/fill functions for CAN (check IDs)                                */
@@ -212,7 +214,7 @@ void fetchInfoFromCAN1(can_t* msg)
          ic_comm_fsm(msg);
          break;
       }
-
+#ifdef ___USE_CAN2_INFORMATION___
       case CANID_1_PDC_STATUS:
       {
          // reset timeout value
@@ -229,6 +231,7 @@ void fetchInfoFromCAN1(can_t* msg)
          }
          break;
       }
+#endif
 
       default:
       {
@@ -246,6 +249,7 @@ void fetchInfoFromCAN1(can_t* msg)
  */
 void fetchInfoFromCAN2(can_t* msg)
 {
+#ifdef ___USE_CAN2_INFORMATION___
    switch(msg->msgId)
    {
       case CANID_2_MEDIA_STATUS:
@@ -310,6 +314,7 @@ void fetchInfoFromCAN2(can_t* msg)
          break;
       }
    }
+#endif
 }
 
 /**
@@ -617,6 +622,7 @@ void setDimValue(uint16_t value)
    storage.dimLevel = dimAverage >> 8;
 }
 
+#ifdef ___USE_CAN2_INFORMATION___
 /**
  * \brief trigger for any IC communication, timed update
  * \todo add 1-2sec timer to provide information to instrument cluster
@@ -824,4 +830,5 @@ uint8_t fillText(uint8_t* source, uint8_t* destination)
 
    return(length);
 }
+#endif
 
