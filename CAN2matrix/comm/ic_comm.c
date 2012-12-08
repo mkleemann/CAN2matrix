@@ -709,6 +709,10 @@ void ic_comm_setRow1(uint8_t* data, uint8_t length)
          textRow1[i] = (uint8_t)data[i];
          ++lengthRow1;
       }
+      for(i = length; i < IC_COMM_MAX_LENGTH_OF_ROW; ++i)
+      {
+         textRow1[i] = ' ';
+      }
    }
 }
 
@@ -727,6 +731,10 @@ void ic_comm_setRow2(uint8_t* data, uint8_t length)
       {
          textRow2[i] = (uint8_t)data[i];
          ++lengthRow2;
+      }
+      for(i = length; i < IC_COMM_MAX_LENGTH_OF_ROW; ++i)
+      {
+         textRow2[i] = ' ';
       }
    }
 }

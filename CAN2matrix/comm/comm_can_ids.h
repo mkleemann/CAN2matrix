@@ -252,8 +252,21 @@
 /**
  * \def CANID_2_MEDIA_STATUS
  * \brief current status of media present
+ *
+ *- media type
+ *- media mode
  */
 #define CANID_2_MEDIA_STATUS           0x291
+
+/**
+ * \def CANID_2_RADIO_STATUS
+ * \brief current status of head unit
+ *
+ *- head unit mode
+ *- track number
+ *- track time
+ */
+#define CANID_2_RADIO_STATUS           0x293
 
 /**
  * \def CANID_2_MEDIA_INFO_DATA

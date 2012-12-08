@@ -88,6 +88,46 @@ ic_comm_infotype_t curMode = INFO_TYPE_SETUP;
 //! last mode for instrument cluster communication
 ic_comm_infotype_t lastMode = INFO_TYPE_SETUP;
 
+/**
+ * \var fmText
+ * \brief text information for FM radio (row #1)
+ *
+ * \var mwText
+ * \brief text information for MW radio (row #1)
+ *
+ * \var lwText
+ * \brief text information for LW radio (row #1)
+ *
+ * \var cdText
+ * \brief text information for CD (row #1)
+ *
+ * \var dvdText
+ * \brief text information for DVD (row #1)
+ *
+ * \var hddText
+ * \brief text information for HDD (row #1)
+ *
+ * \var errText
+ * \brief text information for any error occurring (row #1)
+ *
+ * \var nodiscText
+ * \brief text information no disc present (row #1)
+ */
+uint8_t fmText[]     = { 'F', 'M', 0 };
+uint8_t mwText[]     = { 'M', 'W', 0 };
+uint8_t lwText[]     = { 'L', 'W', 0 };
+uint8_t cdText[]     = { 'C', 'D', 0 };
+uint8_t dvdText[]    = { 'D', 'V', 'D', 0 };
+uint8_t hddText[]    = { 'H', 'D', 'D', 0 };
+uint8_t errText[]    = { 'E', 'R', 'R', 'O', 'R', '!', 0 };
+uint8_t nodiscText[] = { 'N', 'O', ' ', 'D', 'I', 'S', 'C', 0 };
+
+//! temporary row1 text (fetching from different messages)
+uint8_t tempRow1[IC_COMM_MAX_LENGTH_OF_ROW];
+
+//! length of text information in temporary buffer
+uint8_t lenRow1 = 0;
+
 //! text buffer for media information
 uint8_t textBuffer[TEXT_BUFFER_SIZE] =
 {
@@ -214,6 +254,12 @@ void fetchInfoFromCAN2(can_t* msg)
          {
             prepareMediaStatus(msg);
          }
+         break;
+      }
+
+      case CANID_2_RADIO_STATUS:
+      {
+         // get radio status and track info (number/time)
          break;
       }
 
@@ -573,6 +619,7 @@ void setDimValue(uint16_t value)
 
 /**
  * \brief trigger for any IC communication, timed update
+ * \todo add 1-2sec timer to provide information to instrument cluster
  */
 void tick4ICComm(void)
 {
@@ -595,9 +642,17 @@ void tick4ICComm(void)
    // no new message packet arrived yet
    if((0 == mediaInfoSeqCnt) && (false == isICCommActive))
    {
-      // TODO: time information (every 2-5sec only)
-      uint8_t length = endOfInfoBufferText - nextInfoBufferText;
+      uint8_t packet = (endOfInfoBufferText - nextInfoBufferText) % 8;
+      uint8_t length = ((0 == packet) && (0 != endOfInfoBufferText)) ? 8 : packet;
+      // set row1
+      ic_comm_setRow1(tempRow1, lenRow1);
+      // set row 2
       ic_comm_setRow2(&textBuffer[nextInfoBufferText], length);
+      // reset text information for next row2 setup
+      if(length < 8)
+      {
+         nextInfoBufferText = 0;
+      }
    }
 
    // tick off state machine
@@ -645,10 +700,6 @@ void prepareMediaStatus(can_t* msg)
 //   uint8_t srcStat   = (msg->data[4] & 0xF0) >> 4;
 
    ic_comm_infotype_t   infotype;
-   char                 row1[IC_COMM_MAX_LENGTH_OF_ROW];
-//   char                 row2[IC_COMM_MAX_LENGTH_OF_ROW];
-   uint8_t              lenRow1 = 0;
-//   uint8_t              lenRow2 = 0;
 
    // get source type and set information type for display
    switch(source)
@@ -703,8 +754,7 @@ void prepareMediaStatus(can_t* msg)
          case MEDIA_CD_DATA_VIDEO:
          case MEDIA_CD_DATA_PICTURE:
          {
-            row1    = "CD";
-            lenRow1 = 2;
+            lenRow1 = fillText(cdText, tempRow1);
             break;
          }
 
@@ -714,8 +764,7 @@ void prepareMediaStatus(can_t* msg)
          case MEDIA_DVD_DATA_VIDEO:
          case MEDIA_DVD_DATA_PICTURE:
          {
-            row1    = "DVD";
-            lenRow1 = 3;
+            lenRow1 = fillText(dvdText, tempRow1);
             break;
          }
 
@@ -725,15 +774,13 @@ void prepareMediaStatus(can_t* msg)
          case MEDIA_DVD_REGION_NOT_PROGRAMMED:
          case MEDIA_ERROR:
          {
-            row1    = "ERROR";
-            lenRow1 = 5;
+            lenRow1 = fillText(errText, tempRow1);
             break;
          }
 
          case MEDIA_DISC_NOT_PRESENT:
          {
-            row1    = "NO DISC";
-            lenRow1 = 6;
+            lenRow1 = fillText(nodiscText, tempRow1);
             break;
          }
 
@@ -744,13 +791,37 @@ void prepareMediaStatus(can_t* msg)
       }
    }
 
-   // get status information
-
    // set new mode, if changed and PDC not active
    if(curMode != infotype)
    {
       lastMode = curMode;
       curMode  = infotype;
    }
-
 }
+
+/**
+ * \brief fill given data (source) to destination buffer (destination)
+ * \param source pointer to data
+ * \param destination buffer
+ * \return length of copied data
+ *
+ * The source buffer needs to end with '0' to end the copy process. The user
+ * must ensure to have a big enough destination buffer for the copy action.
+ */
+uint8_t fillText(uint8_t* source, uint8_t* destination)
+{
+   uint8_t  length   = 0;
+   uint8_t* src      = source;
+   uint8_t* dest     = destination;
+
+   while(0 != *src)
+   {
+      *dest = *src;
+      ++dest;
+      ++src;
+      ++length;
+   }
+
+   return(length);
+}
+
