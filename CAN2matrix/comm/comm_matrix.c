@@ -202,8 +202,8 @@ void fetchInfoFromCAN1(can_t* msg)
       case CANID_1_RPM_STATUS:
       {
          // 0.25 rpm to 1.0 rpm
-         storage.rpm[1] = (msg->data[1] >> 2) | (msg->data[2] << 6);
-         storage.rpm[0] = msg->data[2] >> 2;
+         storage.rpm[0] = (msg->data[1] >> 2) | (msg->data[2] << 6);
+         storage.rpm[1] = msg->data[2] >> 2;
          break;
       }
 
@@ -357,17 +357,17 @@ void fillInfoToCAN2(can_t* msg)
          // message is 8 bytes long
          msg->header.len = 8;
          // byte 0/1: engine PRM
-         msg->data[0] = storage.rpm[0];
-         msg->data[1] = storage.rpm[1];
+         msg->data[0] = storage.rpm[1];
+         msg->data[1] = storage.rpm[0];
          // byte 2/3: vehicle speed
-         msg->data[2] = storage.speed[0];
-         msg->data[3] = storage.speed[1];
+         msg->data[2] = storage.speed[1];
+         msg->data[3] = storage.speed[0];
          // byte 4/5: wheel count left
-         msg->data[4] = storage.wheel[0];
-         msg->data[5] = storage.wheel[1];
+         msg->data[4] = storage.wheel[1];
+         msg->data[5] = storage.wheel[0];
          // byte 6/7: wheel count right
-         msg->data[6] = storage.wheel[0];
-         msg->data[7] = storage.wheel[1];
+         msg->data[6] = storage.wheel[1];
+         msg->data[7] = storage.wheel[0];
          break;
       }
 
@@ -480,11 +480,11 @@ void transferWheelGearTemp(can_t* msg)
    storage.gearBox = (msg->data[0] & 0x02) ? 0x01 : 0x04;
    // store speed information: CAN1 uses approx. half of the resolution of
    // CAN2 speed signal.
-   storage.speed[1] = msg->data[1] << 1;
-   storage.speed[0] = msg->data[2] << 1 | ((msg->data[0] & 0x80) >> 7);
+   storage.speed[0] = (msg->data[1] >> 1) | ((msg->data[2] & 0x01) << 7);
+   storage.speed[1] = msg->data[2] >> 1;
    // only 10 bits per wheel for count value
-   storage.wheel[1] = msg->data[3];        // lower part
-   storage.wheel[0] = msg->data[4] & 0x3;  // higher part
+   storage.wheel[0] = msg->data[3];        // lower part
+   storage.wheel[1] = msg->data[4] & 0x3;  // higher part
    // store temperature too
    storage.temp = msg->data[5];
 }
