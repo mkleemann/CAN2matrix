@@ -70,6 +70,9 @@ bool isMetric    = true;
 //! language setup
 uint8_t language = LANG_GERMAN_CAN2;
 
+//! counts the seconds for any timing issue needed
+uint8_t countSeconds = 0;
+
 #ifdef ___USE_CAN2_INFORMATION___
 //! PDC timeout for changing back to instrument cluster last mode
 uint8_t pdcTimeoutCnt = 0;
@@ -418,6 +421,14 @@ void fillInfoToCAN2(can_t* msg)
          break;
       }
 
+      case CANID_2_VEH_CONFIG:
+      {  // 2000ms cycle
+         msg->header.len = 8;
+         msg->data[0] = CONFIG_STATUS_PROGRAMMED;
+         msg->data[2] = VEH_BRAND_VW << 3;
+         break;
+      }
+
       default:
       {
          // do nothing!
@@ -572,8 +583,16 @@ void sendCan2_500ms(can_t* msg)
  */
 void sendCan2_1000ms(can_t* msg)
 {
+   ++countSeconds;
+
    msg->msgId = CANID_2_LANGUAGE_AND_UNIT;
    sendCan2Message(msg);
+
+   if(0 == (countSeconds % 2))
+   {  // every 2 seconds
+      msg->msgId = CANID_2_VEH_CONFIG;
+      sendCan2Message(msg);
+   }
 }
 
 /**

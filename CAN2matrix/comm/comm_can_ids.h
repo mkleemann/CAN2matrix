@@ -211,6 +211,12 @@
 #define CANID_2_REVERSE_GEAR           0x20E
 
 /**
+ * \def CANID_2_VEH_CONFIG
+ * \brief vehicle configuration, e.g. brand
+ */
+#define CANID_2_VEH_CONFIG             0x2D3
+
+/**
  * \def CANID_2_LIGHT_STATUS
  * \brief light status and dimming for keys
  */
@@ -442,7 +448,47 @@
 #define LANG_PORTUGESE_CAN2            6
 #define LANG_DUTCH_CAN2                7
 #define LANG_ENGLISH_UK_CAN2           8
-#define LANG_NO_CHANGE_CAN2           15
+#define LANG_NO_CHANGE_CAN2            15
+
+/**
+ * \def CONFIG_STATUS_NOT_PROGRAMMED
+ * \brief config status not taken over by unit
+ *
+ * \def CONFIG_STATUS_PROGRAMMED
+ * \brief config status taken over by unit
+ *
+ * \def CONFIG_STATUS_REQUEST
+ * \brief config status request
+ *
+ * \def CONFIG_STATUS_SNA
+ * \brief config status unavailable
+ */
+#define CONFIG_STATUS_NOT_PROGRAMMED   0
+#define CONFIG_STATUS_PROGRAMMED       1
+#define CONFIG_STATUS_REQUEST          2
+#define CONFIG_STATUS_SNA              3
+
+/**
+ * \def VEH_BRAND_CHRYSLER
+ * \brief vehicle is a Chrysler
+ *
+ * \def VEH_BRAND_DODGE
+ * \brief vehicle is a Dodge
+ *
+ * \def VEH_BRAND_JEEP
+ * \brief vehicle is a Jeep
+ *
+ * \def VEH_BRAND_VW
+ * \brief vehicle is a Volkswagen
+ *
+ * \def VEH_BRAND_SNA
+ * \brief signal not available
+ */
+#define VEH_BRAND_CHRYSLER             1
+#define VEH_BRAND_DODGE                2
+#define VEH_BRAND_JEEP                 3
+#define VEH_BRAND_VW                   6
+#define VEH_BRAND_SNA                  15
 
 /**
  * \def MEDIA_TEXT_SEQUENCE_COUNT_MASK
