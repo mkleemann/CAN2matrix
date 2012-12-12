@@ -33,14 +33,8 @@
 
 //! counter to evaluate timing to send CAN messages
 volatile uint8_t send_it         = 0;
-//! flag to send 100ms cycle CAN messages
-volatile bool    send100ms       = false;
-//! flag to send 500ms cycle CAN messages
-volatile bool    send500ms       = false;
-//! flag to send 1000ms cycle CAN messages
-volatile bool    send1000ms      = false;
 //! flag to send tick to instrument cluster
-volatile bool    sendICCommTick  = false;
+volatile bool    trigger50ms     = false;
 //! current state of FSM
 volatile state_t fsmState        = INIT;
 
@@ -248,6 +242,14 @@ void run()
    can_t msg;
    can_error_t error;
 
+   /**** TIMER TICK FOR INSTRUMENT CLUSTER COMMUNICATION **********/
+#ifdef ___USE_CAN2_INFORMATION___
+   if(true == trigger50ms)
+   {
+      tick4ICComm();
+   }
+#endif
+
    /**** GET MESSAGES FROM CAN1 ***********************************/
 
    handleCan1Reception(&msg);
@@ -267,15 +269,6 @@ void run()
 
    handleCan1Transmission(&msg);
    _delay_ms(1);
-
-   /**** TIMER TICK FOR INSTRUMENT CLUSTER COMMUNICATION **********/
-   if(true == sendICCommTick)
-   {
-      sendICCommTick = false;
-#ifdef ___USE_CAN2_INFORMATION___
-      tick4ICComm();
-#endif
-   }
 
    /**** CHECK CAN STATUS *****************************************/
    error = can_get_general_bus_errors(CAN_CHIP1);
@@ -312,9 +305,9 @@ void errorState()
    restartTimer2();     // may be stopped, due to sleep mode
    while (1)
    {
-      if (send500ms)    // approx. 500ms 4MHz@1024 prescale factor
+      if (0 == (trigger50ms % 10))  // approx. 500ms
       {
-         send500ms = false;
+         trigger50ms = false;
          led_toggle(sleepLed);
       }
    }
@@ -416,10 +409,7 @@ ISR(TIMER1_CAPT_vect)
 ISR(TIMER2_COMP_vect)
 {
    ++send_it;
-   sendICCommTick = (0 == (send_it % 2));   // ~50ms;
-   send100ms      = (0 == (send_it % 4));   // ~100ms
-   send500ms      = (0 == (send_it % 20));  // ~500ms
-   send1000ms     = (0 == (send_it % 40));  // ~1000ms
+   trigger50ms = (0 == (send_it % 2));   // ~50ms;
 }
 
 /**
@@ -483,7 +473,7 @@ void handleCan2Reception(can_t* msg)
  */
 void handleCan1Transmission(can_t* msg)
 {
-   // check for reset of 100/500ms flags!
+   // handle reset trigger wisely, when putting in some code here!
 }
 
 /**
@@ -492,31 +482,15 @@ void handleCan1Transmission(can_t* msg)
  */
 void handleCan2Transmission(can_t* msg)
 {
-   if (true == send100ms)    // approx. 100ms 4MHz@1024 prescale factor
+   if(true == trigger50ms)
    {
-      send100ms = false;
-      sendCan2_100ms(msg);
+      trigger50ms = false;
+      // signal activity
+      led_toggle(txCan2LED);
+      sendCan2(msg);
       // sample and set dim value
       uint16_t dimValue = adc_get();
       setDimValue(dimValue);
-      // signal activity
-      led_toggle(txCan2LED);
-}
-
-   if (true == send500ms)   // approx. 500ms 4MHz@1024 prescale factor
-   {
-      send500ms = false;
-      sendCan2_500ms(msg);
-      // signal activity
-      led_toggle(txCan2LED);
-   }
-
-   if (true == send1000ms) // approx. 1000ms 4MHz@1024 prescale factor
-   {
-      send1000ms = false;
-      sendCan2_1000ms(msg);
-      // signal activity
-      led_toggle(txCan2LED);
    }
 }
 

@@ -71,7 +71,7 @@ bool isMetric    = true;
 uint8_t language = LANG_GERMAN_CAN2;
 
 //! counts the seconds for any timing issue needed
-uint8_t countSeconds = 0;
+uint8_t countTicks = 0;
 
 #ifdef ___USE_CAN2_INFORMATION___
 //! PDC timeout for changing back to instrument cluster last mode
@@ -506,26 +506,10 @@ void transferWheelGearTemp(can_t* msg)
 /***************************************************************************/
 
 /**
- * \brief send CAN1 message every 100ms
+ * \brief send CAN1 messages
  * \param msg - pointer to message struct
  */
-void sendCan1_100ms(can_t* msg)
-{
-}
-
-/**
- * \brief send CAN1 message every 500ms
- * \param msg - pointer to message struct
- */
-void sendCan1_500ms(can_t* msg)
-{
-}
-
-/**
- * \brief send CAN1 message every 1000ms
- * \param msg - pointer to message struct
- */
-void sendCan1_1000ms(can_t* msg)
+void sendCan1(can_t* msg)
 {
 }
 
@@ -549,47 +533,47 @@ void sendCan1Message(can_t* msg)
 
 
 /**
- * \brief send CAN2 message every 100ms
+ * \brief send CAN2 messages
  * \param msg - pointer to message struct
  */
-void sendCan2_100ms(can_t* msg)
+void sendCan2(can_t* msg)
 {
-   msg->msgId = CANID_2_IGNITION;
-   sendCan2Message(msg);
+   // 50ms
+   ++countTicks;
 
-   msg->msgId = CANID_2_WHEEL_DATA;  // should be 50ms, but keep it
-   sendCan2Message(msg);
+   // 100ms
+   if(0 == (countTicks % 2))
+   {
+      msg->msgId = CANID_2_IGNITION;
+      sendCan2Message(msg);
 
-   msg->msgId = CANID_2_ODO_AND_TEMP;
-   sendCan2Message(msg);
-}
+      msg->msgId = CANID_2_WHEEL_DATA;  // should be 50ms, but keep it
+      sendCan2Message(msg);
 
-/**
- * \brief send CAN2 message every 500ms
- * \param msg - pointer to message struct
- */
-void sendCan2_500ms(can_t* msg)
-{
-   msg->msgId = CANID_2_DIMMING;
-   sendCan2Message(msg);
+      msg->msgId = CANID_2_ODO_AND_TEMP;
+      sendCan2Message(msg);
+   }
 
-   msg->msgId = CANID_2_REVERSE_GEAR;
-   sendCan2Message(msg);
-}
+   // 500ms
+   if(0 == (countTicks % 10))
+   {
+      msg->msgId = CANID_2_DIMMING;
+      sendCan2Message(msg);
 
-/**
- * \brief send CAN2 message every 1000ms
- * \param msg - pointer to message struct
- */
-void sendCan2_1000ms(can_t* msg)
-{
-   ++countSeconds;
+      msg->msgId = CANID_2_REVERSE_GEAR;
+      sendCan2Message(msg);
+   }
 
-   msg->msgId = CANID_2_LANGUAGE_AND_UNIT;
-   sendCan2Message(msg);
+   // 1000ms
+   if(0 == (countTicks % 20))
+   {
+      msg->msgId = CANID_2_LANGUAGE_AND_UNIT;
+      sendCan2Message(msg);
+   }
 
-   if(0 == (countSeconds % 2))
-   {  // every 2 seconds
+   // 2000ms
+   if(0 == (countTicks % 40))
+   {
       msg->msgId = CANID_2_VEH_CONFIG;
       sendCan2Message(msg);
    }
