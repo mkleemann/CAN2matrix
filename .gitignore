@@ -21,4 +21,5 @@
 /**/**/*.xcf
 /**/**/**/*.xcf
 /**/*.v*
+/**/TcfTransactionLog.csv
 
