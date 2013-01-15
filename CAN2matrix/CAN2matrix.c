@@ -127,11 +127,6 @@ int __attribute__((OS_main)) main(void)
  */
 void sleepDetected()
 {
-#ifdef ___USE_CAN2_INFORMATION___
-   // stop instrument cluster communications
-   stopICComm();
-#endif
-
    // stop timer for now
    stopTimer1();
    stopTimer2();
@@ -224,10 +219,6 @@ void wakeUp()
 
    adc_enable();
 
-#ifdef ___USE_CAN2_INFORMATION___
-   restartICComm();
-#endif
-
    sei();
 
    // debugging ;-)
@@ -241,14 +232,6 @@ void run()
 {
    can_t msg;
    can_error_t error;
-
-   /**** TIMER TICK FOR INSTRUMENT CLUSTER COMMUNICATION **********/
-#ifdef ___USE_CAN2_INFORMATION___
-   if(true == trigger50ms)
-   {
-      tick4ICComm();
-   }
-#endif
 
    /**** GET MESSAGES FROM CAN1 ***********************************/
 

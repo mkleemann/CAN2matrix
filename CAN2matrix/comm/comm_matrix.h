@@ -186,39 +186,6 @@ void sendCan2Message(can_t* msg);
  */
 void setDimValue(uint16_t value);
 
-/**
- * \brief trigger for any IC communication, timed update
- */
-void tick4ICComm(void);
-
-/**
- * \brief set instrument cluster communication to an end
- */
-void stopICComm(void);
-
-/**
- * \brief set instrument cluster to start sequence
- */
-void restartICComm(void);
-
-/**
- * \brief prepare media status for instrument cluster
- * \param msg - media status event
- * \sa CANID_2_MEDIA_STATUS
- */
-void prepareMediaStatus(can_t* msg);
-
-/**
- * \brief fill given data (source) to destination buffer (destination)
- * \param source pointer to data
- * \param destination buffer
- * \return length of copied data
- *
- * The source buffer needs to end with '0' to end the copy process. The user
- * must ensure to have a big enough destination buffer for the copy action.
- */
-uint8_t fillText(uint8_t* source, uint8_t* destination);
-
 
 #endif /* MATRIX_H_ */
 
