@@ -27,19 +27,9 @@
  */
 bool can_check_message_received(eChipSelect chip)
 {
+   portaccess_t * intPort = getINTPort(chip);
    // check if interrupt pin is (logical not) set - interrupt available
-   bool retVal = false;
-
-   if (CAN_CHIP1 == chip)
-   {
-      retVal = IS_SET(CHIP1_INT_PIN);
-   }
-   else
-   {
-      retVal = IS_SET(CHIP2_INT_PIN);
-   }
-
-   return(retVal);
+   return (0 != (*(intPort->port) & (1 << intPort->pin)));
 }
 
 /**

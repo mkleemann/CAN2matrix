@@ -23,12 +23,12 @@
 #include <avr/cpufunc.h>
 //#include <stdlib.h>
 
-#include "can/can_mcp2515.h"
-#include "adc/adc.h"
+#include "modules/can/can_mcp2515.h"
+#include "modules/adc/adc.h"
 #include "comm/comm_matrix.h"
-#include "leds/leds.h"
-#include "timer/timer.h"
-//#include "uart/uart.h"
+#include "modules/leds/leds.h"
+#include "modules/timer/timer.h"
+//#include "modules/uart/uart.h"
 #include "CAN2matrix.h"
 
 //! counter to evaluate timing to send CAN messages
@@ -302,13 +302,13 @@ void errorState()
  * Setting up the peripherals to the AVR and the wake-up interrupt
  * trigger.
  *
- * * \ref page6 to trigger events
+ * * \ref page_timers to trigger events
  *
- * * \ref page5 to communicate to the MCP2515
+ * * \ref page_spi to communicate to the MCP2515
  *
- * * \ref page4 to show the (non-)errors of your way
+ * * \ref page_status_leds to show the (non-)errors of your way
  *
- * * \ref page1 for connecting the analog and digital world
+ * * \ref page_adc for connecting the analog and digital world
  */
 void initHardware()
 {
@@ -341,7 +341,7 @@ void initHardware()
  * Calls can_init_mcp2515 for each attached CAN controller and setting up
  * bit rate. If an error occurs some status LEDs will indicate it.
  *
- * See chapter \ref page3 for further details.
+ * See chapter \ref page_can_bus for further details.
  *
  * @return true if all is ok. Otherwise false is returned.
  */

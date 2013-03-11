@@ -51,11 +51,10 @@ typedef enum
  * Note: The definitions here correspond to the LED names in eLED. They also
  *       correspond to the type definition of ledType in leds.h.
  */
-#define P_LEDS    {&DDR(C), &PORT(C), PINC1}, \
-                  {&DDR(C), &PORT(C), PINC2}, \
-                  {&DDR(C), &PORT(C), PINC3}, \
-                  {&DDR(C), &PORT(C), PINC4}, \
-                  {&DDR(C), &PORT(C), PINC5}
-
+#define P_LEDS    SET_PORT_PTR(C,1), \
+                  SET_PORT_PTR(C,2), \
+                  SET_PORT_PTR(C,3), \
+                  SET_PORT_PTR(C,4), \
+                  SET_PORT_PTR(C,5)
 
 #endif /* LEDS_CONFIG_H_ */

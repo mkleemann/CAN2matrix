@@ -104,22 +104,22 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="adc\adc.c">
+    <Compile Include="modules\adc\adc.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="adc\adc.h">
+    <Compile Include="modules\adc\adc.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="adc\adc_config.h">
+    <Compile Include="modules\config\adc_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="bar\bar.c">
+    <Compile Include="modules\bar\bar.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="bar\bar.h">
+    <Compile Include="modules\bar\bar.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="bar\bar_config.h">
+    <Compile Include="modules\config\bar_config.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="CAN2matrix.c">
@@ -128,31 +128,31 @@
     <Compile Include="CAN2matrix.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="can\can_error_mcp2515.c">
+    <Compile Include="modules\can\can_error_mcp2515.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="can\can_mcp2515.h">
+    <Compile Include="modules\can\can_mcp2515.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="can\can_config_mcp2515.h">
+    <Compile Include="modules\config\can_config_mcp2515.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="can\can_defs_mcp2515.h">
+    <Compile Include="modules\can\can_defs_mcp2515.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="can\can_filter_mcp2515.c">
+    <Compile Include="modules\can\can_filter_mcp2515.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="can\can_init_mcp2515.c">
+    <Compile Include="modules\can\can_init_mcp2515.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="can\can_receive_mcp2515.c">
+    <Compile Include="modules\can\can_receive_mcp2515.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="can\can_sleep_mcp2515.c">
+    <Compile Include="modules\can\can_sleep_mcp2515.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="can\can_send_mcp2515.c">
+    <Compile Include="modules\can\can_send_mcp2515.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="comm\comm_can_ids.h">
@@ -170,68 +170,70 @@
     <Compile Include="comm\ic_comm.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="leds\leds.c">
+    <Compile Include="modules\leds\leds.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="leds\leds.h">
+    <Compile Include="modules\leds\leds.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="leds\leds_config.h">
+    <Compile Include="modules\config\leds_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="spi\spi.c">
+    <Compile Include="modules\spi\spi.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="spi\spi.h">
+    <Compile Include="modules\spi\spi.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="spi\spi_config.h">
+    <Compile Include="modules\config\spi_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="timer\timer.c">
+    <Compile Include="modules\timer\timer.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="timer\timer.h">
+    <Compile Include="modules\timer\timer.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="timer\timer_config.h">
+    <Compile Include="modules\config\timer_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="uart\uart.c">
+    <Compile Include="modules\uart\uart.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="uart\uart.h">
+    <Compile Include="modules\uart\uart.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="uart\uart_config.h">
+    <Compile Include="modules\config\uart_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="util\util.h">
+    <Compile Include="modules\util\util.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="can" />
-    <Folder Include="leds" />
-    <Folder Include="bar" />
-    <Folder Include="adc" />
+    <Folder Include="modules\" />
+    <Folder Include="modules\can" />
+    <Folder Include="modules\config\" />
+    <Folder Include="modules\leds" />
+    <Folder Include="modules\bar" />
+    <Folder Include="modules\adc" />
     <Folder Include="comm" />
-    <Folder Include="util" />
-    <Folder Include="timer" />
-    <Folder Include="uart" />
-    <Folder Include="spi" />
+    <Folder Include="modules\util" />
+    <Folder Include="modules\timer" />
+    <Folder Include="modules\uart" />
+    <Folder Include="modules\spi" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="adc\adc.dox">
+    <None Include="modules\adc\adc.dox">
       <SubType>compile</SubType>
     </None>
-    <None Include="bar\bar.dox">
+    <None Include="modules\bar\bar.dox">
       <SubType>compile</SubType>
     </None>
     <None Include="CAN2matrix.dox">
       <SubType>compile</SubType>
     </None>
-    <None Include="can\can_mcp2515.dox">
+    <None Include="modules\can\can_mcp2515.dox">
       <SubType>compile</SubType>
     </None>
     <None Include="comm\comm.dox">
@@ -240,7 +242,7 @@
     <None Include="doxygen.conf">
       <SubType>compile</SubType>
     </None>
-    <None Include="leds\leds.dox">
+    <None Include="modules\leds\leds.dox">
       <SubType>compile</SubType>
     </None>
     <None Include="makedep.mk">
@@ -249,13 +251,13 @@
     <None Include="Makefile">
       <SubType>compile</SubType>
     </None>
-    <None Include="spi\spi.dox">
+    <None Include="modules\spi\spi.dox">
       <SubType>compile</SubType>
     </None>
-    <None Include="timer\timer.dox">
+    <None Include="modules\timer\timer.dox">
       <SubType>compile</SubType>
     </None>
-    <None Include="uart\uart.dox">
+    <None Include="modules\uart\uart.dox">
       <SubType>compile</SubType>
     </None>
   </ItemGroup>

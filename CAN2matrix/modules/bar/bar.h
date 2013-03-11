@@ -22,7 +22,7 @@
 #ifndef BAR_H_
 #define BAR_H_
 
-#include "bar_config.h"
+#include "../config/bar_config.h"
 
 /***************************************************************************/
 /* TYPEDEFS                                                                */

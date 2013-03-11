@@ -2,33 +2,35 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-adc\adc.c
+modules\adc\adc.c
 
-bar\bar.c
+modules\bar\bar.c
 
 CAN2matrix.c
 
-can\can_error_mcp2515.c
+modules\config\can_config_mcp2515.c
 
-can\can_filter_mcp2515.c
+modules\can\can_error_mcp2515.c
 
-can\can_init_mcp2515.c
+modules\can\can_filter_mcp2515.c
 
-can\can_receive_mcp2515.c
+modules\can\can_init_mcp2515.c
 
-can\can_sleep_mcp2515.c
+modules\can\can_receive_mcp2515.c
 
-can\can_send_mcp2515.c
+modules\can\can_sleep_mcp2515.c
+
+modules\can\can_send_mcp2515.c
 
 comm\comm_matrix.c
 
 comm\ic_comm.c
 
-leds\leds.c
+modules\leds\leds.c
 
-spi\spi.c
+modules\spi\spi.c
 
-timer\timer.c
+modules\timer\timer.c
 
-uart\uart.c
+modules\uart\uart.c
 

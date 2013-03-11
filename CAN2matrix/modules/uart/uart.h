@@ -23,7 +23,7 @@
 #ifndef UART_H_
 #define UART_H_
 
-#include "uart_config.h"
+#include "../config/uart_config.h"
 
 /***************************************************************************/
 /* DEFINITIONS                                                             */

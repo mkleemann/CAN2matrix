@@ -28,32 +28,11 @@
 #include "../util/util.h"
 #include "../spi/spi.h"
 #include "can_defs_mcp2515.h"
-#include "can_config_mcp2515.h"
+#include "../config/can_config_mcp2515.h"
 
 /**************************************************************************/
 /* TYPE DEFINITIONS                                                       */
 /**************************************************************************/
-
-/**
- * \addtogroup mcp_init CAN Controller Init Functions
- * CAN controller initialisation.
- * @{
- */
-
-/**
- * \brief index of internal CAN bitrate setup
- */
-typedef enum
-{
-   //! 100kbps
-   CAN_BITRATE_100_KBPS = 0,
-   //! 125kbps
-   CAN_BITRATE_125_KBPS = 1,
-   //! maximum index of possible CAN bitrates
-   NUM_OF_CAN_BITRATES  = 2         // always the last one!
-} eCanBitRate;
-
-/*! @} */
 
 
 /**

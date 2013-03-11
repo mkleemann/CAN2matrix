@@ -22,7 +22,7 @@
 #ifndef SPI_H_
 #define SPI_H_
 
-#include "spi_config.h"
+#include "../config/spi_config.h"
 
 /***************************************************************************/
 /* CALCULATE BIT VALUES                                                    */

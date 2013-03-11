@@ -23,22 +23,7 @@
 #ifndef LEDS_H_
 #define LEDS_H_
 
-#include "leds_config.h"
-
-/***************************************************************************/
-/* TYPEDEFS                                                                */
-/***************************************************************************/
-
-/**
- * @brief type of led control struct
- */
-typedef struct { //! pointer of data direction register
-                 pvuint8_t ddr;
-                 //! pointer to port register
-                 pvuint8_t port;
-                 //! pin of port to be used
-                 uint8_t   pin;
-               } ledType;
+#include "../config/leds_config.h"
 
 /***************************************************************************/
 /* PROTOTYPES                                                              */

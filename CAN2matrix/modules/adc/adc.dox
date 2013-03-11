@@ -1,5 +1,5 @@
 /**
- * \page page1 Analog/Digital Converter
+ * \page page_adc Analog/Digital Converter
  *
  * The Analag/Digital Converter (ADC) is used to get a value of brightness
  * to use as input to dim the unit automatically.

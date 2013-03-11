@@ -33,30 +33,6 @@
 #include "can_mcp2515.h"
 
 
-
-/**
- * \brief internal CAN bitrate setup
- *
- * These values are based on 4Mhz oscillator frequency. Higher CAN bitrates
- * may need a higher clock frequency (bus idle time - see datasheet).
- *
- * Only one sample time is set, wake-up filters too (Wake On CAN).
- */
-static uint8_t  mcp2515_cnf[NUM_OF_CAN_BITRATES][3] = {
-   //! CAN_BITRATE_100_KBPS
-   {
-      0x01,    // CNF1  (1 << BRP0)
-      0xA0,    // CNF2  (1 << BTLMODE) | (1 << PHSEG12)
-      0x42     // CNF3  (1 << WAKFIL)  | (1 << PHSEG21)
-   },
-   //! CAN_BITRATE_125_KBPS
-   {
-      0x01,    // CNF1  (1 << BRP0)
-      0x90,    // CNF2  (1 << BTLMODE) | (1 << PHSEG11)
-      0x42     // CNF3  (1 << WAKFIL)  | (1 << PHSEG21)
-   }
-};
-
 /**
  * \brief  initializes MCP2515 selected
  *
@@ -83,9 +59,12 @@ bool can_init_mcp2515(eChipSelect chip,
                       uint8_t mode)
 {
    bool retVal = false;
+   uint8_t *cnf = 0;
 
    if ((bitrate < NUM_OF_CAN_BITRATES) && (chip < NUM_OF_MCP2515))
    {
+      cnf = getCanConfiguration(bitrate);
+
       // set interrupt pins
       setup_interrupt_pins(chip);
       // set chip select pins
@@ -102,12 +81,12 @@ bool can_init_mcp2515(eChipSelect chip,
       _delay_ms(10);
 
       // setup configuration registers
-      write_register_mcp2515(chip, CNF1, mcp2515_cnf[bitrate][0]);
-      write_register_mcp2515(chip, CNF2, mcp2515_cnf[bitrate][1]);
-      write_register_mcp2515(chip, CNF3, mcp2515_cnf[bitrate][2]);
+      write_register_mcp2515(chip, CNF1, cnf[0]);
+      write_register_mcp2515(chip, CNF2, cnf[1]);
+      write_register_mcp2515(chip, CNF3, cnf[2]);
 
       // test if MCP2515 is accessible and CNF set up correctly
-      if(read_register_mcp2515(chip, CNF1) != mcp2515_cnf[bitrate][0])
+      if(read_register_mcp2515(chip, CNF1) != cnf[0])
       {
          return false;
       }
@@ -333,16 +312,11 @@ void set_mode_mcp2515(eChipSelect   chip,
  */
 void setup_interrupt_pins(eChipSelect chip)
 {
-   if(CAN_CHIP1 == chip)
-   {
-      // set interrupt pin to input and internal pull-up resistor
-      PIN_SET_PULLUP(CHIP1_INT_PIN);
-   }
-   else
-   {
-      // set interrupt pin to input and internal pull-up resistor
-      PIN_SET_PULLUP(CHIP2_INT_PIN);
-   }
+   portaccess_t * intPort = getINTPort(chip);
+
+   // set interrupt pin to input and internal pull-up resistor
+   *(intPort->ddr)  &= ~(1 << intPort->pin);
+   *(intPort->port) |=  (1 << intPort->pin);
 }
 
 /**
@@ -351,20 +325,12 @@ void setup_interrupt_pins(eChipSelect chip)
  */
 void setup_cs_pins(eChipSelect chip)
 {
-   if(CAN_CHIP1 == chip)
-   {
-      // set chip select pins to high to get transition for MCP2515
-      SET_PIN(CHIP1_CS_PIN);
-      // set /CS to output
-      PIN_SET_OUTPUT(CHIP1_CS_PIN);
-   }
-   else
-   {
-      // set chip select pins to high to get transition for MCP2515
-      SET_PIN(CHIP2_CS_PIN);
-      // set /CS to output
-      PIN_SET_OUTPUT(CHIP2_CS_PIN);
-   }
+   portaccess_t * csPort = getCSPort(chip);
+
+   // set chip select pins to high to get transition for MCP2515
+   *(csPort->port) |= (1 << csPort->pin);
+   // set /CS to output
+   *(csPort->ddr)  |= (1 << csPort->pin);
 }
 
 
@@ -374,16 +340,9 @@ void setup_cs_pins(eChipSelect chip)
  */
 void set_chip_select(eChipSelect chip)
 {
-   if(CAN_CHIP1 == chip)
-   {
-      // set chip select pins to high to get transition for MCP2515
-      SET_PIN(CHIP1_CS_PIN);
-   }
-   else
-   {
-      // set chip select pins to high to get transition for MCP2515
-      SET_PIN(CHIP2_CS_PIN);
-   }
+   portaccess_t * csPort = getCSPort(chip);
+   // set chip select pins to high to get transition for MCP2515
+   *(csPort->port) |= (1 << csPort->pin);
 }
 
 /**
@@ -392,16 +351,9 @@ void set_chip_select(eChipSelect chip)
  */
 void unset_chip_select(eChipSelect chip)
 {
-   if(CAN_CHIP1 == chip)
-   {
-      // set chip select pins to high to get transition for MCP2515
-      RESET_PIN(CHIP1_CS_PIN);
-   }
-   else
-   {
-      // set chip select pins to high to get transition for MCP2515
-      RESET_PIN(CHIP2_CS_PIN);
-   }
+   portaccess_t * csPort = getCSPort(chip);
+   // set chip select pins to low to get transition for MCP2515
+   *(csPort->port) &= ~(1 << csPort->pin);
 }
 
 

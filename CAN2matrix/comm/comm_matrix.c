@@ -20,7 +20,7 @@
 
 #include <avr/eeprom.h>
 
-#include "../can/can_mcp2515.h"
+#include "../modules/can/can_mcp2515.h"
 
 #include "comm_can_ids.h"
 #include "comm_matrix.h"

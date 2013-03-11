@@ -44,34 +44,35 @@ DOC_CONF := doxygen.conf
 
 # Every subdirectory with source files must be described here
 SUBDIRS :=  \
-./can \
+./modules/can \
 ./comm \
-./leds \
-./bar \
-./adc \
-./util \
-./timer \
-./uart \
-./spi
+./modules/leds \
+./modules/bar \
+./modules/adc \
+./modules/util \
+./modules/timer \
+./modules/uart \
+./modules/spi
 
 
 # Add inputs and outputs from these tool invocations to the build variables
 C_SRCS +=  \
-./adc/adc.c \
-./bar/bar.c \
+./modules/adc/adc.c \
+./modules/bar/bar.c \
 ./CAN2matrix.c \
-./can/can_error_mcp2515.c \
-./can/can_filter_mcp2515.c \
-./can/can_init_mcp2515.c \
-./can/can_receive_mcp2515.c \
-./can/can_sleep_mcp2515.c \
-./can/can_send_mcp2515.c \
+./modules/config/can_config_mcp2515.c \
+./modules/can/can_error_mcp2515.c \
+./modules/can/can_filter_mcp2515.c \
+./modules/can/can_init_mcp2515.c \
+./modules/can/can_receive_mcp2515.c \
+./modules/can/can_sleep_mcp2515.c \
+./modules/can/can_send_mcp2515.c \
 ./comm/comm_matrix.c \
 ./comm/ic_comm.c \
-./leds/leds.c \
-./spi/spi.c \
-./timer/timer.c \
-./uart/uart.c
+./modules/leds/leds.c \
+./modules/spi/spi.c \
+./modules/timer/timer.c \
+./modules/uart/uart.c
 
 
 PREPROCESSING_SRCS +=
@@ -81,80 +82,85 @@ ASM_SRCS +=
 
 
 OBJS +=  \
-adc/adc.o \
-bar/bar.o \
+modules/adc/adc.o \
+modules/bar/bar.o \
 CAN2matrix.o \
-can/can_error_mcp2515.o \
-can/can_filter_mcp2515.o \
-can/can_init_mcp2515.o \
-can/can_receive_mcp2515.o \
-can/can_sleep_mcp2515.o \
-can/can_send_mcp2515.o \
+modules/config/can_config_mcp2515.o \
+modules/can/can_error_mcp2515.o \
+modules/can/can_filter_mcp2515.o \
+modules/can/can_init_mcp2515.o \
+modules/can/can_receive_mcp2515.o \
+modules/can/can_sleep_mcp2515.o \
+modules/can/can_send_mcp2515.o \
 comm/comm_matrix.o \
 comm/ic_comm.o \
-leds/leds.o \
-spi/spi.o \
-timer/timer.o \
-uart/uart.o
+modules/leds/leds.o \
+modules/spi/spi.o \
+modules/timer/timer.o \
+modules/uart/uart.o
 
 
 OBJS_AS_ARGS +=  \
-adc/adc.o \
-bar/bar.o \
+modules/adc/adc.o \
+modules/bar/bar.o \
 CAN2matrix.o \
-can/can_error_mcp2515.o \
-can/can_filter_mcp2515.o \
-can/can_init_mcp2515.o \
-can/can_receive_mcp2515.o \
-can/can_sleep_mcp2515.o \
-can/can_send_mcp2515.o \
+modules/config/can_config_mcp2515.o \
+modules/can/can_error_mcp2515.o \
+modules/can/can_filter_mcp2515.o \
+modules/can/can_init_mcp2515.o \
+modules/can/can_receive_mcp2515.o \
+modules/can/can_sleep_mcp2515.o \
+modules/can/can_send_mcp2515.o \
 comm/comm_matrix.o \
 comm/ic_comm.o \
-leds/leds.o \
-spi/spi.o \
-timer/timer.o \
-uart/uart.o
+modules/leds/leds.o \
+modules/spi/spi.o \
+modules/timer/timer.o \
+modules/uart/uart.o
 
 
 C_DEPS +=  \
-adc/adc.d \
-bar/bar.d \
+modules/adc/adc.d \
+modules/bar/bar.d \
 CAN2matrix.d \
-can/can_error_mcp2515.d \
-can/can_filter_mcp2515.d \
-can/can_init_mcp2515.d \
-can/can_receive_mcp2515.d \
-can/can_sleep_mcp2515.d \
-can/can_send_mcp2515.d \
+modules/config/can_config_mcp2515.d \
+modules/can/can_error_mcp2515.d \
+modules/can/can_filter_mcp2515.d \
+modules/can/can_init_mcp2515.d \
+modules/can/can_receive_mcp2515.d \
+modules/can/can_sleep_mcp2515.d \
+modules/can/can_send_mcp2515.d \
 comm/comm_matrix.d \
 comm/ic_comm.d \
-leds/leds.d \
-spi/spi.d \
-timer/timer.d \
-uart/uart.d
+modules/leds/leds.d \
+modules/spi/spi.d \
+modules/timer/timer.d \
+modules/uart/uart.d
 
 
 C_DEPS_AS_ARGS +=  \
-adc/adc.d \
-bar/bar.d \
+modules/adc/adc.d \
+modules/bar/bar.d \
 CAN2matrix.d \
-can/can_error_mcp2515.d \
-can/can_filter_mcp2515.d \
-can/can_init_mcp2515.d \
-can/can_receive_mcp2515.d \
-can/can_sleep_mcp2515.d \
-can/can_send_mcp2515.d \
+modules/config/can_config_mcp2515.d \
+modules/can/can_error_mcp2515.d \
+modules/can/can_filter_mcp2515.d \
+modules/can/can_init_mcp2515.d \
+modules/can/can_receive_mcp2515.d \
+modules/can/can_sleep_mcp2515.d \
+modules/can/can_send_mcp2515.d \
 comm/comm_matrix.d \
 comm/ic_comm.d \
-leds/leds.d \
-spi/spi.d \
-timer/timer.d \
-uart/uart.d
+modules/leds/leds.d \
+modules/spi/spi.d \
+modules/timer/timer.d \
+modules/uart/uart.d
 
 TEMPS += \
 adc.i \
 bar.i \
 CAN2matrix.i \
+can_config_mcp2515.i \
 can_error_mcp2515.i \
 can_filter_mcp2515.i \
 can_init_mcp2515.i \
@@ -172,6 +178,7 @@ S_SRCS += \
 adc.s \
 bar.s \
 CAN2matrix.s \
+can_config_mcp2515.s \
 can_error_mcp2515.s \
 can_filter_mcp2515.s \
 can_init_mcp2515.s \
@@ -238,13 +245,13 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 
 
 
-adc/%.o: ./adc/%.c
+modules/adc/%.o: ./modules/adc/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler
 	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99 -save-temps  -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo Finished building: $<
 
-bar/%.o: ./bar/%.c
+modules/bar/%.o: ./modules/bar/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler
 	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
@@ -256,7 +263,7 @@ bar/%.o: ./bar/%.c
 	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo Finished building: $<
 
-can/%.o: ./can/%.c
+modules/can/%.o: ./modules/can/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler
 	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
@@ -268,25 +275,25 @@ comm/%.o: ./comm/%.c
 	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo Finished building: $<
 
-leds/%.o: ./leds/%.c
+modules/leds/%.o: ./modules/leds/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler
 	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo Finished building: $<
 
-spi/%.o: ./spi/%.c
+modules/spi/%.o: ./modules/spi/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler
 	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo Finished building: $<
 
-timer/%.o: ./timer/%.c
+modules/timer/%.o: ./modules/timer/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler
 	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo Finished building: $<
 
-uart/%.o: ./uart/%.c
+modules/uart/%.o: ./modules/uart/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler
 	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"

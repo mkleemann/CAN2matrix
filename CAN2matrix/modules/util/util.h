@@ -129,6 +129,9 @@
 //! expand port definition, if x is a macro definition
 #define EXP_PORT(x)              PORT(x)
 
+//! expand to struct
+#define SET_PORT_PTR(x,y)       {&DDR ## x, &PORT ## x, PIN ## x ## y}
+
 /**
  * \def BIT_IS_SET(value, bit)
  * @brief checks if bit in value is set - returns (1<<bit) if true
@@ -140,10 +143,25 @@
  */
 #define BIT_IS_UNSET(value, bit) (!(value & (1<<bit)))
 
+/***************************************************************************/
+
 //! access type for volatile uint8_t
 typedef volatile uint8_t   vuint8_t;
+
 //! access type for pointer of volatile uint8_t
 typedef vuint8_t*          pvuint8_t;
+
+/**
+ * \brief structure for port pins
+ */
+typedef struct { //! pointer of data direction register
+                 pvuint8_t ddr;
+                 //! pointer to port register
+                 pvuint8_t port;
+                 //! pin of port to be used
+                 uint8_t   pin;
+               } portaccess_t;
+
 
 // definition of debug printouts
 #ifdef ___DEBUG_LEVEL___
