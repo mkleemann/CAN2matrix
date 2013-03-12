@@ -7,3 +7,6 @@
 [submodule "CAN2matrix/modules/can"]
 	path = CAN2matrix/modules/can
 	url = git@github.com:mkleemann/can.git
+[submodule "CAN2matrix/modules/leds"]
+	path = CAN2matrix/modules/leds
+	url = git@github.com:mkleemann/leds.git
