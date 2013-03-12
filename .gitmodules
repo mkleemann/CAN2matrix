@@ -13,3 +13,6 @@
 [submodule "CAN2matrix/modules/spi"]
 	path = CAN2matrix/modules/spi
 	url = git@github.com:mkleemann/spi.git
+[submodule "CAN2matrix/modules/timer"]
+	path = CAN2matrix/modules/timer
+	url = git@github.com:mkleemann/timer.git
