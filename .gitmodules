@@ -16,3 +16,6 @@
 [submodule "CAN2matrix/modules/timer"]
 	path = CAN2matrix/modules/timer
 	url = git@github.com:mkleemann/timer.git
+[submodule "CAN2matrix/modules/uart"]
+	path = CAN2matrix/modules/uart
+	url = git@github.com:mkleemann/uart.git
