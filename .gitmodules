@@ -1,3 +1,6 @@
 [submodule "CAN2matrix/modules/util"]
 	path = CAN2matrix/modules/util
 	url = git@github.com:mkleemann/util.git
+[submodule "CAN2matrix/modules/adc"]
+	path = CAN2matrix/modules/adc
+	url = git@github.com:mkleemann/adc.git
