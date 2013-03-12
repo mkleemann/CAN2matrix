@@ -47,7 +47,6 @@ SUBDIRS :=  \
 ./modules/can \
 ./comm \
 ./modules/leds \
-./modules/bar \
 ./modules/adc \
 ./modules/util \
 ./modules/timer \
@@ -58,7 +57,6 @@ SUBDIRS :=  \
 # Add inputs and outputs from these tool invocations to the build variables
 C_SRCS +=  \
 ./modules/adc/adc.c \
-./modules/bar/bar.c \
 ./CAN2matrix.c \
 ./modules/config/can_config_mcp2515.c \
 ./modules/can/can_error_mcp2515.c \
@@ -83,7 +81,6 @@ ASM_SRCS +=
 
 OBJS +=  \
 modules/adc/adc.o \
-modules/bar/bar.o \
 CAN2matrix.o \
 modules/config/can_config_mcp2515.o \
 modules/can/can_error_mcp2515.o \
@@ -102,7 +99,6 @@ modules/uart/uart.o
 
 OBJS_AS_ARGS +=  \
 modules/adc/adc.o \
-modules/bar/bar.o \
 CAN2matrix.o \
 modules/config/can_config_mcp2515.o \
 modules/can/can_error_mcp2515.o \
@@ -121,7 +117,6 @@ modules/uart/uart.o
 
 C_DEPS +=  \
 modules/adc/adc.d \
-modules/bar/bar.d \
 CAN2matrix.d \
 modules/config/can_config_mcp2515.d \
 modules/can/can_error_mcp2515.d \
@@ -140,7 +135,6 @@ modules/uart/uart.d
 
 C_DEPS_AS_ARGS +=  \
 modules/adc/adc.d \
-modules/bar/bar.d \
 CAN2matrix.d \
 modules/config/can_config_mcp2515.d \
 modules/can/can_error_mcp2515.d \
@@ -158,7 +152,6 @@ modules/uart/uart.d
 
 TEMPS += \
 adc.i \
-bar.i \
 CAN2matrix.i \
 can_config_mcp2515.i \
 can_error_mcp2515.i \
@@ -176,7 +169,6 @@ uart.i
 
 S_SRCS += \
 adc.s \
-bar.s \
 CAN2matrix.s \
 can_config_mcp2515.s \
 can_error_mcp2515.s \
@@ -249,12 +241,6 @@ modules/adc/%.o: ./modules/adc/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler
 	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99 -save-temps  -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
-	@echo Finished building: $<
-
-modules/bar/%.o: ./modules/bar/%.c
-	@echo Building file: $<
-	@echo Invoking: AVR/GNU C Compiler
-	$(QUOTE)$(AVR_APP_PATH)$(SLASH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DF_CPU=$(MCU_SPEED) -Os -ffunction-sections -fpack-struct -fshort-enums -Wall -Werror -pedantic -pedantic-errors -c -std=gnu99  -save-temps -mmcu=$(MCU)   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo Finished building: $<
 
 ./%.o: ./%.c

@@ -4,8 +4,6 @@
 
 modules\adc\adc.c
 
-modules\bar\bar.c
-
 CAN2matrix.c
 
 modules\config\can_config_mcp2515.c
