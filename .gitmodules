@@ -19,3 +19,6 @@
 [submodule "CAN2matrix/modules/uart"]
 	path = CAN2matrix/modules/uart
 	url = git@github.com:mkleemann/uart.git
+[submodule "cmake"]
+	path = cmake
+	url = git@github.com:mkleemann/cmake-avr.git
