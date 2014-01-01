@@ -7,11 +7,25 @@ signals arose when trying to build in my old CAN controlled radio.
 Single CAN solutions exist, but often they lack in something or other. So I
 used the tips and tricks to combine such solutions.
 
-*****************************************************************************
-* Note: The project is Atmel Studio 6 based. A makefile for WINAVR or any   *
-*       other AVR toolchain is only maintained from time to time.           *
-*       Documentation via doxygen ("make docu" or "doxygen doxygen.conf").  *
-*****************************************************************************
+The project initially is Atmel Studio 6 based. A makefile for WINAVR or any
+other AVR toolchain is only maintained from time to time. Documentation via 
+doxygen, in this case, via "make docu" or "doxygen doxygen.conf".
+
+Currently the build process is changing to cmake, which will be the future 
+process w/o dependencies to other toolchains or environments.
+
+To build out of source use:
+
+mkdir -p /path/to/some/build/dir
+cd /path/to/some/build/dir
+cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/CAN2matrix/cmake/genric-gcc-avr.cmake /path/to/CAN2matrix
+make
+
+This builds, but does not upload the result to your AVR. Use
+
+make help
+
+to get a list of all targets available.
 
 Both CAN buses (could) use a different bitrate. Only a small number of
 signals are needed to communicate between buses. Sleep and/or power down
