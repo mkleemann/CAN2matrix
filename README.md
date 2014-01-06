@@ -7,26 +7,34 @@ signals arose when trying to build in my old CAN controlled radio.
 Single CAN solutions exist, but often they lack in something or other. So I
 used the tips and tricks to combine such solutions.
 
-The project initially is Atmel Studio 6 based. The build process is now 
+The project initially is Atmel Studio 6 based. The build process is now
 changed to use cmake. All artefacts, like makefiles, will be removed and no
-longer maintained. Documentation can be built via doxygen: 
+longer maintained. Documentation can be built via doxygen:
 
-$> doxygen doxygen.conf
+```
+doxygen doxygen.conf
+```
 
 To build out of source use:
 
-$> mkdir -p /path/to/some/build/dir
-$> cd /path/to/some/build/dir
-$> cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/CAN2matrix/cmake/genric-gcc-avr.cmake /path/to/CAN2matrix
-$> make
+```
+mkdir -p /path/to/some/build/dir
+cd /path/to/some/build/dir
+cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/CAN2matrix/cmake/genric-gcc-avr.cmake /path/to/CAN2matrix
+make
+```
 
 For Windows use the following call instead:
 
-$> cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=/path/to/CAN2matrix/cmake/genric-gcc-avr.cmake /path/to/CAN2matrix
+```
+cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=/path/to/CAN2matrix/cmake/genric-gcc-avr.cmake /path/to/CAN2matrix
+```
 
 This builds, but does not upload, the application. Use
 
-$> make help
+```
+make help
+```
 
 to get a list of all targets available, including the programming targets.
 
