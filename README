@@ -7,25 +7,28 @@ signals arose when trying to build in my old CAN controlled radio.
 Single CAN solutions exist, but often they lack in something or other. So I
 used the tips and tricks to combine such solutions.
 
-The project initially is Atmel Studio 6 based. A makefile for WINAVR or any
-other AVR toolchain is only maintained from time to time. Documentation via 
-doxygen, in this case, via "make docu" or "doxygen doxygen.conf".
+The project initially is Atmel Studio 6 based. The build process is now 
+changed to use cmake. All artefacts, like makefiles, will be removed and no
+longer maintained. Documentation can be built via doxygen: 
 
-Currently the build process is changing to cmake, which will be the future 
-process w/o dependencies to other toolchains or environments.
+$> doxygen doxygen.conf
 
 To build out of source use:
 
-mkdir -p /path/to/some/build/dir
-cd /path/to/some/build/dir
-cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/CAN2matrix/cmake/genric-gcc-avr.cmake /path/to/CAN2matrix
-make
+$> mkdir -p /path/to/some/build/dir
+$> cd /path/to/some/build/dir
+$> cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/CAN2matrix/cmake/genric-gcc-avr.cmake /path/to/CAN2matrix
+$> make
 
-This builds, but does not upload the result to your AVR. Use
+For Windows use the following call instead:
 
-make help
+$> cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=/path/to/CAN2matrix/cmake/genric-gcc-avr.cmake /path/to/CAN2matrix
 
-to get a list of all targets available.
+This builds, but does not upload, the application. Use
+
+$> make help
+
+to get a list of all targets available, including the programming targets.
 
 Both CAN buses (could) use a different bitrate. Only a small number of
 signals are needed to communicate between buses. Sleep and/or power down
