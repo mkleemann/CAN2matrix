@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(CAN2matrix)
 
-# tools to beused for programming the AVR 
+# tools to beused for programming the AVR
 set(AVR_UPLOADTOOL avrdude)
 set(AVR_PROGRAMMER avrispmkII)
 set(AVR_UPLOADTOOL_PORT usb)
@@ -31,11 +31,19 @@ set(CMAKE_BUILD_TYPE Release)
 set(MCU_SPEED "4000000UL")
 
 # some cmake cross-compile necessities
-set(CMAKE_FIND_ROOT_PATH "/usr/avr")
+if(CMAKE_HOST_SYSTEM MATCHES "Windows")
+    if(DEFINED ENV{AVR_FIND_ROOT_PATH})
+        set(CMAKE_FIND_ROOT_PATH $ENV{AVR_FIND_ROOT_PATH})
+    else(DEFINED ENV{AVR_FIND_ROOT_PATH})
+        message(FATAL_ERROR "Please set AVR_FIND_ROOT_PATH in your environment.")
+    endif(DEFINED ENV{AVR_FIND_ROOT_PATH})
+else(CMAKE_HOST_SYSTEM MATCHES "Windows")
+    set(CMAKE_FIND_ROOT_PATH "/usr/avr")
+endif(CMAKE_HOST_SYSTEM MATCHES "Windows")
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-# not added automatically, since CMAKE_SYSTEM_NAME is "generic" 
+# not added automatically, since CMAKE_SYSTEM_NAME is "generic"
 set(CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_FIND_ROOT_PATH}/include")
 set(CMAKE_SYSTEM_LIBRARY_PATH "${CMAKE_FIND_ROOT_PATH}/lib")
 
@@ -44,7 +52,7 @@ message(STATUS "Set CMAKE_FIND_ROOT_PATH to ${CMAKE_FIND_ROOT_PATH}")
 message(STATUS "Set CMAKE_SYSTEM_INCLUDE_PATH to ${CMAKE_SYSTEM_INCLUDE_PATH}")
 message(STATUS "Set CMAKE_SYSTEM_LIBRARY_PATH to ${CMAKE_SYSTEM_LIBRARY_PATH}")
 
-# set compiler options for build types 
+# set compiler options for build types
 if(CMAKE_BUILD_TYPE MATCHES Release)
    set(CMAKE_C_FLAGS_RELEASE "-Os")
    set(CMAKE_CXX_FLAGS_RELEASE "-Os")
@@ -54,7 +62,7 @@ if(CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
    set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Os -save-temps -g -gdwarf-3 -gstrict-dwarf")
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Os -save-temps -g -gdwarf-3 -gstrict-dwarf")
 endif(CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
- 
+
 if(CMAKE_BUILD_TYPE MATCHES Debug)
    set(CMAKE_C_FLAGS_DEBUG "-O0 -save-temps -g -gdwarf-3 -gstrict-dwarf")
    set(CMAKE_CXX_FLAGS_DEBUG "-O0 -save-temps -g -gdwarf-3 -gstrict-dwarf")
