@@ -113,12 +113,6 @@
     <Compile Include="modules\config\adc_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="modules\bar\bar.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="modules\bar\bar.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="modules\config\bar_config.h">
       <SubType>compile</SubType>
     </Compile>
@@ -132,6 +126,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="modules\can\can_mcp2515.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="modules\config\can_config_mcp2515.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="modules\config\can_config_mcp2515.h">
@@ -215,7 +212,6 @@
     <Folder Include="modules\can" />
     <Folder Include="modules\config\" />
     <Folder Include="modules\leds" />
-    <Folder Include="modules\bar" />
     <Folder Include="modules\adc" />
     <Folder Include="comm" />
     <Folder Include="modules\util" />
@@ -225,9 +221,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="modules\adc\adc.dox">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="modules\bar\bar.dox">
       <SubType>compile</SubType>
     </None>
     <None Include="CAN2matrix.dox">
