@@ -1,4 +1,6 @@
+##################################################################################
 # adding modules
+##################################################################################
 add_subdirectory(modules/adc)
 add_subdirectory(modules/can)
 add_subdirectory(modules/leds)
@@ -7,10 +9,14 @@ add_subdirectory(modules/timer)
 add_subdirectory(modules/uart)
 add_subdirectory(modules/config)
 
+##################################################################################
 # configuration files of the submodules
+##################################################################################
 include_directories(modules/config)
 
+##################################################################################
 # executable
+##################################################################################
 add_avr_executable(
    CAN2matrix
    CAN2matrix.c
@@ -22,11 +28,15 @@ add_avr_executable(
    comm/comm_can_ids.h
 )
 
-# find libc
+##################################################################################
+# find avr-libc
+##################################################################################
 find_library(C_LIB c)
 message(STATUS "avr-libc: ${C_LIB}")
 
-# link to libraries
+##################################################################################
+# link elf target to libraries
+##################################################################################
 target_link_libraries(
    CAN2matrix-${AVR_MCU}.elf
    adc-${AVR_MCU}
@@ -39,10 +49,14 @@ target_link_libraries(
    ${C_LIB}
 )
 
+##################################################################################
 # find doxygen
+##################################################################################
 find_package(Doxygen)
 
+##################################################################################
 # create docu target, if package was found
+##################################################################################
 if(DOXYGEN_FOUND)
     # configuration input and output
     set(DOXYGEN_CONF_IN ${CAN2matrix_SOURCE_DIR}/CAN2matrix/doxygen.conf)
@@ -52,7 +66,7 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_INPUT_PATH "\"${CMAKE_CURRENT_SOURCE_DIR}\"")
     set(DOXYGEN_OUTPUT_PATH "\"${CMAKE_CURRENT_BINARY_DIR}\"")
 
-    # cleanup properties
+    # cleanup properties from html output
     set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
                     "${CMAKE_CURRENT_BINARY_DIR}/html"
     )
