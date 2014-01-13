@@ -1,4 +1,9 @@
 ##################################################################################
+# configuration files of the submodules
+##################################################################################
+include_directories(modules)
+
+##################################################################################
 # adding modules
 ##################################################################################
 add_subdirectory(modules/adc)
@@ -8,11 +13,6 @@ add_subdirectory(modules/spi)
 add_subdirectory(modules/timer)
 add_subdirectory(modules/uart)
 add_subdirectory(modules/config)
-
-##################################################################################
-# configuration files of the submodules
-##################################################################################
-include_directories(modules/config)
 
 ##################################################################################
 # executable
