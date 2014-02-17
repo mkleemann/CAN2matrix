@@ -39,7 +39,8 @@ volatile bool    trigger50ms     = false;
 volatile state_t fsmState        = INIT;
 
 /**
- * @brief main loop
+ * \brief main loop
+ * \returns nothing, since the main loop does not end until power off
  *
  * The main loop consists of the FSM and calls all necessary init sequences
  * before entering it. Any error in the init process will result in
