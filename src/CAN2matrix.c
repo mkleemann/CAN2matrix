@@ -23,12 +23,12 @@
 #include <avr/cpufunc.h>
 //#include <stdlib.h>
 
-#include "modules/can/can_mcp2515.h"
-#include "modules/adc/adc.h"
+#include "can/can_mcp2515.h"
+#include "adc/adc.h"
 #include "comm/comm_matrix.h"
-#include "modules/leds/leds.h"
-#include "modules/timer/timer.h"
-//#include "modules/uart/uart.h"
+#include "leds/leds.h"
+#include "timer/timer.h"
+//#include "uart/uart.h"
 #include "CAN2matrix.h"
 
 //! counter to evaluate timing to send CAN messages

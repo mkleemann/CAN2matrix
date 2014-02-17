@@ -1,23 +1,23 @@
 [submodule "CAN2matrix/modules/util"]
-	path = CAN2matrix/modules/util
+	path = modules/util
 	url = git@github.com:mkleemann/util.git
 [submodule "CAN2matrix/modules/adc"]
-	path = CAN2matrix/modules/adc
+	path = modules/adc
 	url = git@github.com:mkleemann/adc.git
 [submodule "CAN2matrix/modules/can"]
-	path = CAN2matrix/modules/can
+	path = modules/can
 	url = git@github.com:mkleemann/can.git
 [submodule "CAN2matrix/modules/leds"]
-	path = CAN2matrix/modules/leds
+	path = modules/leds
 	url = git@github.com:mkleemann/leds.git
 [submodule "CAN2matrix/modules/spi"]
-	path = CAN2matrix/modules/spi
+	path = modules/spi
 	url = git@github.com:mkleemann/spi.git
 [submodule "CAN2matrix/modules/timer"]
-	path = CAN2matrix/modules/timer
+	path = modules/timer
 	url = git@github.com:mkleemann/timer.git
 [submodule "CAN2matrix/modules/uart"]
-	path = CAN2matrix/modules/uart
+	path = modules/uart
 	url = git@github.com:mkleemann/uart.git
 [submodule "cmake"]
 	path = cmake
