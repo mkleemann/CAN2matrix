@@ -134,6 +134,7 @@ add_subdirectory(src)
 ##################################################################################
 # use default doxygen module
 ##################################################################################
+set(DOXYGEN_IMAGE_PATH "${CAN2matrix_SOURCE_DIR}/doc/images")
 include("${CAN2matrix_SOURCE_DIR}/cmake/Modules/defaultDocuTarget.cmake")
 
 
