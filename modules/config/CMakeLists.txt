@@ -2,7 +2,6 @@
 add_avr_library(
    module_config
    adc_config.h
-   bar_config.h
    can_config_mcp2515.c
    can_config_mcp2515.h
    leds_config.h
