@@ -36,7 +36,9 @@
 typedef struct
 {
    //! wheel signal (as-is)
-   uint8_t wheel[2];
+   uint16_t wheel;
+   //! wheel signal (delta)
+   uint16_t wheelDelta;
    //! engine RPM (as-is)
    uint8_t rpm[2];
    //! vehicle speed
@@ -197,11 +199,11 @@ void fillInfoToCAN2(can_t* msg)
          msg->data[2] = storage.speed[1];
          msg->data[3] = storage.speed[0];
          // byte 4/5: wheel count left
-         msg->data[4] = storage.wheel[1];
-         msg->data[5] = storage.wheel[0];
+         msg->data[4] = (storage.wheelDelta & 0x7FF) >> 8;
+         msg->data[5] = (storage.wheelDelta & 0xFF);
          // byte 6/7: wheel count right
-         msg->data[6] = storage.wheel[1];
-         msg->data[7] = storage.wheel[0];
+         msg->data[6] = (storage.wheelDelta & 0x7FF) >> 8;
+         msg->data[7] = (storage.wheelDelta & 0xFF);
          break;
       }
 
@@ -318,6 +320,8 @@ void transferIgnStatus(can_t* msg)
  */
 void transferWheelGearTemp(can_t* msg)
 {
+   uint16_t wheelTmp = storage.wheel;
+   uint16_t deltaTmp = 0;
    // store information: bit 1: 1 - reverse; 0 - not reverse (assume D(rive))
    storage.gearBox = (msg->data[0] & 0x02) ? 0x01 : 0x04;
    // store speed information: CAN1 uses approx. half of the resolution of
@@ -325,8 +329,18 @@ void transferWheelGearTemp(can_t* msg)
    storage.speed[0] = (msg->data[1] >> 1) | ((msg->data[2] & 0x01) << 7);
    storage.speed[1] = msg->data[2] >> 1;
    // only 10 bits per wheel for count value
-   storage.wheel[0] = msg->data[3];        // lower part
-   storage.wheel[1] = msg->data[4] & 0x3;  // higher part
+   // store new wheel signal first, old one saved in tmp
+   storage.wheel = ((uint16_t)(msg->data[4] & 0x07) << 8) | (msg->data[3]);
+   // get difference
+   deltaTmp = storage.wheel - wheelTmp;
+   // check overflow
+   if (wheelTmp > storage.wheel)
+   {
+      // get absolute value of difference
+      deltaTmp &= 0x07FF;
+   }
+   // store new delta
+   storage.wheelDelta = deltaTmp;
    // store temperature too
    storage.temp = msg->data[5];
 }
