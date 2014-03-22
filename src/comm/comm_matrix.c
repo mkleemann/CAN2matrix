@@ -36,9 +36,11 @@
 typedef struct
 {
    //! wheel signal (as-is)
-   uint16_t wheel;
+   uint16_t wheelIn;
    //! wheel signal (delta)
    uint16_t wheelDelta;
+   //! wheel signal (as-is)
+   uint16_t wheelOut;
    //! engine RPM (as-is)
    uint8_t rpm[2];
    //! vehicle speed
@@ -199,11 +201,11 @@ void fillInfoToCAN2(can_t* msg)
          msg->data[2] = storage.speed[1];
          msg->data[3] = storage.speed[0];
          // byte 4/5: wheel count left
-         msg->data[4] = (storage.wheelDelta & 0x7FF) >> 8;
-         msg->data[5] = (storage.wheelDelta & 0xFF);
+         msg->data[4] = storage.wheelOut >> 8;
+         msg->data[5] = (storage.wheelOut & 0xFF);
          // byte 6/7: wheel count right
-         msg->data[6] = (storage.wheelDelta & 0x7FF) >> 8;
-         msg->data[7] = (storage.wheelDelta & 0xFF);
+         msg->data[6] = storage.wheelOut >> 8;
+         msg->data[7] = (storage.wheelOut & 0xFF);
          break;
       }
 
@@ -320,27 +322,28 @@ void transferIgnStatus(can_t* msg)
  */
 void transferWheelGearTemp(can_t* msg)
 {
-   uint16_t wheelTmp = storage.wheel;
-   uint16_t deltaTmp = 0;
+   uint16_t wheelTmp = storage.wheelIn;
    // store information: bit 1: 1 - reverse; 0 - not reverse (assume D(rive))
    storage.gearBox = (msg->data[0] & 0x02) ? 0x01 : 0x04;
    // store speed information: CAN1 uses approx. half of the resolution of
    // CAN2 speed signal.
    storage.speed[0] = (msg->data[1] >> 1) | ((msg->data[2] & 0x01) << 7);
    storage.speed[1] = msg->data[2] >> 1;
-   // only 10 bits per wheel for count value
+   // only 11 bits per wheel for count value
    // store new wheel signal first, old one saved in tmp
-   storage.wheel = ((uint16_t)(msg->data[4] & 0x07) << 8) | (msg->data[3]);
-   // get difference
-   deltaTmp = storage.wheel - wheelTmp;
+   storage.wheelIn   = (msg->data[4] & 0x07);
+   storage.wheelIn <<= 8;
+   storage.wheelIn  |= msg->data[3];
    // check overflow
-   if (wheelTmp > storage.wheel)
+   if (wheelTmp > storage.wheelIn)
    {
       // get absolute value of difference
-      deltaTmp &= 0x07FF;
+      storage.wheelIn |= 0x0800; // += 2048
    }
-   // store new delta
-   storage.wheelDelta = deltaTmp;
+   // get difference
+   storage.wheelDelta = storage.wheelIn - wheelTmp;
+   // add to destination counter
+   storage.wheelOut += storage.wheelDelta;
    // store temperature too
    storage.temp = msg->data[5];
 }
@@ -469,5 +472,4 @@ void setDimValue(uint16_t value)
    // |        dimming average        |           discarded           |
    storage.dimLevel = dimAverage >> 8;
 }
-
 
