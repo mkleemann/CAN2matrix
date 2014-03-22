@@ -29,7 +29,7 @@
  * This is used to determine SPI speed in dependence from main clock. The
  * speed results as follows: Fspi = Fosc/SPI_PRESCALER
  */
-#define SPI_PRESCALER      8
+#define SPI_PRESCALER         4
 #endif
 
 
