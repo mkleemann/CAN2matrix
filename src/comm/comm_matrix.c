@@ -171,6 +171,8 @@ void fillInfoToCAN1(can_t* msg)
  */
 void fillInfoToCAN2(can_t* msg)
 {
+   uint8_t dimOffset = (nightMode) ? NIGHT_OFFSET : 0;
+
    // remove any old values
    for(int i = 0; i < 8; ++i)
    {
@@ -228,8 +230,8 @@ void fillInfoToCAN2(can_t* msg)
                         ((true == nightMode) &&
                          (storage.dimLevel < DAY_NIGHT_UPPER_LIMIT));
          msg->data[0] = (nightMode) ? DIM_2_DAY_MODE : DIM_2_NIGHT_MODE;
-         msg->data[1] = storage.dimLevel; // radio
-         msg->data[2] = storage.dimLevel; // interior
+         msg->data[1] = storage.dimLevel + dimOffset; // radio
+         msg->data[2] = storage.dimLevel + dimOffset; // interior
          break;
       }
 

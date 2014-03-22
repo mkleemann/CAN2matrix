@@ -52,6 +52,14 @@
 #define DAY_NIGHT_LOWER_LIMIT          0x40
 
 /**
+ * \def NIGHT_OFFSET
+ * \brief brightness offset for night view
+ *
+ * Night view is now too dark, it needs a little offset for brightness.
+ */
+#define NIGHT_OFFSET                   64
+
+/**
  * \def DIM_STEPS_2_AVERAGE
  * \brief averaging interval (steps) for dim value
  * \sa setDimValue
