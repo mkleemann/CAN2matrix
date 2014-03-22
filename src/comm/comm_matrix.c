@@ -37,9 +37,7 @@ typedef struct
 {
    //! wheel signal (as-is)
    uint16_t wheelIn;
-   //! wheel signal (delta)
-   uint16_t wheelDelta;
-   //! wheel signal (as-is)
+   //! wheel signal (full 16bit)
    uint16_t wheelOut;
    //! engine RPM (as-is)
    uint8_t rpm[2];
@@ -325,6 +323,8 @@ void transferIgnStatus(can_t* msg)
 void transferWheelGearTemp(can_t* msg)
 {
    uint16_t wheelTmp = storage.wheelIn;
+   uint16_t wheelDelta = 0;
+
    // store information: bit 1: 1 - reverse; 0 - not reverse (assume D(rive))
    storage.gearBox = (msg->data[0] & 0x02) ? 0x01 : 0x04;
    // store speed information: CAN1 uses approx. half of the resolution of
@@ -336,16 +336,17 @@ void transferWheelGearTemp(can_t* msg)
    storage.wheelIn   = (msg->data[4] & 0x07);
    storage.wheelIn <<= 8;
    storage.wheelIn  |= msg->data[3];
+   // get difference
+   wheelDelta = storage.wheelIn - wheelTmp;
    // check overflow
    if (wheelTmp > storage.wheelIn)
    {
-      // get absolute value of difference
-      storage.wheelIn |= 0x0800; // += 2048
+      // get correct difference including turnaround
+      wheelDelta = 2047 - wheelTmp;
+      wheelDelta += storage.wheelIn;
    }
-   // get difference
-   storage.wheelDelta = storage.wheelIn - wheelTmp;
    // add to destination counter
-   storage.wheelOut += storage.wheelDelta;
+   storage.wheelOut += wheelDelta;
    // store temperature too
    storage.temp = msg->data[5];
 }
