@@ -1,10 +1,10 @@
 ##################################################################################
-# CMakeLists.txt for CAN2matrix poject based on cmake-aver toolchain 
+# CMakeLists.txt for CAN2matrix poject based on cmake-avr toolchain 
 ##################################################################################
 
 cmake_minimum_required(VERSION 2.8)
 
-project(CAN2matrix)
+### TOOLCHAIN SETUP AREA #########################################################
 
 ##################################################################################
 # tools to be used for programming the AVR
@@ -21,6 +21,15 @@ set(AVR_H_FUSE 0xd9)
 set(AVR_L_FUSE 0xc3)
 
 ##################################################################################
+# set build type
+##################################################################################
+set(CMAKE_BUILD_TYPE Release)
+
+### END TOOLCHAIN SETUP AREA #####################################################
+
+project(CAN2matrix)
+
+##################################################################################
 # status messages for AVR related settings
 ##################################################################################
 message(STATUS "Current uploadtool is: ${AVR_UPLOADTOOL}")
@@ -30,11 +39,6 @@ message(STATUS "Current uploadtool options are: ${AVR_UPLOADTOOL_OPTIONS}")
 message(STATUS "Current MCU is set to: ${AVR_MCU}")
 message(STATUS "Current H_FUSE is set to: ${AVR_H_FUSE}")
 message(STATUS "Current L_FUSE is set to: ${AVR_L_FUSE}")
-
-##################################################################################
-# set build type
-##################################################################################
-set(CMAKE_BUILD_TYPE Release)
 
 ##################################################################################
 # MCU speed (Hz) needs to be defined for AVR toolchain, e.g. delay.h

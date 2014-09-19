@@ -21,15 +21,15 @@ message(STATUS "avr-libc: ${C_LIB}")
 ##################################################################################
 # link elf target to libraries
 ##################################################################################
-target_link_libraries(
-   CAN2matrix-${AVR_MCU}.elf
-   adc-${AVR_MCU}
-   can-${AVR_MCU}
-   leds-${AVR_MCU}
-   spi-${AVR_MCU}
-   timer-${AVR_MCU}
-   uart-${AVR_MCU}
-   module_config-${AVR_MCU}
+avr_target_link_libraries(
+   CAN2matrix
+   adc
+   can
+   leds
+   spi
+   timer
+   uart
+   module_config
    ${C_LIB}
 )
 
